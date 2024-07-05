@@ -1,5 +1,6 @@
-package com.pinkproject.user;
+package com.pinkproject.notice;
 
+import com.pinkproject.admin.Admin;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
@@ -10,28 +11,25 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Data
-@Table(name = "user_tb") // 유저테이블
+@Table(name = "notice_tb") //공지사항 테이블
 @Entity
-public class User {
+public class Notice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id; // 유저 번호
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Admin admin; // 관리자
+
     @Column(nullable = false)
-    private String oauthProvider;  // 오어스프로바이더?
+    private String content; // 내용
 
     @Column(nullable = false, unique = true)
     private String email; // 이메일
 
-    @CreationTimestamp
-    private LocalDateTime createdAt; // 유저 가입 일자
+    private String password; // 패스워드
 
-    @Builder
-    public User(Integer id, String oauthProvider, String email, LocalDateTime createdAt) {
-        this.id = id;
-        this.oauthProvider = oauthProvider;
-        this.email = email;
-        this.createdAt = createdAt;
-    }
+    @CreationTimestamp
+    private LocalDateTime createdAt; // 생성날짜
 
 }
