@@ -1,10 +1,12 @@
+-- 가계부 사용자
 -- user_tb
-INSERT INTO user_tb (oauth_provider, email, created_at) VALUES
-    ('KAKAO', 'example@kakao.com', '2024-01-01');
+INSERT INTO user_tb (oauth_provider, email, created_at)
+VALUES ('KAKAO', 'example@kakao.com', '2024-01-01');
 
 -- record_tb
 -- 2024년 1월부터 7월 초까지의 INCOME/EXPENSE 데이터
-INSERT INTO record_tb (user_id, account_type, category_in, category_out, amount, description, created_at) VALUES
+INSERT INTO record_tb (user_id, account_type, category_in, category_out, amount, description, created_at)
+VALUES
 
 -- 1월
 (1, 'INCOME', 'SALARY', NULL, 4000000, '월급 들어옴', '2024-01-10'),
@@ -241,7 +243,8 @@ INSERT INTO record_tb (user_id, account_type, category_in, category_out, amount,
 
 -- memo_tb
 -- 2024년 1월부터 7월 초까지의 메모 데이터
-INSERT INTO memo_tb (user_id, content, created_at) VALUES
+INSERT INTO memo_tb (user_id, content, created_at)
+VALUES
 
 -- 1월
 (1, '새해 목표 설정하기: 운동 열심히 하기', '2024-01-03'),
@@ -288,3 +291,24 @@ INSERT INTO memo_tb (user_id, content, created_at) VALUES
 -- 7월
 (1, '여름휴가 계획 세우기', '2024-07-01'),
 (1, '가족과 바다 여행', '2024-07-05');
+
+
+-- 가계부 어플 관리자
+-- 관리자 추가
+INSERT INTO admin_tb (username, password, created_at)
+VALUES ('admin', 'securepassword', '2024-01-01 10:00:00');
+
+-- 공지사항 추가
+INSERT INTO notice_tb (admin_id, title, content, created_at)
+VALUES (1, '환영합니다!', '핑크피크 애플리케이션을 이용해주셔서 감사합니다. 다양한 기능을 통해 쉽고 편리하게 가계부를 작성해보세요.', '2023-10-02 09:00:00'),
+       (1, '업데이트 안내', '1.1.0 버전 업데이트 내용: 버그 수정 및 UI 개선', '2024-01-10 09:00:00'),
+       (1, '점검 안내', '서버 점검 안내: 2024년 1월 15일 오전 2시부터 4시까지 서비스 이용이 일시 중단됩니다.', '2024-01-12 14:00:00'),
+       (1, '신규 기능 추가', '가계부 데이터 백업 기능이 추가되었습니다. 이제 데이터를 안전하게 보관하세요.', '2024-02-05 09:00:00'),
+       (1, '이벤트 안내', '가계부 작성 이벤트: 매월 우수 작성자에게 상품을 드립니다. 자세한 내용은 이벤트 페이지를 참고하세요.', '2024-02-20 09:00:00'),
+       (1, '사용자 가이드', '가계부 작성 방법 및 활용 팁을 안내드립니다. 자세한 내용은 사용자 가이드 페이지를 참고하세요.', '2024-03-01 09:00:00'),
+       (1, '보안 업데이트', '안전한 서비스 이용을 위해 보안 업데이트가 진행되었습니다.', '2024-03-15 09:00:00'),
+       (1, '모바일 앱 출시', '이제 모바일에서도 가계부를 쉽게 작성할 수 있습니다. 모바일 앱을 다운로드하세요.', '2024-04-01 09:00:00'),
+       (1, '고객센터 운영 시간 변경', '고객센터 운영 시간이 변경되었습니다. 새로운 운영 시간은 오전 9시부터 오후 6시까지입니다.', '2024-04-20 09:00:00'),
+       (1, '데이터 정기 백업 안내', '데이터의 안전한 보관을 위해 매주 일요일 오전 2시에 정기 백업이 진행됩니다.', '2024-05-01 09:00:00'),
+       (1, '여름맞이 업데이트', '여름을 맞아 새로운 테마가 추가되었습니다. 설정에서 테마를 변경해보세요.', '2024-06-01 09:00:00'),
+       (1, '서비스 이용약관 변경', '서비스 이용약관이 변경되었습니다. 자세한 내용은 공지사항을 참고하세요.', '2024-07-01 09:00:00');
