@@ -1,6 +1,6 @@
 package com.pinkproject._core.error;
 
-import com.pinkpig._core.error.exception.Exception400;
+import com.pinkproject._core.error.exception.Exception400;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;

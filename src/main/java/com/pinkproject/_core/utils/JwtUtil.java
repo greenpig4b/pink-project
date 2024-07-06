@@ -18,7 +18,7 @@ public class JwtUtil {
                 .withSubject("stay")
                 .withExpiresAt(new Date(System.currentTimeMillis() + 1000L * 60L * 60L * 24L * 365L)) // 1년간 지속
                 .withClaim("id", user.getId())
-                .withClaim("email", user.getUsername())
+                .withClaim("email", user.getEmail())
                 .sign(Algorithm.HMAC512("usertoken")); // 대칭키 사용 나중에 yeoeotteohno 이라 적은 자리에 환경 변수를 넣는다 OS 의 값을 땡겨와야한다!
         return jwt;
     }

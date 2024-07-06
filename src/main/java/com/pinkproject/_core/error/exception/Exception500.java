@@ -1,6 +1,6 @@
 package com.pinkproject._core.error.exception;
 
-import com.pinkpig._core.utils.ApiUtil;
+import com.pinkproject._core.utils.ApiUtil;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
