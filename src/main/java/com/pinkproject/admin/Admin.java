@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 
 @NoArgsConstructor
@@ -25,10 +25,10 @@ public class Admin {
     private String password; // 패스워드
 
     @CreationTimestamp
-    private LocalDateTime createdAt; // 생성날짜
+    private Timestamp createdAt; // 생성날짜
 
     @Builder
-    public Admin(Integer id, String username, String password, LocalDateTime createdAt) {
+    public Admin(Integer id, String username, String password, Timestamp createdAt) {
         this.id = id;
         this.username = username;
         this.password = password;
