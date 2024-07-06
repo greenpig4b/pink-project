@@ -1,5 +1,8 @@
 package com.pinkproject.record;
 
+import com.pinkproject.record.enums.AccountType;
+import com.pinkproject.record.enums.CategoryIn;
+import com.pinkproject.record.enums.CategoryOut;
 import com.pinkproject.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -22,9 +25,18 @@ public class Record {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user; // user_id // 유저
 
-    private String accountType; // 수입/지출
-    private String categoryIn; // 월급 등의 소득
-    private String categoryOut; // 경조사 / 정기 지출 등
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    private AccountType accountType; // 수입/지출
+
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    private CategoryIn categoryIn; // 월급 등의 소득
+
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    private CategoryOut categoryOut; // 경조사 / 정기 지출 등
+
     private Integer amount; // 금액
     private String description; // 지출 / 소비 설명
 
@@ -32,7 +44,7 @@ public class Record {
     private LocalDateTime createdAt; // 생성날짜
 
     @Builder
-    public Record(Integer id, User user, String accountType, String categoryIn, String categoryOut, Integer amount, String description, LocalDateTime createdAt) {
+    public Record(Integer id, User user, AccountType accountType, CategoryIn categoryIn, CategoryOut categoryOut, Integer amount, String description, LocalDateTime createdAt) {
         this.id = id;
         this.user = user;
         this.accountType = accountType;
