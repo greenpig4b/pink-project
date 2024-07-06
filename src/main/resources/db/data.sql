@@ -1,7 +1,7 @@
 -- 가계부 사용자
 -- user_tb
 INSERT INTO user_tb (oauth_provider, email, created_at)
-VALUES ('KAKAO', 'example@kakao.com', '2024-01-01');
+VALUES ('KAKAO', 'ssar@kakao.com', '2024-01-01');
 
 -- record_tb
 -- 2024년 1월부터 7월 초까지의 INCOME/EXPENSE 데이터
