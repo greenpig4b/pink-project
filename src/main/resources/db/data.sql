@@ -296,7 +296,7 @@ VALUES
 -- 가계부 어플 관리자
 -- 관리자 추가
 INSERT INTO admin_tb (username, password, created_at)
-VALUES ('admin', 'securepassword', '2024-01-01 10:00:00');
+VALUES ('admin', '1234', '2024-01-01 10:00:00');
 
 -- 공지사항 추가
 INSERT INTO notice_tb (admin_id, title, content, created_at)
