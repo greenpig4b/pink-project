@@ -37,7 +37,10 @@ public class Record {
     @Enumerated(EnumType.STRING)
     private CategoryOut categoryOut; // 경조사 / 정기 지출 등
 
+    @Column(nullable = false)
     private Integer amount; // 금액
+
+    @Column(nullable = false)
     private String description; // 지출 / 소비 설명
 
     @CreationTimestamp

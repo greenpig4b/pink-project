@@ -17,7 +17,11 @@ public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id; // 유저 번호
+
+    @Column(nullable = false, unique = true)
     private String username; // 유저네임
+
+    @Column(nullable = false)
     private String password; // 패스워드
 
     @CreationTimestamp
