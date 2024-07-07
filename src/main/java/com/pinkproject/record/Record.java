@@ -1,6 +1,7 @@
 package com.pinkproject.record;
 
 import com.pinkproject.record.enums.AccountType;
+import com.pinkproject.record.enums.Assets;
 import com.pinkproject.record.enums.CategoryIn;
 import com.pinkproject.record.enums.CategoryOut;
 import com.pinkproject.user.User;
@@ -25,9 +26,13 @@ public class Record {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user; // user_id // 유저
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AccountType accountType; // 수입/지출
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Assets assets;
 
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
