@@ -1,5 +1,6 @@
 package com.pinkproject.memo;
 
+import com.pinkproject.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,10 @@ public class Memo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user; // user_id // 유저
 
     private String content; // 내용
 

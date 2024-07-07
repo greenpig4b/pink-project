@@ -1,34 +1,53 @@
 package com.pinkproject.record;
 
+import com.pinkproject.record.enums.AccountType;
+import com.pinkproject.record.enums.CategoryIn;
+import com.pinkproject.record.enums.CategoryOut;
+import com.pinkproject.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
 @Data
 @Table(name = "record_tb") // 기록테이블
+@Entity
 public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    private Integer id;
 
+    @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    Integer user; // user_id // 유저
+    private User user; // user_id // 유저
 
-    String accountType; // 수입/지출
-    String categoryIn; // 월급 등의 소득
-    String categoryOut; // 경조사 / 정기 지출 등
-    Integer amount; // 금액
-    String description; // 지출 / 소비 설명
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    private AccountType accountType; // 수입/지출
+
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    private CategoryIn categoryIn; // 월급 등의 소득
+
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    private CategoryOut categoryOut; // 경조사 / 정기 지출 등
+
+    @Column(nullable = false)
+    private Integer amount; // 금액
+
+    @Column(nullable = false)
+    private String description; // 지출 / 소비 설명
 
     @CreationTimestamp
     private LocalDateTime createdAt; // 생성날짜
 
     @Builder
-    public Record(Integer id, Integer user, String accountType, String categoryIn, String categoryOut, Integer amount, String description, LocalDateTime createdAt) {
+    public Record(Integer id, User user, AccountType accountType, CategoryIn categoryIn, CategoryOut categoryOut, Integer amount, String description, LocalDateTime createdAt) {
         this.id = id;
         this.user = user;
         this.accountType = accountType;
