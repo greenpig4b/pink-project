@@ -54,6 +54,7 @@ public class RecordService {
                 .collect(Collectors.groupingBy(record -> record.getCreatedAt().toLocalDate().toString()));
 
         List<DailyRecord> dailyRecords = recordsByDate.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
                 .map(entry -> {
                     String date = entry.getKey();
                     List<Record> dailyRecordList = entry.getValue();
