@@ -1,6 +1,7 @@
 package com.pinkproject.record;
 
 import com.pinkproject._core.error.exception.Exception404;
+import com.pinkproject._core.utils.Formatter;
 import com.pinkproject.record.RecordResponse.DailyRecordsDTO.DailyRecord;
 import com.pinkproject.record.RecordResponse.DailyRecordsDTO.DailyTransactionDetail;
 import com.pinkproject.record.RecordResponse.DailyRecordsDTO._DailyMainDTORecord;
@@ -77,7 +78,8 @@ public class RecordService {
                                     record.getCategoryIn(),
                                     record.getCategoryOut(),
                                     record.getDescription(),
-                                    record.getCreatedAt().toString(),
+                                    Formatter.formatDayOnly(record.getCreatedAt()),
+                                    Formatter.formatCreatedAtPeriodWithTime(record.getCreatedAt()),
                                     record.getAssets(),
                                     record.getAmount()
                             )).toList();

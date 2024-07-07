@@ -12,6 +12,7 @@ public class Formatter {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static final DateTimeFormatter DAY_FORMATTER = DateTimeFormatter.ofPattern("dd");
 
     public static String formatDate(LocalDateTime date) {
         return date.format(DATE_FORMATTER);
@@ -62,5 +63,10 @@ public class Formatter {
             return period + " " + time.toString();
         }
         return null;
+    }
+
+    // 날짜의 "일" 형식만 반환
+    public static String formatDayOnly(LocalDateTime createdAt) {
+        return createdAt != null ? createdAt.format(DAY_FORMATTER) : null;
     }
 }

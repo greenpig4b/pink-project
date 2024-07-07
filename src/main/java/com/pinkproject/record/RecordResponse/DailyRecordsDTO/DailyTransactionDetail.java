@@ -10,7 +10,8 @@ public record DailyTransactionDetail(
         CategoryIn categoryIn,
         CategoryOut categoryOut,
         String description,
-        String createdAt,
+        String date,
+        String time,
         Assets assets,
         Integer amount
 ) {
