@@ -1,9 +1,9 @@
 package com.pinkproject.record;
 
-import com.pinkproject.record.enums.TransactionType;
 import com.pinkproject.record.enums.Assets;
 import com.pinkproject.record.enums.CategoryIn;
 import com.pinkproject.record.enums.CategoryOut;
+import com.pinkproject.record.enums.TransactionType;
 import com.pinkproject.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -52,10 +52,11 @@ public class Record {
     private LocalDateTime createdAt; // 생성날짜
 
     @Builder
-    public Record(Integer id, User user, TransactionType transactionType, CategoryIn categoryIn, CategoryOut categoryOut, Integer amount, String description, LocalDateTime createdAt) {
+    public Record(Integer id, User user, TransactionType transactionType, Assets assets, CategoryIn categoryIn, CategoryOut categoryOut, Integer amount, String description, LocalDateTime createdAt) {
         this.id = id;
         this.user = user;
         this.transactionType = transactionType;
+        this.assets = assets;
         this.categoryIn = categoryIn;
         this.categoryOut = categoryOut;
         this.amount = amount;

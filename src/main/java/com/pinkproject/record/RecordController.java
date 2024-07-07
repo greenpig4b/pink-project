@@ -20,6 +20,9 @@ public class RecordController {
     @GetMapping("/api/records/monthly")
     public ResponseEntity<?> dailyRecords(@RequestParam Integer year, @RequestParam Integer month) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
+//        if (sessionUser == null) {
+//            return ResponseEntity.status(401).build();
+//        }
         _DailyMainDTORecord respDTO = recordService.getDailyMain(sessionUser, year, month);
 
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
