@@ -29,16 +29,17 @@ public class RecordService {
                 .orElseThrow(() -> new Exception404("유저 정보가 없습니다."));
 
         // _DailyMainDTORecord에 담을 정보를 추린다.
+        // 조회 시작일과 종료일을 설정
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfMonth());
 
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
 
-        // 검색한 것 담음
+        // 주어진 기간 동안의 기록을 검색
         List<Record> records = recordRepository.findByUserIdAndCreatedAtBetween(user.getId(), startDateTime, endDateTime);
 
-        // 해당 월의 수입의 합, 지출의 합, 수입/지출의 합이 필요하다.
+        // 해당 월의 수입의 합, 지출의 합, 수입/지출의 합을 계산
         Integer monthlyIncome = records.stream()
                 .filter(record -> record.getTransactionType() == TransactionType.INCOME)
                 .mapToInt(Record::getAmount)
@@ -51,9 +52,11 @@ public class RecordService {
 
         Integer monthlyTotalAmount = monthlyIncome - monthlyExpense;
 
+        // 날짜별로 기록을 그룹화
         Map<String, List<Record>> recordsByDate = records.stream()
                 .collect(Collectors.groupingBy(record -> record.getCreatedAt().toLocalDate().toString()));
 
+        // 날짜별 기록을 생성하고 정렬
         List<DailyRecord> dailyRecords = recordsByDate.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())  // 날짜 기준으로 정렬
                 .map(entry -> {
@@ -72,6 +75,7 @@ public class RecordService {
 
                     Integer dailyTotalAmount = dailyIncome - dailyExpense;
 
+                    // 일별 거래 세부 정보를 생성
                     List<DailyTransactionDetail> dailyTransactionDetails = dailyRecordList.stream()
                             .map(record -> new DailyTransactionDetail(
                                     record.getTransactionType(),
@@ -80,24 +84,26 @@ public class RecordService {
                                     record.getDescription(),
                                     Formatter.formatCreatedAtPeriodWithTime(record.getCreatedAt()), // 오전/오후 시간 반환
                                     record.getAssets() != null ? record.getAssets().getKorean() : null,
-                                    Formatter.number(record.getAmount()) // 세 자리마다 콤마와 "원" 추가
+                                    Formatter.number(record.getAmount())
                             )).toList();
 
+                    // 일별 기록을 생성
                     return new DailyRecord(
-                            Formatter.formatDayOnly(date), // 날짜의 일만 반환
-                            Formatter.number(dailyIncome), // 세 자리마다 콤마와 "원" 추가
-                            Formatter.number(dailyExpense), // 세 자리마다 콤마와 "원" 추가
-                            Formatter.number(dailyTotalAmount), // 세 자리마다 콤마와 "원" 추가
+                            Formatter.formatDayOnly(date),
+                            Formatter.number(dailyIncome),
+                            Formatter.number(dailyExpense),
+                            Formatter.number(dailyTotalAmount),
                             dailyTransactionDetails
                     );
                 }).toList();
 
+        // 월별 및 일별 기록을 포함한 DTO 객체를 반환
         return new _DailyMainDTORecord(
-                Formatter.formatYearWithSuffix(startDate), // 연도에 '년' 추가
-                Formatter.formatMonthWithSuffix(startDate), // 월에 '월' 추가
-                Formatter.number(monthlyIncome), // 세 자리마다 콤마와 "원" 추가
-                Formatter.number(monthlyExpense), // 세 자리마다 콤마와 "원" 추가
-                Formatter.number(monthlyTotalAmount), // 세 자리마다 콤마와 "원" 추가
+                Formatter.formatYearWithSuffix(startDate),
+                Formatter.formatMonthWithSuffix(startDate),
+                Formatter.number(monthlyIncome),
+                Formatter.number(monthlyExpense),
+                Formatter.number(monthlyTotalAmount),
                 dailyRecords
         );
     }
