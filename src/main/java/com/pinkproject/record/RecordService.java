@@ -55,7 +55,7 @@ public class RecordService {
                 .collect(Collectors.groupingBy(record -> record.getCreatedAt().toLocalDate().toString()));
 
         List<DailyRecord> dailyRecords = recordsByDate.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
+                .sorted(Map.Entry.comparingByKey())  // 날짜 기준으로 정렬
                 .map(entry -> {
                     String date = entry.getKey();
                     List<Record> dailyRecordList = entry.getValue();
@@ -78,28 +78,29 @@ public class RecordService {
                                     record.getCategoryIn(),
                                     record.getCategoryOut(),
                                     record.getDescription(),
-                                    Formatter.formatDayOnly(record.getCreatedAt()),
-                                    Formatter.formatCreatedAtPeriodWithTime(record.getCreatedAt()),
+                                    Formatter.formatCreatedAtPeriodWithTime(record.getCreatedAt()), // 오전/오후 시간 반환
                                     record.getAssets(),
-                                    record.getAmount()
+                                    Formatter.number(record.getAmount()) // 세 자리마다 콤마와 "원" 추가
                             )).toList();
 
                     return new DailyRecord(
-                            date,
-                            dailyIncome,
-                            dailyExpense,
-                            dailyTotalAmount,
+                            date.substring(8), // 날짜의 일만 반환
+                            Formatter.number(dailyIncome), // 세 자리마다 콤마와 "원" 추가
+                            Formatter.number(dailyExpense), // 세 자리마다 콤마와 "원" 추가
+                            Formatter.number(dailyTotalAmount), // 세 자리마다 콤마와 "원" 추가
                             dailyTransactionDetails
                     );
                 }).toList();
 
-        String yearMonth = String.format("%04d-%02d", year, month);
+        String yearStr = String.valueOf(year);
+        String monthStr = String.valueOf(month);
 
         return new _DailyMainDTORecord(
-                yearMonth,
-                monthlyIncome,
-                monthlyExpense,
-                monthlyTotalAmount,
+                yearStr,
+                monthStr,
+                Formatter.number(monthlyIncome), // 세 자리마다 콤마와 "원" 추가
+                Formatter.number(monthlyExpense), // 세 자리마다 콤마와 "원" 추가
+                Formatter.number(monthlyTotalAmount), // 세 자리마다 콤마와 "원" 추가
                 dailyRecords
         );
     }

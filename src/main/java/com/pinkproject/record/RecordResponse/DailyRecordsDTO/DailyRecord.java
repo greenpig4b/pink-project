@@ -4,9 +4,9 @@ import java.util.List;
 
 public record DailyRecord(
         String date,
-        Integer dailyIncome,
-        Integer dailyExpense,
-        Integer dailyTotalAmount,
+        String dailyIncome,
+        String dailyExpense,
+        String dailyTotalAmount,
         List<DailyTransactionDetail> dailyTransactionDetail
 ) {
 }

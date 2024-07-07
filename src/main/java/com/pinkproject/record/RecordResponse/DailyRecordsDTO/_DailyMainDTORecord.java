@@ -3,10 +3,11 @@ package com.pinkproject.record.RecordResponse.DailyRecordsDTO;
 import java.util.List;
 
 public record _DailyMainDTORecord(
+        String year,
         String month,
-        Integer monthlyIncome,
-        Integer monthlyExpense,
-        Integer monthlyTotalAmount,
+        String monthlyIncome,
+        String monthlyExpense,
+        String monthlyTotalAmount,
         List<DailyRecord> dailyRecord
 ) {
 }
