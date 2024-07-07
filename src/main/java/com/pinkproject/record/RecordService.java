@@ -29,8 +29,6 @@ public class RecordService {
                 .orElseThrow(() -> new Exception404("유저 정보가 없습니다."));
 
         // _DailyMainDTORecord에 담을 정보를 추린다.
-        // 1. 연/월이 필요하다. -> 컨트롤러에서 쿼리스트링으로 받아오자.
-        // 월의 첫째 날과 마지막 날 사이의 값을 모두 검색
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfMonth());
 
@@ -95,7 +93,6 @@ public class RecordService {
 
         String yearMonth = String.format("%04d-%02d", year, month);
 
-        // 구한 값들을 레코드에 담아서 리턴한다.
         return new _DailyMainDTORecord(
                 yearMonth,
                 monthlyIncome,
@@ -103,11 +100,5 @@ public class RecordService {
                 monthlyTotalAmount,
                 dailyRecords
         );
-        // DailyRecord에 담을 정보를 추린다.
-        // 3. 기록이 있는 날의 날짜가 필요하다.(기록이 없으면 날짜가 없어야 함)
-        // 4. 기록이 있는 날의 수입의 합, 지출의 합, 수입/지출의 합이 필요하다.
-
-        // DailyTransactionDetail에 담을 정보를 추린다.
-        // 5. 해당하는 날짜의 상세 내역이 필요하다.
     }
 }
