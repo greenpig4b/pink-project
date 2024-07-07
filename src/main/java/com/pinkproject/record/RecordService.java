@@ -5,7 +5,6 @@ import com.pinkproject.record.RecordResponse.DailyRecordsDTO.DailyRecord;
 import com.pinkproject.record.RecordResponse.DailyRecordsDTO.DailyTransactionDetail;
 import com.pinkproject.record.RecordResponse.DailyRecordsDTO._DailyMainDTORecord;
 import com.pinkproject.record.enums.TransactionType;
-import com.pinkproject.user.SessionUser;
 import com.pinkproject.user.User;
 import com.pinkproject.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +23,8 @@ public class RecordService {
     private final UserRepository userRepository;
     private final RecordRepository recordRepository;
 
-    public _DailyMainDTORecord getDailyMain(SessionUser sessionUser, Integer year, Integer month) {
-        User user = userRepository.findById(sessionUser.getId())
+    public _DailyMainDTORecord getDailyMain(Integer sessionUserUd, Integer year, Integer month) {
+        User user = userRepository.findById(sessionUserUd)
                 .orElseThrow(() -> new Exception404("유저 정보가 없습니다."));
 
         // _DailyMainDTORecord에 담을 정보를 추린다.

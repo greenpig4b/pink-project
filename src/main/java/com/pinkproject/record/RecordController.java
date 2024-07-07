@@ -2,7 +2,6 @@ package com.pinkproject.record;
 
 import com.pinkproject._core.utils.ApiUtil;
 import com.pinkproject.record.RecordResponse.DailyRecordsDTO._DailyMainDTORecord;
-import com.pinkproject.user.SessionUser;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +16,13 @@ public class RecordController {
     private final HttpSession session;
 
     // 기록 일일 화면 랜더링
-    @GetMapping("/api/records/monthly")
+    @GetMapping("/records/monthly") // TODO: api빼둠
     public ResponseEntity<?> dailyRecords(@RequestParam Integer year, @RequestParam Integer month) {
-        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
+//        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
 //        if (sessionUser == null) {
 //            return ResponseEntity.status(401).build();
 //        }
-        _DailyMainDTORecord respDTO = recordService.getDailyMain(sessionUser, year, month);
+        _DailyMainDTORecord respDTO = recordService.getDailyMain(1, year, month); // TODO: 세션유저 빼둠
 
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
