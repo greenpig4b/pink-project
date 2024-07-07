@@ -14,7 +14,7 @@ public class SessionUser {
     private LocalDateTime createdAt; // 유저 가입 일자
 
     @Builder
-    public SessionUser(Integer id, String username, String email, String password, LocalDateTime createdAt) {
+    public SessionUser(Integer id, String email, LocalDateTime createdAt) {
         this.id = id;
         this.email = email;
         this.createdAt = createdAt;
