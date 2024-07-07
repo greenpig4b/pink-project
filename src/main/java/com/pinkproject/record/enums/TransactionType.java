@@ -1,12 +1,12 @@
 package com.pinkproject.record.enums;
 
-public enum AccountType {
+public enum TransactionType {
     INCOME("수입"),
     EXPENSE("지출");
 
     private final String korean;
 
-    AccountType(String korean) {
+    TransactionType(String korean) {
         this.korean = korean;
     }
 

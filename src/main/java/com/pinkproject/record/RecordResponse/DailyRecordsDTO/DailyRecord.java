@@ -1,12 +1,12 @@
 package com.pinkproject.record.RecordResponse.DailyRecordsDTO;
 
+import java.util.List;
+
 public record DailyRecord(
         String date,
-        String day,
-        String yearMonth,
         Integer dailyIncome,
         Integer dailyExpense,
         Integer dailyTotalAmount,
-        DailyIncomeHistory dailyIncomeHistory
+        List<DailyTransactionDetail> dailyTransactionDetail
 ) {
 }
