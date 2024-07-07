@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -68,17 +69,23 @@ public class Formatter {
     }
 
     // 날짜의 "일" 형식만 반환
-    public static String formatDayOnly(LocalDateTime createdAt) {
-        return createdAt != null ? createdAt.format(DAY_FORMATTER) : null;
+    public static String formatDayOnly(LocalDate date) {
+        return date != null ? date.format(DAY_FORMATTER) + "일" : null;
     }
 
-    // 연도 형식만 반환
-    public static String formatYear(LocalDateTime date) {
-        return date.format(YEAR_FORMATTER);
+    // 연도 형식 반환 (년 추가)
+    public static String formatYearWithSuffix(LocalDate date) {
+        return date.format(YEAR_FORMATTER) + "년";
     }
 
-    // 월 형식만 반환 (0 제거)
-    public static String formatMonth(LocalDateTime date) {
-        return date.format(MONTH_FORMATTER);
+    // 월 형식 반환 (월 추가)
+    public static String formatMonthWithSuffix(LocalDate date) {
+        return date.format(MONTH_FORMATTER) + "월";
+    }
+
+    // 숫자를 세 자리마다 콤마로 구분하여 문자열로 반환
+    public static String formatNumberWithComma(int number) {
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        return formatter.format(number) + "원";
     }
 }

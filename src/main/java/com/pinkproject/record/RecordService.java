@@ -38,7 +38,7 @@ public class RecordService {
         // 검색한 것 담음
         List<Record> records = recordRepository.findByUserIdAndCreatedAtBetween(user.getId(), startDateTime, endDateTime);
 
-        // 2. 해당 월의 수입의 합, 지출의 합, 수입/지출의 합이 필요하다.
+        // 해당 월의 수입의 합, 지출의 합, 수입/지출의 합이 필요하다.
         Integer monthlyIncome = records.stream()
                 .filter(record -> record.getTransactionType() == TransactionType.INCOME)
                 .mapToInt(Record::getAmount)
@@ -57,7 +57,7 @@ public class RecordService {
         List<DailyRecord> dailyRecords = recordsByDate.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())  // 날짜 기준으로 정렬
                 .map(entry -> {
-                    String date = entry.getKey();
+                    LocalDate date = LocalDate.parse(entry.getKey());
                     List<Record> dailyRecordList = entry.getValue();
 
                     Integer dailyIncome = dailyRecordList.stream()
@@ -84,7 +84,7 @@ public class RecordService {
                             )).toList();
 
                     return new DailyRecord(
-                            date.substring(8), // 날짜의 일만 반환
+                            Formatter.formatDayOnly(date), // 날짜의 일만 반환
                             Formatter.number(dailyIncome), // 세 자리마다 콤마와 "원" 추가
                             Formatter.number(dailyExpense), // 세 자리마다 콤마와 "원" 추가
                             Formatter.number(dailyTotalAmount), // 세 자리마다 콤마와 "원" 추가
@@ -92,12 +92,9 @@ public class RecordService {
                     );
                 }).toList();
 
-        String yearStr = String.valueOf(year);
-        String monthStr = String.valueOf(month);
-
         return new _DailyMainDTORecord(
-                yearStr,
-                monthStr,
+                Formatter.formatYearWithSuffix(startDate), // 연도에 '년' 추가
+                Formatter.formatMonthWithSuffix(startDate), // 월에 '월' 추가
                 Formatter.number(monthlyIncome), // 세 자리마다 콤마와 "원" 추가
                 Formatter.number(monthlyExpense), // 세 자리마다 콤마와 "원" 추가
                 Formatter.number(monthlyTotalAmount), // 세 자리마다 콤마와 "원" 추가
