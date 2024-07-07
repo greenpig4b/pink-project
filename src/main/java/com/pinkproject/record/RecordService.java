@@ -75,11 +75,11 @@ public class RecordService {
                     List<DailyTransactionDetail> dailyTransactionDetails = dailyRecordList.stream()
                             .map(record -> new DailyTransactionDetail(
                                     record.getTransactionType(),
-                                    record.getCategoryIn(),
-                                    record.getCategoryOut(),
+                                    record.getCategoryIn() != null ? record.getCategoryIn().getKorean() : null,
+                                    record.getCategoryOut() != null ? record.getCategoryOut().getKorean() : null,
                                     record.getDescription(),
                                     Formatter.formatCreatedAtPeriodWithTime(record.getCreatedAt()), // 오전/오후 시간 반환
-                                    record.getAssets(),
+                                    record.getAssets() != null ? record.getAssets().getKorean() : null,
                                     Formatter.number(record.getAmount()) // 세 자리마다 콤마와 "원" 추가
                             )).toList();
 

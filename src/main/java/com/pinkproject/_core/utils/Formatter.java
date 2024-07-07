@@ -26,6 +26,7 @@ public class Formatter {
         return localDateTime.format(TIMESTAMP_FORMATTER);
     }
 
+    // 세 자리마다 점찍고 원 붙이기
     public static String number(int number) {
         DecimalFormat decimalFormat = new DecimalFormat("#,###원");
         return decimalFormat.format(number);
