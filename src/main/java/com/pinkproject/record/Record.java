@@ -1,8 +1,9 @@
 package com.pinkproject.record;
 
-import com.pinkproject.record.enums.AccountType;
+import com.pinkproject.record.enums.Assets;
 import com.pinkproject.record.enums.CategoryIn;
 import com.pinkproject.record.enums.CategoryOut;
+import com.pinkproject.record.enums.TransactionType;
 import com.pinkproject.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -25,9 +26,13 @@ public class Record {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user; // user_id // 유저
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private AccountType accountType; // 수입/지출
+    private TransactionType transactionType; // 수입/지출
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Assets assets; // TODO: 이거 사실 좀 애매해요ㅠ 일단은 자산의 형태 CASH, BANK, CARD
 
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
@@ -47,10 +52,11 @@ public class Record {
     private LocalDateTime createdAt; // 생성날짜
 
     @Builder
-    public Record(Integer id, User user, AccountType accountType, CategoryIn categoryIn, CategoryOut categoryOut, Integer amount, String description, LocalDateTime createdAt) {
+    public Record(Integer id, User user, TransactionType transactionType, Assets assets, CategoryIn categoryIn, CategoryOut categoryOut, Integer amount, String description, LocalDateTime createdAt) {
         this.id = id;
         this.user = user;
-        this.accountType = accountType;
+        this.transactionType = transactionType;
+        this.assets = assets;
         this.categoryIn = categoryIn;
         this.categoryOut = categoryOut;
         this.amount = amount;

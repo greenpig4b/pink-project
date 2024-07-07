@@ -1,12 +1,13 @@
 package com.pinkproject.record.enums;
 
-public enum AccountType {
-    INCOME("수입"),
-    EXPENSE("지출");
+public enum Assets {
+    CASH("현금"),
+    BANK("은행"),
+    CARD("카드");
 
     private final String korean;
 
-    AccountType(String korean) {
+    Assets(String korean) {
         this.korean = korean;
     }
 

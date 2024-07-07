@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -12,6 +13,9 @@ public class Formatter {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static final DateTimeFormatter DAY_FORMATTER = DateTimeFormatter.ofPattern("dd");
+    private static final DateTimeFormatter YEAR_FORMATTER = DateTimeFormatter.ofPattern("yyyy");
+    private static final DateTimeFormatter MONTH_FORMATTER = DateTimeFormatter.ofPattern("M"); // 월 앞의 0 제거
 
     public static String formatDate(LocalDateTime date) {
         return date.format(DATE_FORMATTER);
@@ -22,6 +26,7 @@ public class Formatter {
         return localDateTime.format(TIMESTAMP_FORMATTER);
     }
 
+    // 세 자리마다 점찍고 원 붙이기
     public static String number(int number) {
         DecimalFormat decimalFormat = new DecimalFormat("#,###원");
         return decimalFormat.format(number);
@@ -62,5 +67,26 @@ public class Formatter {
             return period + " " + time.toString();
         }
         return null;
+    }
+
+    // 날짜의 "일" 형식만 반환
+    public static String formatDayOnly(LocalDate date) {
+        return date != null ? date.format(DAY_FORMATTER) + "일" : null;
+    }
+
+    // 연도 형식 반환 (년 추가)
+    public static String formatYearWithSuffix(LocalDate date) {
+        return date.format(YEAR_FORMATTER) + "년";
+    }
+
+    // 월 형식 반환 (월 추가)
+    public static String formatMonthWithSuffix(LocalDate date) {
+        return date.format(MONTH_FORMATTER) + "월";
+    }
+
+    // 숫자를 세 자리마다 콤마로 구분하여 문자열로 반환
+    public static String formatNumberWithComma(int number) {
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        return formatter.format(number) + "원";
     }
 }

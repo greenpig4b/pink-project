@@ -2,9 +2,11 @@ package com.pinkproject.user;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
 @Data
 public class SessionUser {
     private Integer id; // 유저 번호
@@ -12,7 +14,7 @@ public class SessionUser {
     private LocalDateTime createdAt; // 유저 가입 일자
 
     @Builder
-    public SessionUser(Integer id, String username, String email, String password, LocalDateTime createdAt) {
+    public SessionUser(Integer id, String email, LocalDateTime createdAt) {
         this.id = id;
         this.email = email;
         this.createdAt = createdAt;
