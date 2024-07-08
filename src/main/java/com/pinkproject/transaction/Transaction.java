@@ -61,6 +61,10 @@ public class Transaction {
         this.createdAt = this.createdAt.truncatedTo(ChronoUnit.SECONDS);
     }
 
+    public LocalDateTime getEffectiveDateTime() {
+        return updatedAt != null ? updatedAt : createdAt;
+    }
+
     @Builder
     public Transaction(Integer id, User user, TransactionType transactionType, Assets assets, CategoryIn categoryIn, CategoryOut categoryOut, Integer amount, String description, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;

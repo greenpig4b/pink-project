@@ -44,7 +44,7 @@ public class TransactionService {
         Integer monthlyExpense = transactions.stream().filter(transaction -> transaction.getTransactionType() == TransactionType.EXPENSE).mapToInt(Transaction::getAmount).sum();
         Integer monthlyTotalAmount = monthlyIncome - monthlyExpense;
 
-        Map<String, List<Transaction>> recordsByDate = transactions.stream().collect(Collectors.groupingBy(transaction -> transaction.getCreatedAt().toLocalDate().toString()));
+        Map<String, List<Transaction>> recordsByDate = transactions.stream().collect(Collectors.groupingBy(transaction -> transaction.getEffectiveDateTime().toLocalDate().toString()));
 
         List<DailyTransactionRecord> dailyTransactionRecords = recordsByDate.entrySet().stream().sorted(Map.Entry.comparingByKey())
                 .map(entry -> {
@@ -61,7 +61,7 @@ public class TransactionService {
                                     transaction.getCategoryIn() != null ? transaction.getCategoryIn().getKorean() : null,
                                     transaction.getCategoryOut() != null ? transaction.getCategoryOut().getKorean() : null,
                                     transaction.getDescription(),
-                                    Formatter.formatCreatedAtPeriodWithTime(transaction.getCreatedAt()),
+                                    Formatter.formatCreatedAtPeriodWithTime(transaction.getEffectiveDateTime()),
                                     transaction.getAssets() != null ? transaction.getAssets().getKorean() : null, Formatter.number(transaction.getAmount()))).toList();
 
                     return new DailyTransactionRecord(Formatter.formatDayOnly(date), Formatter.number(dailyIncome), Formatter.number(dailyExpense), Formatter.number(dailyTotalAmount), dailyTransactionDetailRecords);
