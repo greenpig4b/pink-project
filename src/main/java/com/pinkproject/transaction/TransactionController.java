@@ -43,7 +43,7 @@ public class TransactionController {
 
     // 가계부 수정
     @PutMapping("/records/{id}") // TODO: API 경로 설정
-    public ResponseEntity<?> updateRecord(@PathVariable Integer id, @RequestBody _UpdateTransactionRecord reqRecord) {
+    public ResponseEntity<?> updateRecord(@PathVariable("id") Integer id, @RequestBody _UpdateTransactionRecord reqRecord) {
         // SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         // if (sessionUser == null) {
         //     return ResponseEntity.status(401).build();
@@ -56,7 +56,7 @@ public class TransactionController {
 
     // 가계부 삭제
     @DeleteMapping("/records/{id}") // TODO: api빼둠
-    public ResponseEntity<?> deleteRecord(@PathVariable Integer id) {
+    public ResponseEntity<?> deleteRecord(@PathVariable("id") Integer id) {
         // SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         // if (sessionUser == null) {
         //     return ResponseEntity.status(401).build();
