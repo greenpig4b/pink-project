@@ -3,6 +3,7 @@ package com.pinkproject.transaction;
 import com.pinkproject._core.utils.ApiUtil;
 import com.pinkproject.transaction.TransactionRequest.SaveTransactionDTO._SaveTransactionRecord;
 import com.pinkproject.transaction.TransactionResponse.DailyTransactionDTO._DailyMainRecord;
+import com.pinkproject.transaction.TransactionResponse.SavaTransactionDTO._SaveTransactionRespRecord;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +36,8 @@ public class TransactionController {
 //        }
         System.out.println(reqDTO);
         transactionService.saveTransaction(reqDTO, 1); // TODO: 세션유저 빼둠
-
-        return ResponseEntity.ok(new ApiUtil<>(null));
+        _SaveTransactionRespRecord respDTO = transactionService.saveTransaction(reqDTO, 1); // TODO: 세션유저 빼둠
+        return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
 
     // 가계부 수정

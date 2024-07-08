@@ -103,20 +103,19 @@ public class TransactionService {
                 .createdAt(createdAt)
                 .build();
 
-//        if (reqRecord.categoryIn() != null) {
-//            transaction.categoryIn(reqRecord.categoryIn());
-//        } else if (reqRecord.categoryOut() != null) {
-//            transaction.categoryOut(reqRecord.categoryOut());
-//        }
-
         transactionRepository.save(transaction);
+
+        String formattedYearMonthDate = Formatter.formatDate(transaction.getCreatedAt());
+        String formattedTime = Formatter.formatCreatedAtPeriodWithTime(transaction.getCreatedAt());
+
         return new _SaveTransactionRespRecord(
                 transaction.getTransactionType(),
-                transaction.getCreatedAt(),
-                transaction.getAmount(),
+                formattedYearMonthDate,
+                formattedTime,
+                Formatter.number(transaction.getAmount()),
                 transaction.getCategoryIn(),
                 transaction.getCategoryOut(),
-                transaction.getAssets(),
+                transaction.getAssets().getKorean(),
                 transaction.getDescription()
         );
     }
