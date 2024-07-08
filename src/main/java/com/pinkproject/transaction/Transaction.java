@@ -9,9 +9,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @NoArgsConstructor
 @Data
@@ -48,8 +48,17 @@ public class Transaction {
     @Column(nullable = false)
     private String description; // 지출 / 소비 설명
 
-    @CreationTimestamp
     private LocalDateTime createdAt; // 생성날짜
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.createdAt = this.createdAt.truncatedTo(ChronoUnit.SECONDS);
+    }
 
     @Builder
     public Transaction(Integer id, User user, TransactionType transactionType, Assets assets, CategoryIn categoryIn, CategoryOut categoryOut, Integer amount, String description, LocalDateTime createdAt) {
@@ -61,6 +70,6 @@ public class Transaction {
         this.categoryOut = categoryOut;
         this.amount = amount;
         this.description = description;
-        this.createdAt = createdAt;
+        this.createdAt = createdAt != null ? createdAt.truncatedTo(ChronoUnit.SECONDS) : null;
     }
 }

@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class Formatter {
 
@@ -89,5 +90,10 @@ public class Formatter {
     public static String formatNumberWithComma(int number) {
         DecimalFormat formatter = new DecimalFormat("#,###");
         return formatter.format(number) + "원";
+    }
+
+    // 밀리초를 제거한 LocalDateTime 반환
+    public static LocalDateTime truncateToSeconds(LocalDateTime dateTime) {
+        return dateTime.truncatedTo(ChronoUnit.SECONDS);
     }
 }

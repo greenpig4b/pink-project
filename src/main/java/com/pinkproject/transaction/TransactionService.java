@@ -90,7 +90,7 @@ public class TransactionService {
             throw new IllegalArgumentException("날짜와 시간을 모두 입력해야 합니다.");
         }
 
-        LocalDateTime createdAt = LocalDateTime.parse(reqRecord.yearMonthDate() + "T" + reqRecord.time());
+        LocalDateTime createdAt = Formatter.truncateToSeconds(LocalDateTime.parse(reqRecord.yearMonthDate() + "T" + reqRecord.time()));
 
         Transaction transaction = Transaction.builder()
                 .user(user)
@@ -115,8 +115,51 @@ public class TransactionService {
                 Formatter.number(transaction.getAmount()),
                 transaction.getCategoryIn(),
                 transaction.getCategoryOut(),
-                transaction.getAssets().getKorean(),
+                transaction.getAssets() != null ? transaction.getAssets().getKorean() : null,
                 transaction.getDescription()
         );
     }
+
+//    @Transactional
+//    public _UpdateTransactionRespRecord updateTransaction(Integer transactionId, _UpdateTransactionRecord reqRecord) {
+//        User user = userRepository.findById(reqRecord.userId()).orElseThrow(() -> new Exception404("유저 정보를 찾을 수 없습니다."));
+//
+//        Transaction transaction = transactionRepository.findById(transactionId)
+//                .orElseThrow(() -> new Exception404("거래 정보를 찾을 수 없습니다."));
+//
+//        if (!transaction.getUser().getId().equals(user.getId())) {
+//            throw new IllegalArgumentException("사용자 권한이 없습니다.");
+//        }
+//
+//        if (reqRecord.yearMonthDate() == null || reqRecord.time() == null) {
+//            throw new IllegalArgumentException("날짜와 시간을 모두 입력해야 합니다.");
+//        }
+//
+//        LocalDateTime updatedAt = Formatter.truncateToSeconds(LocalDateTime.parse(reqRecord.yearMonthDate() + "T" + reqRecord.time()));
+//
+//        transaction.setTransactionType(reqRecord.transactionType());
+//        transaction.setCategoryIn(reqRecord.categoryIn() != null ? reqRecord.categoryIn() : null);
+//        transaction.setCategoryOut(reqRecord.categoryOut() != null ? reqRecord.categoryOut() : null);
+//        transaction.setAssets(reqRecord.assets());
+//        transaction.setAmount(reqRecord.amount());
+//        transaction.setDescription(reqRecord.description());
+//        transaction.setUpdatedAt(updatedAt);
+//
+//        transactionRepository.save(transaction);
+//
+//        String formattedYearMonthDate = Formatter.formatDate(transaction.getUpdatedAt());
+//        String formattedTime = Formatter.formatCreatedAtPeriodWithTime(transaction.getUpdatedAt());
+//
+//        return new _UpdateTransactionRespRecord(
+//                transaction.getId(),
+//                transaction.getTransactionType(),
+//                formattedYearMonthDate,
+//                formattedTime,
+//                Formatter.number(transaction.getAmount()),
+//                transaction.getCategoryIn(),
+//                transaction.getCategoryOut(),
+//                transaction.getAssets() != null ? transaction.getAssets().getKorean() : null,
+//                transaction.getDescription()
+//        );
+//    }
 }
