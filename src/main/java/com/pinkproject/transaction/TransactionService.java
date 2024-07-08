@@ -6,6 +6,7 @@ import com.pinkproject.transaction.TransactionRequest.SaveTransactionDTO._SaveTr
 import com.pinkproject.transaction.TransactionResponse.DailyTransactionDTO.DailyTransactionDetailRecord;
 import com.pinkproject.transaction.TransactionResponse.DailyTransactionDTO.DailyTransactionRecord;
 import com.pinkproject.transaction.TransactionResponse.DailyTransactionDTO._DailyMainRecord;
+import com.pinkproject.transaction.TransactionResponse.SavaTransactionDTO._SaveTransactionRespRecord;
 import com.pinkproject.transaction.enums.TransactionType;
 import com.pinkproject.user.User;
 import com.pinkproject.user.UserRepository;
@@ -82,7 +83,7 @@ public class TransactionService {
 
     // 가계부 인서트
     @Transactional
-    public void saveTransaction(_SaveTransactionRecord reqRecord, Integer sessionUserId) {
+    public _SaveTransactionRespRecord saveTransaction(_SaveTransactionRecord reqRecord, Integer sessionUserId) {
         User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보를 찾을 수 없습니다."));
 
         if (reqRecord.yearMonthDate() == null || reqRecord.time() == null) {
@@ -91,20 +92,32 @@ public class TransactionService {
 
         LocalDateTime createdAt = LocalDateTime.parse(reqRecord.yearMonthDate() + "T" + reqRecord.time());
 
-        Transaction.TransactionBuilder transaction = Transaction.builder()
+        Transaction transaction = Transaction.builder()
                 .user(user)
                 .transactionType(reqRecord.transactionType())
+                .categoryIn(reqRecord.categoryIn() != null ? reqRecord.categoryIn() : null)
+                .categoryOut(reqRecord.categoryOut() != null ? reqRecord.categoryOut() : null)
                 .assets(reqRecord.assets())
                 .amount(reqRecord.amount())
                 .description(reqRecord.description())
-                .createdAt(createdAt);
+                .createdAt(createdAt)
+                .build();
 
-        if (reqRecord.categoryIn() != null) {
-            transaction.categoryIn(reqRecord.categoryIn());
-        } else if (reqRecord.categoryOut() != null) {
-            transaction.categoryOut(reqRecord.categoryOut());
-        }
+//        if (reqRecord.categoryIn() != null) {
+//            transaction.categoryIn(reqRecord.categoryIn());
+//        } else if (reqRecord.categoryOut() != null) {
+//            transaction.categoryOut(reqRecord.categoryOut());
+//        }
 
-        transactionRepository.save(transaction.build());
+        transactionRepository.save(transaction);
+        return new _SaveTransactionRespRecord(
+                transaction.getTransactionType(),
+                transaction.getCreatedAt(),
+                transaction.getAmount(),
+                transaction.getCategoryIn(),
+                transaction.getCategoryOut(),
+                transaction.getAssets(),
+                transaction.getDescription()
+        );
     }
 }
