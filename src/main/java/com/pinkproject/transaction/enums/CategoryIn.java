@@ -1,4 +1,4 @@
-package com.pinkproject.record.enums;
+package com.pinkproject.transaction.enums;
 
 public enum CategoryIn {
     SALARY("월급"),

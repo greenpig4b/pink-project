@@ -22,6 +22,7 @@ public class Memo {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user; // user_id // 유저
 
+    // TODO: 타이틀
     private String content; // 내용
 
     @CreationTimestamp

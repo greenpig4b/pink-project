@@ -1,4 +1,4 @@
-package com.pinkproject.record;
+package com.pinkproject.transaction;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
-import static com.pinkproject.record.enums.CategoryIn.SALARY;
+import static com.pinkproject.transaction.enums.CategoryIn.SALARY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-class RecordRepositoryTest {
+class TransactionRepositoryTest {
     @Autowired
-    private RecordRepository recordRepository;
+    private TransactionRepository transactionRepository;
 
     @Test
     void findByUserIdAndCreatedAtBetween_test() {
@@ -29,10 +29,10 @@ class RecordRepositoryTest {
 
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
-        List<Record> record = recordRepository.findByUserIdAndCreatedAtBetween(userId, startDateTime, endDateTime);
+        List<Transaction> transaction = transactionRepository.findByUserIdAndCreatedAtBetween(userId, startDateTime, endDateTime);
 
-        assertThat(record.getFirst().getId()).isEqualTo(142);
-        assertThat(record.getFirst().getAssets().getKorean()).isEqualTo("은행");
-        assertThat(record.getFirst().getCategoryIn()).isEqualTo(SALARY);
+        assertThat(transaction.getFirst().getId()).isEqualTo(142);
+        assertThat(transaction.getFirst().getAssets().getKorean()).isEqualTo("은행");
+        assertThat(transaction.getFirst().getCategoryIn()).isEqualTo(SALARY);
     }
 }
