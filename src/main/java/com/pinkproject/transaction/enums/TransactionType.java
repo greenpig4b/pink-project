@@ -1,4 +1,4 @@
-package com.pinkproject.record.enums;
+package com.pinkproject.transaction.enums;
 
 public enum TransactionType {
     INCOME("수입"),

@@ -1,4 +1,4 @@
-package com.pinkproject.record.enums;
+package com.pinkproject.transaction.enums;
 
 public enum Assets {
     CASH("현금"),

@@ -1,4 +1,4 @@
-package com.pinkproject.record.RecordResponse.DailyRecordsDTO;
+package com.pinkproject.transaction.TransactionResponse.DailyTransactionDTO;
 
 import java.util.List;
 
@@ -8,6 +8,6 @@ public record _DailyMainDTORecord(
         String monthlyIncome,
         String monthlyExpense,
         String monthlyTotalAmount,
-        List<DailyRecord> dailyRecord
+        List<DailyTransaction> dailyTransaction
 ) {
 }

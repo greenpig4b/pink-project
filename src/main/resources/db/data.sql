@@ -4,7 +4,8 @@ VALUES ('KAKAO', 'ssar@kakao.com', '2024-01-01 09:00:00');
 
 -- record_tb
 -- 2024년 1월부터 7월 초까지의 INCOME/EXPENSE 데이터
-INSERT INTO record_tb (user_id, transaction_type, assets, category_in, category_out, amount, description, created_at)
+INSERT INTO transaction_tb (user_id, transaction_type, assets, category_in, category_out, amount, description,
+                            created_at)
 VALUES
 
 -- 1월

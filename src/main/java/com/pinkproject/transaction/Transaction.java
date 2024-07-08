@@ -1,9 +1,9 @@
-package com.pinkproject.record;
+package com.pinkproject.transaction;
 
-import com.pinkproject.record.enums.Assets;
-import com.pinkproject.record.enums.CategoryIn;
-import com.pinkproject.record.enums.CategoryOut;
-import com.pinkproject.record.enums.TransactionType;
+import com.pinkproject.transaction.enums.Assets;
+import com.pinkproject.transaction.enums.CategoryIn;
+import com.pinkproject.transaction.enums.CategoryOut;
+import com.pinkproject.transaction.enums.TransactionType;
 import com.pinkproject.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Data
-@Table(name = "record_tb") // 기록테이블
+@Table(name = "transaction_tb") // 기록테이블
 @Entity
-public class Record {
+public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -52,7 +52,7 @@ public class Record {
     private LocalDateTime createdAt; // 생성날짜
 
     @Builder
-    public Record(Integer id, User user, TransactionType transactionType, Assets assets, CategoryIn categoryIn, CategoryOut categoryOut, Integer amount, String description, LocalDateTime createdAt) {
+    public Transaction(Integer id, User user, TransactionType transactionType, Assets assets, CategoryIn categoryIn, CategoryOut categoryOut, Integer amount, String description, LocalDateTime createdAt) {
         this.id = id;
         this.user = user;
         this.transactionType = transactionType;

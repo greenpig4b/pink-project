@@ -1,6 +1,6 @@
-package com.pinkproject.record.RecordResponse.DailyRecordsDTO;
+package com.pinkproject.transaction.TransactionResponse.DailyTransactionDTO;
 
-import com.pinkproject.record.enums.TransactionType;
+import com.pinkproject.transaction.enums.TransactionType;
 
 public record DailyTransactionDetail(
         TransactionType transactionType,

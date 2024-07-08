@@ -1,8 +1,8 @@
-package com.pinkproject.record.RecordResponse.DailyRecordsDTO;
+package com.pinkproject.transaction.TransactionResponse.DailyTransactionDTO;
 
 import java.util.List;
 
-public record DailyRecord(
+public record DailyTransaction(
         String date,
         String dailyIncome,
         String dailyExpense,
