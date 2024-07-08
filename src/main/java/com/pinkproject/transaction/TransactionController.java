@@ -24,18 +24,21 @@ public class TransactionController {
         // if (sessionUser == null) {
         //     return ResponseEntity.status(401).build();
         // }
-        _DailyMainRecord respDTO = transactionService.getDailyMain(1, year, month); // TODO: 세션유저 빼둠
 
+        // 월별 거래 내역을 조회하고 응답으로 반환
+        _DailyMainRecord respDTO = transactionService.getDailyMain(1, year, month); // TODO: 세션유저 빼둠
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
 
     // 가계부 저장
-    @PostMapping("/records") // TODO: api빼둠
+    @PostMapping("/records") // TODO: API 경로 설정
     public ResponseEntity<?> saveRecord(@RequestBody _SaveTransactionRecord reqRecord) {
         // SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         // if (sessionUser == null) {
         //     return ResponseEntity.status(401).build();
         // }
+
+        // 요청된 거래 내역을 저장하고 응답으로 반환
         System.out.println(reqRecord);
         _SaveTransactionRespRecord respDTO = transactionService.saveTransaction(reqRecord, 1); // TODO: 세션유저 빼둠
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
@@ -49,18 +52,21 @@ public class TransactionController {
         //     return ResponseEntity.status(401).build();
         // }
 
+        // 요청된 거래 내역을 수정하고 응답으로 반환
         System.out.println(reqRecord);
         _UpdateTransactionRespRecord response = transactionService.updateTransaction(id, reqRecord);
         return ResponseEntity.ok(new ApiUtil<>(response));
     }
 
     // 가계부 삭제
-    @DeleteMapping("/records/{id}") // TODO: api빼둠
+    @DeleteMapping("/records/{id}") // TODO: API 경로 설정
     public ResponseEntity<?> deleteRecord(@PathVariable("id") Integer id) {
         // SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         // if (sessionUser == null) {
         //     return ResponseEntity.status(401).build();
         // }
+
+        // 요청된 거래 내역을 삭제
         transactionService.deleteTransaction(id, 1); // TODO: 세션유저 빼둠
         return ResponseEntity.ok(new ApiUtil<>(null));
     }
