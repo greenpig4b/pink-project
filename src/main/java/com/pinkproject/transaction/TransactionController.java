@@ -1,7 +1,8 @@
 package com.pinkproject.transaction;
 
 import com.pinkproject._core.utils.ApiUtil;
-import com.pinkproject.transaction.TransactionResponse.DailyTransactionDTO._DailyMainDTORecord;
+import com.pinkproject.transaction.TransactionRequest.SaveTransactionDTO._SaveTransactionRecord;
+import com.pinkproject.transaction.TransactionResponse.DailyTransactionDTO._DailyMainRecord;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,19 +21,20 @@ public class TransactionController {
 //        if (sessionUser == null) {
 //            return ResponseEntity.status(401).build();
 //        }
-        _DailyMainDTORecord respDTO = transactionService.getDailyMain(1, year, month); // TODO: 세션유저 빼둠
+        _DailyMainRecord respDTO = transactionService.getDailyMain(1, year, month); // TODO: 세션유저 빼둠
 
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
 
     // 가계부 저장
     @PostMapping("/records") // TODO: api빼둠
-    public ResponseEntity<?> saveRecord() {
+    public ResponseEntity<?> saveRecord(@RequestBody _SaveTransactionRecord reqDTO) {
 //        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
 //        if (sessionUser == null) {
 //            return ResponseEntity.status(401).build();
 //        }
-//        _DailyMainDTORecord respDTO = recordService.getDailyMain(1, year, month); // TODO: 세션유저 빼둠
+        System.out.println(reqDTO);
+        transactionService.saveTransaction(reqDTO, 1); // TODO: 세션유저 빼둠
 
         return ResponseEntity.ok(new ApiUtil<>(null));
     }

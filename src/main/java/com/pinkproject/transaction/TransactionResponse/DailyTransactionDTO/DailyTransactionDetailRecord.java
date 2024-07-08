@@ -2,7 +2,7 @@ package com.pinkproject.transaction.TransactionResponse.DailyTransactionDTO;
 
 import com.pinkproject.transaction.enums.TransactionType;
 
-public record DailyTransactionDetail(
+public record DailyTransactionDetailRecord(
         TransactionType transactionType,
         String categoryIn,
         String categoryOut,

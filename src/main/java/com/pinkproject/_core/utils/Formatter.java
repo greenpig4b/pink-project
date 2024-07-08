@@ -12,10 +12,11 @@ import java.time.format.DateTimeFormatter;
 public class Formatter {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter DAY_FORMATTER = DateTimeFormatter.ofPattern("dd");
     private static final DateTimeFormatter YEAR_FORMATTER = DateTimeFormatter.ofPattern("yyyy");
     private static final DateTimeFormatter MONTH_FORMATTER = DateTimeFormatter.ofPattern("M"); // 월 앞의 0 제거
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm"); // 시간과 분만 포함
 
     public static String formatDate(LocalDateTime date) {
         return date.format(DATE_FORMATTER);
@@ -64,7 +65,7 @@ public class Formatter {
         if (createdAt != null) {
             LocalTime time = createdAt.toLocalTime();
             String period = time.isBefore(LocalTime.NOON) ? "오전" : "오후";
-            return period + " " + time.toString();
+            return period + " " + time.format(TIME_FORMATTER);
         }
         return null;
     }

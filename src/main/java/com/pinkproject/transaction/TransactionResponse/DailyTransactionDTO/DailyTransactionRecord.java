@@ -2,11 +2,11 @@ package com.pinkproject.transaction.TransactionResponse.DailyTransactionDTO;
 
 import java.util.List;
 
-public record DailyTransaction(
+public record DailyTransactionRecord(
         String date,
         String dailyIncome,
         String dailyExpense,
         String dailyTotalAmount,
-        List<DailyTransactionDetail> dailyTransactionDetail
+        List<DailyTransactionDetailRecord> dailyTransactionDetailRecord
 ) {
 }
