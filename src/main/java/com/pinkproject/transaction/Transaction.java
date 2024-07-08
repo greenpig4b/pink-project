@@ -49,6 +49,7 @@ public class Transaction {
     private String description; // 지출 / 소비 설명
 
     private LocalDateTime createdAt; // 생성날짜
+    private LocalDateTime updatedAt; // 생성날짜
 
     @PrePersist
     protected void onCreate() {
@@ -61,7 +62,7 @@ public class Transaction {
     }
 
     @Builder
-    public Transaction(Integer id, User user, TransactionType transactionType, Assets assets, CategoryIn categoryIn, CategoryOut categoryOut, Integer amount, String description, LocalDateTime createdAt) {
+    public Transaction(Integer id, User user, TransactionType transactionType, Assets assets, CategoryIn categoryIn, CategoryOut categoryOut, Integer amount, String description, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.user = user;
         this.transactionType = transactionType;
@@ -71,5 +72,6 @@ public class Transaction {
         this.amount = amount;
         this.description = description;
         this.createdAt = createdAt != null ? createdAt.truncatedTo(ChronoUnit.SECONDS) : null;
+        this.updatedAt = updatedAt != null ? updatedAt.truncatedTo(ChronoUnit.SECONDS) : null;
     }
 }
