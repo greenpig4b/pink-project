@@ -4,8 +4,6 @@ import com.pinkproject._core.error.exception.Exception404;
 import com.pinkproject._core.utils.Formatter;
 import com.pinkproject.transaction.TransactionRequest.SaveTransactionRecord._SaveTransactionRecord;
 import com.pinkproject.transaction.TransactionRequest.UpdateTransactionRecord._UpdateTransactionRecord;
-import com.pinkproject.transaction.TransactionResponse.DailyTransactionRecord.DailyTransactionDetailRecord;
-import com.pinkproject.transaction.TransactionResponse.DailyTransactionRecord.DailyTransactionRecord;
 import com.pinkproject.transaction.TransactionResponse.DailyTransactionRecord._DailyTransactionMainRecord;
 import com.pinkproject.transaction.TransactionResponse.SavaTransactionRecord._SaveTransactionRespRecord;
 import com.pinkproject.transaction.TransactionResponse.UpdateTransactionRecord._UpdateTransactionRespRecord;
@@ -46,7 +44,7 @@ public class TransactionService {
 
         Map<String, List<Transaction>> transactionsByDate = transactions.stream().collect(Collectors.groupingBy(transaction -> transaction.getEffectiveDateTime().toLocalDate().toString()));
 
-        List<DailyTransactionRecord> dailyTransactionRecords = transactionsByDate.entrySet().stream().sorted(Map.Entry.comparingByKey())
+        List<_DailyTransactionMainRecord.DailyTransactionRecord> dailyTransactionRecords = transactionsByDate.entrySet().stream().sorted(Map.Entry.comparingByKey())
                 .map(entry -> {
                     LocalDate date = LocalDate.parse(entry.getKey());
                     List<Transaction> dailyTransactionList = entry.getValue();
@@ -55,8 +53,8 @@ public class TransactionService {
                     Integer dailyExpense = dailyTransactionList.stream().filter(transaction -> transaction.getTransactionType() == TransactionType.EXPENSE).mapToInt(Transaction::getAmount).sum();
                     Integer dailyTotalAmount = dailyIncome - dailyExpense;
 
-                    List<DailyTransactionDetailRecord> dailyTransactionDetailRecords = dailyTransactionList.stream()
-                            .map(transaction -> new DailyTransactionDetailRecord(
+                    List<_DailyTransactionMainRecord.DailyTransactionRecord.DailyTransactionDetailRecord> dailyTransactionDetailRecords = dailyTransactionList.stream()
+                            .map(transaction -> new _DailyTransactionMainRecord.DailyTransactionRecord.DailyTransactionDetailRecord(
                                     transaction.getTransactionType(),
                                     transaction.getCategoryIn() != null ? transaction.getCategoryIn().getKorean() : null,
                                     transaction.getCategoryOut() != null ? transaction.getCategoryOut().getKorean() : null,
@@ -64,7 +62,7 @@ public class TransactionService {
                                     Formatter.formatCreatedAtPeriodWithTime(transaction.getEffectiveDateTime()),
                                     transaction.getAssets() != null ? transaction.getAssets().getKorean() : null, Formatter.number(transaction.getAmount()))).toList();
 
-                    return new DailyTransactionRecord(Formatter.formatDayOnly(date), Formatter.number(dailyIncome), Formatter.number(dailyExpense), Formatter.number(dailyTotalAmount), dailyTransactionDetailRecords);
+                    return new _DailyTransactionMainRecord.DailyTransactionRecord(Formatter.formatDayOnly(date), Formatter.number(dailyIncome), Formatter.number(dailyExpense), Formatter.number(dailyTotalAmount), dailyTransactionDetailRecords);
                 }).toList();
 
         return new _DailyTransactionMainRecord(Formatter.formatYearWithSuffix(startDate), Formatter.formatMonthWithSuffix(startDate), Formatter.number(monthlyIncome), Formatter.number(monthlyExpense), Formatter.number(monthlyTotalAmount), dailyTransactionRecords);
