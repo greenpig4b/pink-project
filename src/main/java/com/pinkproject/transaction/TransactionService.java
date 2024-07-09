@@ -82,7 +82,7 @@ public class TransactionService {
         }
 
         LocalDateTime createdAt = Formatter.truncateToSeconds(LocalDateTime.parse(reqRecord.yearMonthDate() + "T" + reqRecord.time()));
-        System.out.println("createdAt1 = " + createdAt);
+
         Transaction transaction = Transaction.builder()
                 .user(user)
                 .transactionType(reqRecord.transactionType())
@@ -93,14 +93,12 @@ public class TransactionService {
                 .description(reqRecord.description())
                 .createdAt(createdAt)
                 .build();
-        System.out.println("transaction = " + transaction);
+
         transaction = transactionRepository.saveAndFlush(transaction);
-        System.out.println("transaction = " + transaction);
 
         String formattedYearMonthDate = Formatter.formatDate(transaction.getCreatedAt());
         String formattedTime = Formatter.formatCreatedAtPeriodWithTime(transaction.getCreatedAt());
-        System.out.println("formattedTime = " + formattedTime);
-        System.out.println("formattedYearMonthDate = " + formattedYearMonthDate);
+
         return new _SaveTransactionRespRecord(
                 transaction.getUser().getId(),
                 transaction.getTransactionType(),
@@ -139,7 +137,7 @@ public class TransactionService {
         transaction.setDescription(reqRecord.description());
         transaction.setUpdatedAt(updatedAt);
 
-        transactionRepository.save(transaction);
+        transactionRepository.saveAndFlush(transaction);
 
         String formattedYearMonthDate = Formatter.formatDate(transaction.getUpdatedAt());
         String formattedTime = Formatter.formatCreatedAtPeriodWithTime(transaction.getUpdatedAt());

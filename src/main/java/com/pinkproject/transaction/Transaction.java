@@ -60,12 +60,15 @@ public class Transaction {
 
     @PreUpdate
     protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        if (this.updatedAt == null) {
+            this.updatedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        }
     }
 
     public LocalDateTime getEffectiveDateTime() {
         return updatedAt != null ? updatedAt : createdAt;
     }
+
 
     @Builder
     public Transaction(Integer id, User user, TransactionType transactionType, Assets assets, CategoryIn categoryIn, CategoryOut categoryOut, Integer amount, String description, LocalDateTime createdAt, LocalDateTime updatedAt) {
