@@ -6,7 +6,7 @@ import com.pinkproject.transaction.TransactionRequest.SaveTransactionRecord._Sav
 import com.pinkproject.transaction.TransactionRequest.UpdateTransactionRecord._UpdateTransactionRecord;
 import com.pinkproject.transaction.TransactionResponse.DailyTransactionRecord.DailyTransactionDetailRecord;
 import com.pinkproject.transaction.TransactionResponse.DailyTransactionRecord.DailyTransactionRecord;
-import com.pinkproject.transaction.TransactionResponse.DailyTransactionRecord._DailyMainRecord;
+import com.pinkproject.transaction.TransactionResponse.DailyTransactionRecord._DailyTransactionMainRecord;
 import com.pinkproject.transaction.TransactionResponse.SavaTransactionRecord._SaveTransactionRespRecord;
 import com.pinkproject.transaction.TransactionResponse.UpdateTransactionRecord._UpdateTransactionRespRecord;
 import com.pinkproject.transaction.enums.TransactionType;
@@ -29,7 +29,7 @@ public class TransactionService {
     private final UserRepository userRepository;
     private final TransactionRepository transactionRepository;
 
-    public _DailyMainRecord getDailyMain(Integer sessionUserId, Integer year, Integer month) {
+    public _DailyTransactionMainRecord getDailyTransactionMain(Integer sessionUserId, Integer year, Integer month) {
         User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보가 없습니다."));
 
         LocalDate startDate = LocalDate.of(year, month, 1);
@@ -44,9 +44,9 @@ public class TransactionService {
         Integer monthlyExpense = transactions.stream().filter(transaction -> transaction.getTransactionType() == TransactionType.EXPENSE).mapToInt(Transaction::getAmount).sum();
         Integer monthlyTotalAmount = monthlyIncome - monthlyExpense;
 
-        Map<String, List<Transaction>> recordsByDate = transactions.stream().collect(Collectors.groupingBy(transaction -> transaction.getEffectiveDateTime().toLocalDate().toString()));
+        Map<String, List<Transaction>> transactionsByDate = transactions.stream().collect(Collectors.groupingBy(transaction -> transaction.getEffectiveDateTime().toLocalDate().toString()));
 
-        List<DailyTransactionRecord> dailyTransactionRecords = recordsByDate.entrySet().stream().sorted(Map.Entry.comparingByKey())
+        List<DailyTransactionRecord> dailyTransactionRecords = transactionsByDate.entrySet().stream().sorted(Map.Entry.comparingByKey())
                 .map(entry -> {
                     LocalDate date = LocalDate.parse(entry.getKey());
                     List<Transaction> dailyTransactionList = entry.getValue();
@@ -67,7 +67,7 @@ public class TransactionService {
                     return new DailyTransactionRecord(Formatter.formatDayOnly(date), Formatter.number(dailyIncome), Formatter.number(dailyExpense), Formatter.number(dailyTotalAmount), dailyTransactionDetailRecords);
                 }).toList();
 
-        return new _DailyMainRecord(Formatter.formatYearWithSuffix(startDate), Formatter.formatMonthWithSuffix(startDate), Formatter.number(monthlyIncome), Formatter.number(monthlyExpense), Formatter.number(monthlyTotalAmount), dailyTransactionRecords);
+        return new _DailyTransactionMainRecord(Formatter.formatYearWithSuffix(startDate), Formatter.formatMonthWithSuffix(startDate), Formatter.number(monthlyIncome), Formatter.number(monthlyExpense), Formatter.number(monthlyTotalAmount), dailyTransactionRecords);
     }
 
     @Transactional

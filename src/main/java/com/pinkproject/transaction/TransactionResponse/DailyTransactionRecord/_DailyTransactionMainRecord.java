@@ -2,7 +2,7 @@ package com.pinkproject.transaction.TransactionResponse.DailyTransactionRecord;
 
 import java.util.List;
 
-public record _DailyMainRecord(
+public record _DailyTransactionMainRecord(
         String year,
         String month,
         String monthlyIncome,
