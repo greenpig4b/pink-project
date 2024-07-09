@@ -1,18 +1,20 @@
-package com.pinkproject.transaction.TransactionResponse.UpdateTransactionRecord;
+package com.pinkproject.transaction.TransactionRequest;
 
+import com.pinkproject.transaction.enums.Assets;
 import com.pinkproject.transaction.enums.CategoryIn;
 import com.pinkproject.transaction.enums.CategoryOut;
 import com.pinkproject.transaction.enums.TransactionType;
 
-public record _UpdateTransactionRespRecord(
+public record _UpdateTransactionRecord(
         Integer id,
+        Integer userId,
         TransactionType transactionType,
         String yearMonthDate,
         String time,
-        String amount,
+        Integer amount,
         CategoryIn categoryIn,
         CategoryOut categoryOut,
-        String assets,
+        Assets assets,
         String description
 ) {
 }

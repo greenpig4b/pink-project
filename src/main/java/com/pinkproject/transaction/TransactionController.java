@@ -1,11 +1,11 @@
 package com.pinkproject.transaction;
 
 import com.pinkproject._core.utils.ApiUtil;
-import com.pinkproject.transaction.TransactionRequest.SaveTransactionRecord._SaveTransactionRecord;
-import com.pinkproject.transaction.TransactionRequest.UpdateTransactionRecord._UpdateTransactionRecord;
-import com.pinkproject.transaction.TransactionResponse.DailyTransactionRecord._DailyTransactionMainRecord;
-import com.pinkproject.transaction.TransactionResponse.SavaTransactionRecord._SaveTransactionRespRecord;
-import com.pinkproject.transaction.TransactionResponse.UpdateTransactionRecord._UpdateTransactionRespRecord;
+import com.pinkproject.transaction.TransactionRequest._SaveTransactionRecord;
+import com.pinkproject.transaction.TransactionRequest._UpdateTransactionRecord;
+import com.pinkproject.transaction.TransactionResponse._DailyTransactionMainRecord;
+import com.pinkproject.transaction.TransactionResponse._SaveTransactionRespRecord;
+import com.pinkproject.transaction.TransactionResponse._UpdateTransactionRespRecord;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

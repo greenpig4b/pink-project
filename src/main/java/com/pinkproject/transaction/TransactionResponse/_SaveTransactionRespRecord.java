@@ -1,4 +1,4 @@
-package com.pinkproject.transaction.TransactionResponse.SavaTransactionRecord;
+package com.pinkproject.transaction.TransactionResponse;
 
 import com.pinkproject.transaction.enums.CategoryIn;
 import com.pinkproject.transaction.enums.CategoryOut;

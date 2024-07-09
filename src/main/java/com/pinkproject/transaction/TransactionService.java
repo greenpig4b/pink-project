@@ -2,11 +2,11 @@ package com.pinkproject.transaction;
 
 import com.pinkproject._core.error.exception.Exception404;
 import com.pinkproject._core.utils.Formatter;
-import com.pinkproject.transaction.TransactionRequest.SaveTransactionRecord._SaveTransactionRecord;
-import com.pinkproject.transaction.TransactionRequest.UpdateTransactionRecord._UpdateTransactionRecord;
-import com.pinkproject.transaction.TransactionResponse.DailyTransactionRecord._DailyTransactionMainRecord;
-import com.pinkproject.transaction.TransactionResponse.SavaTransactionRecord._SaveTransactionRespRecord;
-import com.pinkproject.transaction.TransactionResponse.UpdateTransactionRecord._UpdateTransactionRespRecord;
+import com.pinkproject.transaction.TransactionRequest._SaveTransactionRecord;
+import com.pinkproject.transaction.TransactionRequest._UpdateTransactionRecord;
+import com.pinkproject.transaction.TransactionResponse._DailyTransactionMainRecord;
+import com.pinkproject.transaction.TransactionResponse._SaveTransactionRespRecord;
+import com.pinkproject.transaction.TransactionResponse._UpdateTransactionRespRecord;
 import com.pinkproject.transaction.enums.TransactionType;
 import com.pinkproject.user.User;
 import com.pinkproject.user.UserRepository;
@@ -38,8 +38,10 @@ public class TransactionService {
 
         List<Transaction> transactions = transactionRepository.findByUserIdAndCreatedAtBetween(user.getId(), startDateTime, endDateTime);
 
-        Integer monthlyIncome = transactions.stream().filter(transaction -> transaction.getTransactionType() == TransactionType.INCOME).mapToInt(Transaction::getAmount).sum();
-        Integer monthlyExpense = transactions.stream().filter(transaction -> transaction.getTransactionType() == TransactionType.EXPENSE).mapToInt(Transaction::getAmount).sum();
+        Integer monthlyIncome = transactions.stream()
+                .filter(transaction -> transaction.getTransactionType() == TransactionType.INCOME).mapToInt(Transaction::getAmount).sum();
+        Integer monthlyExpense = transactions.stream()
+                .filter(transaction -> transaction.getTransactionType() == TransactionType.EXPENSE).mapToInt(Transaction::getAmount).sum();
         Integer monthlyTotalAmount = monthlyIncome - monthlyExpense;
 
         Map<String, List<Transaction>> transactionsByDate = transactions.stream().collect(Collectors.groupingBy(transaction -> transaction.getEffectiveDateTime().toLocalDate().toString()));
@@ -49,8 +51,10 @@ public class TransactionService {
                     LocalDate date = LocalDate.parse(entry.getKey());
                     List<Transaction> dailyTransactionList = entry.getValue();
 
-                    Integer dailyIncome = dailyTransactionList.stream().filter(transaction -> transaction.getTransactionType() == TransactionType.INCOME).mapToInt(Transaction::getAmount).sum();
-                    Integer dailyExpense = dailyTransactionList.stream().filter(transaction -> transaction.getTransactionType() == TransactionType.EXPENSE).mapToInt(Transaction::getAmount).sum();
+                    Integer dailyIncome = dailyTransactionList.stream()
+                            .filter(transaction -> transaction.getTransactionType() == TransactionType.INCOME).mapToInt(Transaction::getAmount).sum();
+                    Integer dailyExpense = dailyTransactionList.stream()
+                            .filter(transaction -> transaction.getTransactionType() == TransactionType.EXPENSE).mapToInt(Transaction::getAmount).sum();
                     Integer dailyTotalAmount = dailyIncome - dailyExpense;
 
                     List<_DailyTransactionMainRecord.DailyTransactionRecord.DailyTransactionDetailRecord> dailyTransactionDetailRecords = dailyTransactionList.stream()

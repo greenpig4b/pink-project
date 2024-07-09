@@ -1,4 +1,4 @@
-package com.pinkproject.transaction.TransactionRequest.SaveTransactionRecord;
+package com.pinkproject.transaction.TransactionRequest;
 
 import com.pinkproject.transaction.enums.Assets;
 import com.pinkproject.transaction.enums.CategoryIn;

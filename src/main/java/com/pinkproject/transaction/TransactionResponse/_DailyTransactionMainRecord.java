@@ -1,4 +1,4 @@
-package com.pinkproject.transaction.TransactionResponse.DailyTransactionRecord;
+package com.pinkproject.transaction.TransactionResponse;
 
 import com.pinkproject.transaction.enums.TransactionType;
 
