@@ -2,8 +2,10 @@ package com.pinkproject.memo;
 
 import com.pinkproject._core.error.exception.Exception404;
 import com.pinkproject.memo.MemoRequest._SaveMemoRecord;
+import com.pinkproject.memo.MemoRequest._UpdateMemoRecord;
 import com.pinkproject.memo.MemoResponse._MonthlyMemoMainRecord;
 import com.pinkproject.memo.MemoResponse._SaveMemoRespRecord;
+import com.pinkproject.memo.MemoResponse._UpdateMemoRespRecord;
 import com.pinkproject.user.User;
 import com.pinkproject.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -74,31 +76,34 @@ public class MemoService {
                 memo.getContent()
         );
     }
-//
-//    @Transactional
-//    public _UpdateMemoRespRecord updateMemo(Integer memoId, _UpdateMemoRecord reqRecord) {
-//        User user = userRepository.findById(reqRecord.userId()).orElseThrow(() -> new Exception404("유저 정보를 찾을 수 없습니다."));
-//
-//        Memo memo = memoRepository.findById(memoId)
-//                .orElseThrow(() -> new Exception404("메모 정보를 찾을 수 없습니다."));
-//
-//        if (!memo.getUserId().equals(user.getId())) {
-//            throw new IllegalArgumentException("사용자 권한이 없습니다.");
-//        }
-//
-//        memo.setTitle(reqRecord.title());
-//        memo.setContent(reqRecord.content());
-//        memo.setUpdatedAt(LocalDateTime.now());
-//
-//        memo = memoRepository.saveAndFlush(memo);
-//
-//        return new _UpdateMemoRespRecord(
-//                memo.getId(),
-//                memo.getTitle(),
-//                memo.getContent()
-//        );
-//    }
-//
+
+    // 메모 업데이트
+    @Transactional
+    public _UpdateMemoRespRecord updateMemo(Integer memoId, _UpdateMemoRecord reqRecord) {
+        User user = userRepository.findById(reqRecord.userId()).orElseThrow(() -> new Exception404("유저 정보를 찾을 수 없습니다."));
+
+        Memo memo = memoRepository.findById(memoId)
+                .orElseThrow(() -> new Exception404("메모 정보를 찾을 수 없습니다."));
+
+        if (!memo.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("사용자 권한이 없습니다.");
+        }
+
+        memo.setId(reqRecord.id());
+        memo.setUser(user);
+        memo.setTitle(reqRecord.title());
+        memo.setContent(reqRecord.content());
+
+        memo = memoRepository.saveAndFlush(memo);
+
+        return new _UpdateMemoRespRecord(
+                memo.getId(),
+                memo.getUser().getId(),
+                memo.getTitle(),
+                memo.getContent()
+        );
+    }
+
 //    @Transactional
 //    public void deleteMemo(Integer memoId, Integer sessionUserId) {
 //        User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보를 찾을 수 없습니다."));

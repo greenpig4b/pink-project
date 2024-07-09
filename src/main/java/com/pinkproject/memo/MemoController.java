@@ -2,8 +2,10 @@ package com.pinkproject.memo;
 
 import com.pinkproject._core.utils.ApiUtil;
 import com.pinkproject.memo.MemoRequest._SaveMemoRecord;
+import com.pinkproject.memo.MemoRequest._UpdateMemoRecord;
 import com.pinkproject.memo.MemoResponse._MonthlyMemoMainRecord;
 import com.pinkproject.memo.MemoResponse._SaveMemoRespRecord;
+import com.pinkproject.memo.MemoResponse._UpdateMemoRespRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,20 +38,20 @@ public class MemoController {
         _SaveMemoRespRecord respDTO = memoService.saveMemo(reqRecord, 1); // TODO: 세션유저 빼둠
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
-//
-//    // 메모 수정
-//    @PutMapping("/memos/{id}") // TODO: API 경로 설정
-//    public ResponseEntity<?> updateMemo(@PathVariable("id") Integer id, @RequestBody _UpdateMemoRecord reqRecord) {
-//        // SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
-//        // if (sessionUser == null) {
-//        //     return ResponseEntity.status(401).build();
-//        // }
-//
-//        System.out.println(reqRecord);
-//        _UpdateMemoRespRecord response = memoService.updateMemo(id, reqRecord);
-//        return ResponseEntity.ok(new ApiUtil<>(response));
-//    }
-//
+
+    // 메모 수정
+    @PutMapping("/memos/{id}") // TODO: API 경로 설정
+    public ResponseEntity<?> updateMemo(@PathVariable("id") Integer id, @RequestBody _UpdateMemoRecord reqRecord) {
+        // SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
+        // if (sessionUser == null) {
+        //     return ResponseEntity.status(401).build();
+        // }
+
+        System.out.println(reqRecord);
+        _UpdateMemoRespRecord response = memoService.updateMemo(id, reqRecord);
+        return ResponseEntity.ok(new ApiUtil<>(response));
+    }
+
 //    // 메모 삭제
 //    @DeleteMapping("/memos/{id}") // TODO: api빼둠
 //    public ResponseEntity<?> deleteMemo(@PathVariable("id") Integer id) {
