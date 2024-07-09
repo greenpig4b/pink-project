@@ -52,14 +52,14 @@ public class MemoController {
         return ResponseEntity.ok(new ApiUtil<>(response));
     }
 
-//    // 메모 삭제
-//    @DeleteMapping("/memos/{id}") // TODO: api빼둠
-//    public ResponseEntity<?> deleteMemo(@PathVariable("id") Integer id) {
-//        // SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
-//        // if (sessionUser == null) {
-//        //     return ResponseEntity.status(401).build();
-//        // }
-//        memoService.deleteMemo(id, 1); // TODO: 세션유저 빼둠
-//        return ResponseEntity.ok(new ApiUtil<>(null));
-//    }
+    // 메모 삭제
+    @DeleteMapping("/memos/{id}") // TODO: api빼둠
+    public ResponseEntity<?> deleteMemo(@PathVariable("id") Integer id) {
+        // SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
+        // if (sessionUser == null) {
+        //     return ResponseEntity.status(401).build();
+        // }
+        memoService.deleteMemo(id, 1); // TODO: 세션유저 빼둠
+        return ResponseEntity.ok(new ApiUtil<>(null));
+    }
 }

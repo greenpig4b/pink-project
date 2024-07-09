@@ -104,17 +104,17 @@ public class MemoService {
         );
     }
 
-//    @Transactional
-//    public void deleteMemo(Integer memoId, Integer sessionUserId) {
-//        User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보를 찾을 수 없습니다."));
-//
-//        Memo memo = memoRepository.findById(memoId)
-//                .orElseThrow(() -> new Exception404("메모 정보를 찾을 수 없습니다."));
-//
-//        if (!memo.getUserId().equals(user.getId())) {
-//            throw new IllegalArgumentException("사용자 권한이 없습니다.");
-//        }
-//
-//        memoRepository.delete(memo);
-//    }
+    @Transactional
+    public void deleteMemo(Integer memoId, Integer sessionUserId) {
+        User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보를 찾을 수 없습니다."));
+
+        Memo memo = memoRepository.findById(memoId)
+                .orElseThrow(() -> new Exception404("메모 정보를 찾을 수 없습니다."));
+
+        if (!memo.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("사용자 권한이 없습니다.");
+        }
+
+        memoRepository.delete(memo);
+    }
 }
