@@ -53,12 +53,14 @@ public class Transaction {
 
     @PrePersist
     protected void onCreate() {
-        this.createdAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        }
     }
 
     @PreUpdate
     protected void onUpdate() {
-        this.createdAt = this.createdAt.truncatedTo(ChronoUnit.SECONDS);
+        this.updatedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
 
     public LocalDateTime getEffectiveDateTime() {
