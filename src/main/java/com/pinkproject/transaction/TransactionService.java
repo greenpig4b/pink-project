@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -58,6 +59,7 @@ public class TransactionService {
                     Integer dailyTotalAmount = dailyIncome - dailyExpense;
 
                     List<_DailyTransactionMainRecord.DailyTransactionRecord.DailyTransactionDetailRecord> dailyTransactionDetailRecords = dailyTransactionList.stream()
+                            .sorted(Comparator.comparing(Transaction::getEffectiveDateTime))
                             .map(transaction -> new _DailyTransactionMainRecord.DailyTransactionRecord.DailyTransactionDetailRecord(
                                     transaction.getId(),
                                     transaction.getTransactionType(),
