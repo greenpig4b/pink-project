@@ -5,6 +5,7 @@ import com.pinkproject.transaction.enums.TransactionType;
 import java.util.List;
 
 public record _DailyTransactionMainRecord(
+        Integer userId,
         String year,
         String month,
         String monthlyIncome,
@@ -20,6 +21,7 @@ public record _DailyTransactionMainRecord(
             List<DailyTransactionDetailRecord> dailyTransactionDetailRecord
     ) {
         public record DailyTransactionDetailRecord(
+                Integer id,
                 TransactionType transactionType,
                 String categoryIn,
                 String categoryOut,

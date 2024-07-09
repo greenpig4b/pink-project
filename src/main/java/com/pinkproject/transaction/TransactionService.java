@@ -55,6 +55,7 @@ public class TransactionService {
 
                     List<_DailyTransactionMainRecord.DailyTransactionRecord.DailyTransactionDetailRecord> dailyTransactionDetailRecords = dailyTransactionList.stream()
                             .map(transaction -> new _DailyTransactionMainRecord.DailyTransactionRecord.DailyTransactionDetailRecord(
+                                    transaction.getId(),
                                     transaction.getTransactionType(),
                                     transaction.getCategoryIn() != null ? transaction.getCategoryIn().getKorean() : null,
                                     transaction.getCategoryOut() != null ? transaction.getCategoryOut().getKorean() : null,
@@ -65,7 +66,7 @@ public class TransactionService {
                     return new _DailyTransactionMainRecord.DailyTransactionRecord(Formatter.formatDayOnly(date), Formatter.number(dailyIncome), Formatter.number(dailyExpense), Formatter.number(dailyTotalAmount), dailyTransactionDetailRecords);
                 }).toList();
 
-        return new _DailyTransactionMainRecord(Formatter.formatYearWithSuffix(startDate), Formatter.formatMonthWithSuffix(startDate), Formatter.number(monthlyIncome), Formatter.number(monthlyExpense), Formatter.number(monthlyTotalAmount), dailyTransactionRecords);
+        return new _DailyTransactionMainRecord(sessionUserId, Formatter.formatYearWithSuffix(startDate), Formatter.formatMonthWithSuffix(startDate), Formatter.number(monthlyIncome), Formatter.number(monthlyExpense), Formatter.number(monthlyTotalAmount), dailyTransactionRecords);
     }
 
     @Transactional
