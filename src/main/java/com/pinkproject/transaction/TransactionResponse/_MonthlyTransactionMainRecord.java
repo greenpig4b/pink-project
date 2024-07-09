@@ -4,7 +4,7 @@ import com.pinkproject.transaction.enums.TransactionType;
 
 import java.util.List;
 
-public record _DailyTransactionMainRecord(
+public record _MonthlyTransactionMainRecord(
         Integer userId,
         String year,
         String month,
