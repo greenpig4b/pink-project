@@ -18,8 +18,8 @@ public class TransactionController {
     private final HttpSession session;
 
     // 기록 일일 화면 랜더링
-    @GetMapping("/records/monthly") // TODO: api빼둠
-    public ResponseEntity<?> dailyRecords(@RequestParam Integer year, @RequestParam Integer month) {
+    @GetMapping("/transactions/monthly") // TODO: api빼둠
+    public ResponseEntity<?> dailyTransactions(@RequestParam Integer year, @RequestParam Integer month) {
         // SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         // if (sessionUser == null) {
         //     return ResponseEntity.status(401).build();
@@ -30,8 +30,8 @@ public class TransactionController {
     }
 
     // 가계부 저장
-    @PostMapping("/records") // TODO: api빼둠
-    public ResponseEntity<?> saveRecord(@RequestBody _SaveTransactionRecord reqRecord) {
+    @PostMapping("/transactions") // TODO: api빼둠
+    public ResponseEntity<?> saveTransactions(@RequestBody _SaveTransactionRecord reqRecord) {
         // SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         // if (sessionUser == null) {
         //     return ResponseEntity.status(401).build();
@@ -42,8 +42,8 @@ public class TransactionController {
     }
 
     // 가계부 수정
-    @PutMapping("/records/{id}") // TODO: API 경로 설정
-    public ResponseEntity<?> updateRecord(@PathVariable("id") Integer id, @RequestBody _UpdateTransactionRecord reqRecord) {
+    @PutMapping("/transactions/{id}") // TODO: API 경로 설정
+    public ResponseEntity<?> updateTransactions(@PathVariable("id") Integer id, @RequestBody _UpdateTransactionRecord reqRecord) {
         // SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         // if (sessionUser == null) {
         //     return ResponseEntity.status(401).build();
@@ -55,8 +55,8 @@ public class TransactionController {
     }
 
     // 가계부 삭제
-    @DeleteMapping("/records/{id}") // TODO: api빼둠
-    public ResponseEntity<?> deleteRecord(@PathVariable("id") Integer id) {
+    @DeleteMapping("/transactions/{id}") // TODO: api빼둠
+    public ResponseEntity<?> deleteTransactions(@PathVariable("id") Integer id) {
         // SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         // if (sessionUser == null) {
         //     return ResponseEntity.status(401).build();
