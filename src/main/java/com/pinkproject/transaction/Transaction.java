@@ -32,41 +32,43 @@ public class Transaction {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Assets assets; // 자산 형태 (CASH, BANK, CARD)
+    private Assets assets; // TODO: 이거 사실 좀 애매해요ㅠ 일단은 자산의 형태 CASH, BANK, CARD
 
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
-    private CategoryIn categoryIn; // 소득 카테고리
+    private CategoryIn categoryIn; // 월급 등의 소득
 
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
-    private CategoryOut categoryOut; // 지출 카테고리
+    private CategoryOut categoryOut; // 경조사 / 정기 지출 등
 
     @Column(nullable = false)
     private Integer amount; // 금액
 
     @Column(nullable = false)
-    private String description; // 설명
+    private String description; // 지출 / 소비 설명
 
-    private LocalDateTime createdAt; // 생성 날짜
-    private LocalDateTime updatedAt; // 수정 날짜
+    private LocalDateTime createdAt; // 생성날짜
+    private LocalDateTime updatedAt; // 생성날짜
 
     @PrePersist
     protected void onCreate() {
-        // 엔티티가 처음 저장될 때 호출됨
-        this.createdAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS); // 생성 날짜를 초 단위로 설정
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        }
     }
 
     @PreUpdate
     protected void onUpdate() {
-        // 엔티티가 업데이트될 때 호출됨
-        this.updatedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS); // 수정 날짜를 초 단위로 설정
+        if (this.updatedAt == null) {
+            this.updatedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        }
     }
 
-    // 수정 날짜가 있으면 수정 날짜를, 없으면 생성 날짜를 반환
     public LocalDateTime getEffectiveDateTime() {
         return updatedAt != null ? updatedAt : createdAt;
     }
+
 
     @Builder
     public Transaction(Integer id, User user, TransactionType transactionType, Assets assets, CategoryIn categoryIn, CategoryOut categoryOut, Integer amount, String description, LocalDateTime createdAt, LocalDateTime updatedAt) {
