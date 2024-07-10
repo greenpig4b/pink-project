@@ -3,7 +3,7 @@ package com.pinkproject.user.UserResponse;
 import lombok.Builder;
 
 @Builder
-public record JoinRespRecord(
+public record _JoinRespRecord(
         String email,
         String password
 ) {

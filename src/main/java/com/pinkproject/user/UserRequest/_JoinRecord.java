@@ -1,6 +1,6 @@
 package com.pinkproject.user.UserRequest;
 
-public record JoinRecord(
+public record _JoinRecord(
         String email,
         String password
 ) {

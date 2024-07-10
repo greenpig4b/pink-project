@@ -1,8 +1,13 @@
 package com.pinkproject.user;
 
 import com.pinkproject._core.error.exception.Exception400;
-import com.pinkproject.user.UserRequest.JoinRecord;
-import com.pinkproject.user.UserResponse.JoinRespRecord;
+import com.pinkproject._core.utils.JwtUtil;
+import com.pinkproject.user.UserRequest._JoinRecord;
+import com.pinkproject.user.UserRequest._LoginRecord;
+import com.pinkproject.user.UserRequest._UserUpdateRecord;
+import com.pinkproject.user.UserResponse._JoinRespRecord;
+import com.pinkproject.user.UserResponse._LoginRespRecord;
+import com.pinkproject.user.UserResponse._UserRespRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public JoinRespRecord saveUser(JoinRecord reqRecord) {
+    public _JoinRespRecord saveUser(_JoinRecord reqRecord) {
         Optional<User> userOP = userRepository.findByEmail(reqRecord.email());
         if (userOP.isPresent()) {
             throw new Exception400("이미 가입된 이메일입니다.");
@@ -24,9 +29,25 @@ public class UserService {
         User user = new User(reqRecord);
         userRepository.saveAndFlush(user);
 
-        return JoinRespRecord.builder()
+        return _JoinRespRecord.builder()
                 .email(reqRecord.email())
                 .password(reqRecord.password())
                 .build();
+    }
+
+    public _LoginRespRecord getUser(_LoginRecord reqRecord) {
+        User user = userRepository.findByEmailAndPassword(reqRecord.email(), reqRecord.password());
+        _LoginRespRecord.UserRecord userRecord = new _LoginRespRecord.UserRecord(user.getEmail(), user.getPassword());
+        String jwt = JwtUtil.create(user);
+        
+        return new _LoginRespRecord(userRecord, jwt);
+    }
+
+    public _UserRespRecord getUserInfo(Integer id) {
+        return null;
+    }
+
+    public SessionUser updateUserInfo(_UserUpdateRecord reqRecord, Integer id) {
+        return null;
     }
 }

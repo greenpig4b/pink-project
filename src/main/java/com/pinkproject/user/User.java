@@ -1,6 +1,7 @@
 package com.pinkproject.user;
 
-import com.pinkproject.user.UserRequest.JoinRecord;
+import com.pinkproject.user.UserRequest._JoinRecord;
+import com.pinkproject.user.UserRequest._UserUpdateRecord;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
@@ -40,8 +41,12 @@ public class User {
     }
 
 
-    public User(JoinRecord joinRecord) {
+    public User(_JoinRecord joinRecord) {
         this.email = joinRecord.email();
         this.password = joinRecord.password();
+    }
+
+    public void update(_UserUpdateRecord userUpdateRecord) {
+        this.password = userUpdateRecord.password();
     }
 }
