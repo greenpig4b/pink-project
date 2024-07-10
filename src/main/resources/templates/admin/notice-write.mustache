@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공지사항 작성</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<main role="main">
+    <section id="section n1">
+        <aside class="side-bar side-wrapper">
+            <div class="side-content header">
+                <figure>
+                    <img src="/images/logo.png" alt="logo">
+                </figure>
+                <span>핑크피그</span>
+            </div>
+            <div class="side-content info">
+                <p>관리자 : admin1</p>
+                <p>접속일시: 2024-07-08 16:06:16</p>
+                <a href="/admin/logout" class="logout-btn" id="logoutBtn">로그아웃</a>            </div>
+            <div class="side-menu active">
+                <p class="head-menu"><i class="fa-solid fa-marker"></i> 관리</p>
+                <ul class="sub active">
+                    <li><a href="/admin/notice">공지사항</a></li>
+                    <li><a href="/admin/faq">FAQ</a></li>
+                </ul>
+            </div>
+        </aside>
+        <div class="content-page">
+            <div class="content-tab-bar">
+                <ul class="tab-nav">
+                    <li class="tab-link"><a href="/company/question">공지사항</a></li>
+                    <li class="tab-link current"><a href="/company/faq">자주 묻는 질문</a></li>
+                </ul>
+                <div class="tab-content current">
+                    <div class="tab-head">
+                        <p>공지사항</p>
+                    </div>
+                    <div class="tab-item detail">
+                        <div class="review-detail-wrapper">
+                            <div class="detail-head">
+                                <div>
+                                    <p class="title">공지 작성하기</p>
+                                </div>
+                            </div>
+                            <form action="#" method="#">
+                                <div class="detail-content">
+                                    <span class="review-title">제목</span>
+                                    <p class="review-content">
+                                        <input type="text" class="input">
+                                    </p>
+                                    <span class="review-title">내용</span>
+                                    <p class="review-content">
+                                        <textarea name="" id="" cols="30" rows="10"></textarea>
+                                    </p>
+                                    <!-- <span class="review-title">답변 내용</span> -->
+                                    <!-- <input type="text"> -->
+                                </div>
+                                <div class="report-button-wrapper">
+                                    <button class="btn black" type="button" onclick="history.back()">작성완료</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        logoutBtn.addEventListener('mouseenter', () => {
+            logoutBtn.style.backgroundColor = '#f45858';
+            logoutBtn.style.borderColor = '#f45858';
+            logoutBtn.style.color = '#fff';
+        });
+
+        logoutBtn.addEventListener('mouseleave', () => {
+            logoutBtn.style.backgroundColor = 'transparent';
+            logoutBtn.style.borderColor = '#fff';
+            logoutBtn.style.color = '#fff';
+        });
+
+        const manageMenu = document.getElementById('manageMenu');
+        const userMenu = document.getElementById('userMenu');
+
+        manageMenu.addEventListener('click', () => {
+            manageMenu.classList.toggle('active');
+        });
+
+        userMenu.addEventListener('click', () => {
+            userMenu.classList.toggle('active');
+        });
+    });
+
+</script>
+</body>
+
+</html>
