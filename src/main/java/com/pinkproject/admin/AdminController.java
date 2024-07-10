@@ -2,33 +2,50 @@ package com.pinkproject.admin;
 
 
 import com.pinkproject.admin.AdminRequest._LoginAdminRecord;
+import com.pinkproject.notice.NoticeService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/admin")
+
 public class AdminController {
     private final AdminService adminService;
-    private HttpSession session;
+    private final NoticeService noticeService;
+    private final HttpSession session;
 
 
-    @GetMapping("/login")
+
+    @GetMapping("/admin")
     public String loginForm() {
         return "admin/login-form";
     }
 
-    @PostMapping("/login")
-    @ResponseBody
-    public String login(@RequestBody _LoginAdminRecord loginAdminRecord) {
+    @PostMapping("/admin/login")
+    public String login(@RequestParam String username, @RequestParam String password, HttpSession session) {
+        _LoginAdminRecord loginAdminRecord = new _LoginAdminRecord(username, password);
         boolean isAuthenticated = adminService.authenticate(loginAdminRecord);
         if (isAuthenticated) {
-            session.setAttribute("admin", loginAdminRecord.username());
-            return "redirect:/admin/dashboard";
+            Admin admin = adminService.findByUsername(username);
+            SessionAdmin sessionAdmin = new SessionAdmin(admin);
+            session.setAttribute("admin", sessionAdmin);
+            return "redirect:/admin/notice";
         } else {
-            return "redirect:/admin/login?error=true";
+            return "redirect:/admin?error=true";
         }
+    }
+
+    @GetMapping("/admin/logout")
+    public String logout() {
+        session.invalidate();
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/admin/notice")
+    public String notice() {
+        return "admin/notice";
     }
 }
