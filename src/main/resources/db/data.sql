@@ -1,6 +1,6 @@
 -- 유저 추가
-INSERT INTO user_tb (oauth_provider, email, created_at)
-VALUES ('KAKAO', 'ssar@kakao.com', '2024-01-01 09:00:00');
+INSERT INTO user_tb (oauth_provider, email, password, created_at)
+VALUES ('KAKAO', 'ssar@kakao.com', '1234', '2024-01-01 09:00:00');
 
 -- record_tb
 -- 2024년 1월부터 7월 초까지의 INCOME/EXPENSE 데이터
