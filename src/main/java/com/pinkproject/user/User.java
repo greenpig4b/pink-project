@@ -17,8 +17,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id; // 유저 번호
 
-    @Column(nullable = false)
-    private String oauthProvider;  // 오어스프로바이더?
+    @Column(nullable = true)
+    private String oauthProvider;  // 오어스프로바이더
 
     @Column(nullable = false, unique = true)
     private String email; // 이메일
