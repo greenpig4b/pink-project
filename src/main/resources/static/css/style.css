@@ -163,8 +163,8 @@ main {
 }
 
 .logout-btn:hover {
-    background-color: #d61586;
-    border: 1px solid #d61586;
+    background-color: #FC7C9A;
+    border: 1px solid #FC7C9A;
     color: #fff;
 }
 
@@ -192,7 +192,7 @@ main {
 }
 
 .side-menu ul li.on {
-    background-color: #d61586;
+    background-color: #FC7C9A;
 }
 
 .side-menu ul li a {
@@ -217,8 +217,8 @@ main {
 }
 
 .side-menu ul li a:hover {
-    background-color: #d61586;
-    border-color: #d61586;
+    background-color: #FC7C9A;
+    border-color: #FC7C9A;
     color: #fff;
 }
 
@@ -237,8 +237,8 @@ main {
 }
 
 .tab-nav li.current a {
-    border-bottom: 3px solid #d61586;
-    color: #d61586;
+    border-bottom: 3px solid #FC7C9A;
+    color: #FC7C9A;
 }
 
 .tab-content {
@@ -342,7 +342,7 @@ main {
 }
 
 .search-box .tab-input-wrapper .submit-btn {
-    background-color: #d61586;
+    background-color: #FC7C9A;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -382,7 +382,7 @@ main {
 }
 
 .tab-item table .state.wait {
-    background-color: #d61586;
+    background-color: #FC7C9A;
 }
 
 .review-detail-wrapper {
@@ -421,13 +421,13 @@ main {
     padding: 25px 10px;
     font-weight: 700;
     border: 1px solid #ddd;
-    color: #d61586;
+    color: #FC7C9A;
 }
 
 .detail-btn {
     display: inline-block; /* 버튼을 인라인 블록 요소로 설정 */
     padding: 10px 5px; /* 버튼 내부 여백 설정 */
-    background-color: #d61586;
+    background-color: #FC7C9A;
     color: #fff;
     text-align: center;
     border-radius: 5px;
@@ -443,7 +443,7 @@ main {
 
 .tab-item table .detail {
     cursor: pointer;
-    color: #d61586;
+    color: #FC7C9A;
     text-decoration: underline;
 }
 
@@ -500,7 +500,7 @@ main {
 
 .detail-content .review-title {
     font-size: 16px;
-    color: #d61586;
+    color: #FC7C9A;
     display: block;
     margin-bottom: 10px;
 }
@@ -570,8 +570,8 @@ main {
 }
 
 .btn:hover {
-    background-color: #d61586;
-    border: 1px solid #d61586;
+    background-color: #FC7C9A;
+    border: 1px solid #FC7C9A;
     color: #fff;
 }
 
@@ -605,8 +605,8 @@ input[type="checkbox"] + label:before {
 }
 
 input[type="checkbox"]:checked + label:before {
-    background-color: #d61586;
-    border-color: #d61586;
+    background-color: #FC7C9A;
+    border-color: #FC7C9A;
 }
 
 input[type="checkbox"]:checked + label:after {
@@ -627,7 +627,7 @@ input[type="checkbox"]:checked + label:after {
 .form-group label {
     display: block;
     margin-bottom: 5px;
-    color: #d61586;
+    color: #FC7C9A;
     font-weight: 700;
 }
 
