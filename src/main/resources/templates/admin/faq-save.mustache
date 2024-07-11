@@ -22,7 +22,7 @@
                 <span>핑크피그</span>
             </div>
             <div class="side-content info">
-                <p>관리자 : admin1</p>
+                <p>관리자 : {{username}}</p>
                 <p>접속일시: 2024-07-08 16:06:16</p>
                 <a href="/admin/logout" class="logout-btn" id="logoutBtn">로그아웃</a>
             </div>
@@ -50,8 +50,7 @@
                                 <p class="title">FAQ 등록</p>
                             </div>
                         </div>
-                        <form action="/admin/write" method="post">
-                            <input type="hidden" name="userId" value="{{sessionUser.id}}">
+                        <form action="/admin/faq/save" method="post">
                             <div class="detail-content">
                                 <div class="form-group">
                                     <label for="classification">분류</label>
@@ -65,16 +64,16 @@
                                 <div class="detail-faq-content">
                                     <span class="review-title">제목</span>
                                     <p class="review-content">
-                                        <input type="text" class="input">
+                                        <input type="text" name="title" class="input">
                                     </p>
                                     <span class="review-title">내용</span>
                                     <p class="review-content">
-                                        <textarea name="" id="" cols="30" rows="10"></textarea>
+                                        <textarea name="content" cols="30" rows="10"></textarea>
                                     </p>
                                 </div>
                             </div>
                             <div class="report-button-wrapper">
-                                <button class="btn black">작성완료</button>
+                                <button class="btn black" type="submit">작성완료</button>
                             </div>
                         </form>
                     </div>

@@ -22,9 +22,10 @@
                 <span>핑크피그</span>
             </div>
             <div class="side-content info">
-                <p>관리자 : admin1</p>
+                <p>관리자 : {{username}}</p>
                 <p>접속일시: 2024-07-08 16:06:16</p>
-                <a href="/admin/logout" class="logout-btn" id="logoutBtn">로그아웃</a>            </div>
+                <a href="/admin/logout" class="logout-btn" id="logoutBtn">로그아웃</a>
+            </div>
             <div class="side-menu active">
                 <p class="head-menu"><i class="fa-solid fa-marker"></i> 관리</p>
                 <ul class="sub active">
@@ -36,8 +37,8 @@
         <div class="content-page">
             <div class="content-tab-bar">
                 <ul class="tab-nav">
-                    <li class="tab-link"><a href="/admin/question">공지사항</a></li>
-                    <li class="tab-link current"><a href="/admin/faq">자주 묻는 질문</a></li>
+                    <li class="tab-link current"><a href="/admin/notice">공지사항</a></li>
+                    <li class="tab-link"><a href="/admin/faq">자주 묻는 질문</a></li>
                 </ul>
                 <div class="tab-content current">
                     <div class="tab-head">
@@ -50,21 +51,19 @@
                                     <p class="title">공지 작성하기</p>
                                 </div>
                             </div>
-                            <form action="#" method="#">
+                            <form action="/admin/notice/save" method="post">
                                 <div class="detail-content">
                                     <span class="review-title">제목</span>
                                     <p class="review-content">
-                                        <input type="text" class="input">
+                                        <input type="text" name="title" class="input" required>
                                     </p>
                                     <span class="review-title">내용</span>
                                     <p class="review-content">
-                                        <textarea name="" id="" cols="30" rows="10"></textarea>
+                                        <textarea name="content" id="content" cols="30" rows="10" required></textarea>
                                     </p>
-                                    <!-- <span class="review-title">답변 내용</span> -->
-                                    <!-- <input type="text"> -->
                                 </div>
                                 <div class="report-button-wrapper">
-                                    <button class="btn black" type="button" onclick="history.back()">작성완료</button>
+                                    <button class="btn black" type="submit">작성완료</button>
                                 </div>
                             </form>
                         </div>
@@ -72,7 +71,6 @@
                 </div>
             </div>
         </div>
-
     </section>
 </main>
 <script>
@@ -105,5 +103,4 @@
 
 </script>
 </body>
-
 </html>
