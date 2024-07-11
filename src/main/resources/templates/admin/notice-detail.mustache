@@ -21,7 +21,7 @@
                 <span>핑크피그</span>
             </div>
             <div class="side-content info">
-                <p>관리자 : admin1</p>
+                <p>관리자 : {{username}}</p>
                 <p>접속일시: 2024-07-08 16:06:16</p>
                 <a href="/admin/logout" class="logout-btn" id="logoutBtn">로그아웃</a>                </div>
             <div class="side-menu active">
@@ -35,8 +35,8 @@
         <div class="content-page">
             <div class="content-tab-bar">
                 <ul class="tab-nav">
-                    <li class="tab-link current"><a href="/company/question">공지사항</a></li>
-                    <li class="tab-link"><a href="/company/faq">자주 묻는 질문</a></li>
+                    <li class="tab-link current"><a href="/admin/question">공지사항</a></li>
+                    <li class="tab-link"><a href="/admin/faq">자주 묻는 질문</a></li>
                 </ul>
                 <div class="tab-content current">
                     <div class="tab-head">
@@ -47,23 +47,17 @@
                             <form action="#" method="#">
                                 <div class="detail-head">
                                     <div>
-                                        <p class="title">안녕하세요 핑크피그를 이용해주셔서 감사합니다</p>
-                                        <span>2024.04.21 15:41:21</span>
+                                        <p class="title">{{title}}</p>
+                                        <span>{{date}}</span>
                                         <br>
                                         <br>
-                                        <em>작성자 : admin</em>
+                                        <em>작성자 : {{username}}</em>
                                     </div>
                                 </div>
                                 <div class="detail-content">
                                     <span class="review-title">공지 내용</span>
                                     <p class="review-content">
-                                        <b>언제 어디서나 </b>
-                                        <br>
-                                        <br>
-                                        <b>사용한 내역을 빠르게 기록할 수 있는 </b>
-                                        <br>
-                                        <br>
-                                        <b>똑똑한 가계부 핑크피그 입니다.</b>
+                                        <b>{{content}}</b>
                                         <br>
                                         <br>
                                     </p>
@@ -72,6 +66,7 @@
                                 </div>
                                 <div class="report-button-wrapper">
                                     <button class="btn black" type="button" onclick="history.back()">뒤로</button>
+                                    <button class="btn black" type="button" onclick="deleteNotice()">삭제</button>
                                 </div>
                             </form>
                         </div>
@@ -109,6 +104,28 @@
         });
     });
 
+    function deleteNotice() {
+        if (confirm('정말 삭제하시겠습니까?')) {
+            fetch('/admin/faq/delete/{{id}}', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('삭제되었습니다.');
+                            window.location.href = '/admin/faq';
+                        } else {
+                            alert('삭제에 실패했습니다.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('삭제 중 오류가 발생했습니다.');
+                    });
+        }
+    }
 </script>
 </body>
 </html>

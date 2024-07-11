@@ -23,6 +23,9 @@ public class Faq {
     private Admin admin; // 관리자 번호
 
     @Column(nullable = false)
+    private String title; // 제목
+
+    @Column(nullable = false)
     private String content; // 질문 내용
 
     @CreationTimestamp
@@ -30,6 +33,7 @@ public class Faq {
 
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false) // USER, USE, COMMON -> 사용자, 사용법, 일
     private FaqEnum classification;
 
     @Builder
