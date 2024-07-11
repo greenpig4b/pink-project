@@ -1,6 +1,9 @@
 package com.pinkproject.faq;
 
+import com.pinkproject.admin.Admin;
 import com.pinkproject.admin.AdminRequest._DetailFaqAdminRecord;
+import com.pinkproject.admin.AdminRequest._SaveFaqAdminRecord;
+import com.pinkproject.admin.enums.FaqEnum;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +23,7 @@ public class FaqService {
                         faq.getId(),
                         faq.getTitle(),
                         faq.getContent(),
-                        faq.getAdmin().getUsername(), // admin username ���기화
+                        faq.getAdmin().getUsername(),
                         faq.getClassification(),
                         faq.getCreatedAt().toLocalDate()
                 ))
@@ -47,4 +50,17 @@ public class FaqService {
     public void deleteFaq(Integer id) {
         faqRepository.deleteById(id);
     }
+
+    @Transactional
+    public Integer saveFaq(_SaveFaqAdminRecord saveFaqAdminRecord, Admin admin) {
+        Faq faq = Faq.builder()
+                .admin(admin)
+                .title(saveFaqAdminRecord.title())
+                .content(saveFaqAdminRecord.content())
+                .classification(FaqEnum.fromValue(saveFaqAdminRecord.classification()))
+                .build();
+        faq = faqRepository.save(faq);
+        return faq.getId();
+    }
+
 }

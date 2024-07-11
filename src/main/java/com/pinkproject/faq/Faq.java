@@ -19,6 +19,7 @@ public class Faq {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id; // 자주 묻는 질문 번호
 
+    @JoinColumn(name = "admin_id")  // admin_id foreign key in faq_tb table (admin table)
     @ManyToOne(fetch = FetchType.LAZY)
     private Admin admin; // 관리자 번호
 
@@ -37,11 +38,10 @@ public class Faq {
     private FaqEnum classification;
 
     @Builder
-    public Faq(Integer id, Admin admin, String content, LocalDateTime createdAt, FaqEnum classification) {
-        this.id = id;
+    public Faq(Admin admin, String title, String content, FaqEnum classification) {
         this.admin = admin;
+        this.title = title;
         this.content = content;
-        this.createdAt = createdAt;
         this.classification = classification;
     }
 }
