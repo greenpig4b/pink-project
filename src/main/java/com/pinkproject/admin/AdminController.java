@@ -2,16 +2,15 @@ package com.pinkproject.admin;
 
 
 import com.pinkproject._core.utils.ApiUtil;
-import com.pinkproject.admin.AdminRequest._DetailFaqAdminRecord;
-import com.pinkproject.admin.AdminRequest._DetailNoticeAdminRecord;
-import com.pinkproject.admin.AdminRequest._LoginAdminRecord;
-import com.pinkproject.admin.AdminRequest._SaveFaqAdminRecord;
+import com.pinkproject.admin.AdminRequest.*;
 import com.pinkproject.admin.AdminResponse._SaveFaqAdminRespRecord;
 import com.pinkproject.faq.FaqService;
 import com.pinkproject.notice.Notice;
+import com.pinkproject.notice.NoticeRepository;
 import com.pinkproject.notice.NoticeService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +31,7 @@ public class AdminController {
     private final NoticeService noticeService;
     private final FaqService faqService;
     private final HttpSession session;
-    private final View error;
+
 
 
     @GetMapping("/admin")
@@ -158,4 +157,26 @@ public class AdminController {
             return "admin/faq-save";
         }
     }
+    @GetMapping("/admin/notice/save")
+    public String saveNoticeForm(HttpServletRequest request) {
+        SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
+        if (sessionAdmin != null) {
+            request.setAttribute("username", sessionAdmin.getUsername());
+        }
+        return "admin/notice-save";
+    }
+
+    @PostMapping("/admin/notice/save")
+    public String saveNotice(@ModelAttribute _SaveNoticeAdminRecord saveNoticeAdminRecord, HttpServletRequest request) {
+        try {
+            SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
+            Admin admin = adminService.findByUsername(sessionAdmin.getUsername());
+            noticeService.saveNotice(saveNoticeAdminRecord, admin);
+            return "redirect:/admin/notice";
+        } catch (Exception e) {
+            request.setAttribute("errorMessage", e.getMessage());
+            return "admin/notice-save";
+        }
+    }
+
 }
