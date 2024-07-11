@@ -22,7 +22,7 @@
         <span>핑크피그</span>
       </div>
       <div class="side-content info">
-        <p>관리자 : admin</p>
+        <p>관리자 : {{username}}</p>
         <p>접속일시: 2024-07-08 16:06:16</p>
         <a href="/admin/logout" class="logout-btn" id="logoutBtn">로그아웃</a>            </div>
       <div class="side-menu active">
@@ -36,7 +36,7 @@
     <div class="content-page">
       <div class="content-tab-bar">
         <ul class="tab-nav">
-          <li class="tab-link current"><a href="/admin/company/question">공지사항</a></li>
+          <li class="tab-link current"><a href="/admin/question">공지사항</a></li>
           <li class="tab-link"><a href="/admin/faq">자주 묻는 질문</a></li>
         </ul>
         <div class="tab-content current">
@@ -47,7 +47,7 @@
             <form action="#" method="#" style="width: 100%;">
               <ul class="search-box">
                 <li class="search-left">
-                  <span>공지사항 <em>2</em>개</span>
+                    <span>공지사항 <em>{{notices.size}}</em>개</span>
                 </li>
                 <li class="search-right">
                   <div class="tab-input-wrapper">
@@ -73,18 +73,14 @@
               </tr>
               </thead>
               <tbody>
-              <tr class="review">
-                <td class="title">업데이트가 완료되었습니다</td>
-                <td class="content">admin</td>
-                <td>2024-07-08</td>
-                <td><button class="detail-btn">상세보기</button></td>
-              </tr>
-              <tr class="review">
-                <td class="title">업데이트가 완료되었습니다</td>
-                <td class="content">admin</td>
-                <td>2024-07-08</td>
-                <td><button class="detail-btn">상세보기</button></td>
-              </tr>
+              {{#notices}}
+                  <tr class="review">
+                      <td class="title">{{title}}</td>
+                      <td class="content">{{username}}</td>
+                      <td>{{date}}</td>
+                      <td><a class="detail-btn" href="/admin/notice/detail/{{id}}">상세보기</a></td>
+                  </tr>
+              {{/notices}}
               </tbody>
             </table>
           </div>

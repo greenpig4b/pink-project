@@ -25,14 +25,14 @@
                 <span>핑크피그</span>
             </div>
             <div class="side-content info">
-                <p>관리자 : admin1</p>
+                <p>관리자 : {{username}}</p>
                 <p>접속일시: 2024-07-08 16:06:16</p>
                 <a href="/admin/logout" class="logout-btn" id="logoutBtn">로그아웃</a>            </div>
 
             <div class="side-menu active">
                 <p class="head-menu"><i class="fa-solid fa-marker"></i>  관리</p>
                 <ul class="sub active">
-                    <li><a href="/admin/company/question">공지사항</a></li>
+                    <li><a href="/admin/notice">공지사항</a></li>
                     <li><a href="/admin/faq">자주 묻는 질문</a></li>
                 </ul>
             </div>
@@ -40,8 +40,8 @@
         <div class="content-page">
             <div class="content-tab-bar">
                 <ul class="tab-nav">
-                    <li class="tab-link"><a href="/user/question">공지사항</a></li>
-                    <li class="tab-link current"><a href="/user/faq">자주 묻는 질문</a></li>
+                    <li class="tab-link"><a href="/admin/notice">공지사항</a></li>
+                    <li class="tab-link current"><a href="/admin/faq">자주 묻는 질문</a></li>
                 </ul>
                 <div class="tab-content current">
                     <div class="tab-head">
@@ -51,7 +51,7 @@
                         <form action="#" method="#" style="width: 100%;">
                             <ul class="search-box">
                                 <li class="search-left">
-                                    <span>FAQ <em></em>3개</span>
+                                    <span>FAQ <em>{{faqs.size}}</em>개</span>
                                 </li>
                                 <li class="search-right">
                                     <div>
@@ -82,30 +82,19 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr class="review">
-                                <td class="title">지출내역 확인 방법은 이렇게 쓰세요</td>
-                                <td class="admin">admin1</td>
-                                <td><span class="date">2024년 1월 30일</span></td>
-                                <td><button class="detail-btn">상세보기</button></td>
-                            </tr>
-
-                            <tr class="review">
-                                <td class="title">월 수익 내용을 수정하고 싶을때는 이렇게 하세요</td>
-                                <td class="admin">admin1</td>
-                                <td><span class="date">2024년 1월 30일</span></td>
-                                <td><button class="detail-btn">상세보기</button></td>
-                            </tr>
-                            <tr class="review">
-                                <td class="title">핑크피그 앱을 사용하려면?</td>
-                                <td class="admin">admin1</td>
-                                <td><span class="date">2024년 1월 30일</span></td>
-                                <td><button class="detail-btn">상세보기</button></td>
-                            </tr>
+                            {{#faqs}}
+                                <tr class="review">
+                                    <td class="title">{{title}}</td>
+                                    <td class="admin">{{username}}</td>
+                                    <td><span class="date">{{date}}</span></td>
+                                    <td><a class="detail-btn" href="/admin/faq/detail/{{id}}">상세보기</a></td>
+                                </tr>
+                            {{/faqs}}
                             </tbody>
                         </table>
                     </div>
                     <div class="faq-button-wrapper">
-                        <a class="btn black" href="/admin/faq/write-form">작성</a>
+                        <a class="btn black" href="/admin/faq/save-form">작성</a>
                     </div>
                 </div>
             </div>

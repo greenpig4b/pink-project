@@ -1,7 +1,7 @@
 package com.pinkproject.admin;
 
+import com.pinkproject.admin.AdminRequest._DetailNoticeAdminRecord;
 import com.pinkproject.admin.AdminRequest._LoginAdminRecord;
-import com.pinkproject.notice.Notice;
 import com.pinkproject.notice.NoticeRepository;
 import com.pinkproject.notice.NoticeService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class AdminService {
         return adminRepository.findByUsername(username);
     }
 
-    public List<Notice> getNotices() {
+    public List<_DetailNoticeAdminRecord> getNotices() {
         return noticeService.getNotices();
     }
 }
