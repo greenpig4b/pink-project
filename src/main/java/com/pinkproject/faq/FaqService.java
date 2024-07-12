@@ -17,6 +17,20 @@ public class FaqService {
     private final FaqRepository faqRepository;
 
     @Transactional
+    public List<_DetailFaqAdminRecord> searchFaqs(String keyword) {
+        return faqRepository.findByKeywordWithFaq(keyword).stream()
+                .map(faq -> new _DetailFaqAdminRecord(
+                        faq.getId(),
+                        faq.getTitle(),
+                        faq.getContent(),
+                        faq.getAdmin().getUsername(),
+                        faq.getClassification(),
+                        faq.getCreatedAt().toLocalDate()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
     public List<_DetailFaqAdminRecord> getFaqs() {
         return faqRepository.findAllWithAdmin().stream()
                 .map(faq -> new _DetailFaqAdminRecord(

@@ -12,5 +12,5 @@ public interface NoticeRepository extends JpaRepository<Notice, Integer> {
     List<Notice> findAllWithAdmin();
 
     @Query("SELECT n FROM Notice n JOIN FETCH n.admin WHERE n.title LIKE %:keyword% ORDER BY n.createdAt DESC")
-    List<Notice> findByKeywordWithSearch(@Param("keyword") String keyword);
+    List<Notice> findByKeywordWithNotice(@Param("keyword") String keyword);
 }
