@@ -333,7 +333,6 @@ main {
 }
 
 .search-box .tab-input-wrapper input {
-    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
     outline: none;
