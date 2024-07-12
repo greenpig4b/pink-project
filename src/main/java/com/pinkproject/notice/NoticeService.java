@@ -25,6 +25,19 @@ public class NoticeService {
 
 
     @Transactional
+    public List<_DetailNoticeAdminRecord> searchNotices(String keyword) {
+        return noticeRepository.findByKeywordWithSearch(keyword).stream()
+                .map(notice -> new _DetailNoticeAdminRecord(
+                        notice.getId(),
+                        notice.getTitle(),
+                        notice.getContent(),
+                        notice.getAdmin().getUsername(),
+                        notice.getCreatedAt().toLocalDate()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
     public List<_DetailNoticeAdminRecord> getNotices() {
         return noticeRepository.findAllWithAdmin().stream()
                 .map(notice -> new _DetailNoticeAdminRecord(

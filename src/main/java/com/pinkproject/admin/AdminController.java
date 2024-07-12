@@ -62,8 +62,13 @@ public class AdminController {
     }
 
     @GetMapping("/admin/notice")
-    public String notice(HttpServletRequest request) {
-        List<_DetailNoticeAdminRecord> notices = noticeService.getNotices();
+    public String notice(@RequestParam(value = "keyword", required = false) String keyword, HttpServletRequest request) {
+        List<_DetailNoticeAdminRecord> notices;
+        if (keyword != null && !keyword.isEmpty()) {
+            notices = noticeService.searchNotices(keyword);
+        } else {
+            notices = noticeService.getNotices();
+        }
         request.setAttribute("notices", notices);
         SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
         if (sessionAdmin != null) {
