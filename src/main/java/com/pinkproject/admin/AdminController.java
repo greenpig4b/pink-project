@@ -19,6 +19,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.View;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
@@ -60,24 +62,43 @@ public class AdminController {
     }
 
     @GetMapping("/admin/notice")
-    public String notice(HttpServletRequest request) {
+    public String notice(@RequestParam(value = "keyword", required = false) String keyword, HttpServletRequest request) {
         List<_DetailNoticeAdminRecord> notices = noticeService.getNotices();
+        notices.forEach(n -> System.out.println(n.title() + " - " + n.content() + " - " + n.username()));
+        if (keyword != null && !keyword.isEmpty()) {
+            notices = noticeService.searchNotices(keyword);
+        } else {
+            notices = noticeService.getNotices();
+        }
         request.setAttribute("notices", notices);
         SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
         if (sessionAdmin != null) {
             request.setAttribute("username", sessionAdmin.getUsername());
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String formattedNow = now.format(formatter);
+            request.setAttribute("currentDateTime", formattedNow);
         }
         return "admin/notice";
     }
 
     @GetMapping("/admin/faq")
-    public String faq(HttpServletRequest request) {
+    public String faq(@RequestParam(value = "keyword", required = false) String keyword, HttpServletRequest request) {
         List<_DetailFaqAdminRecord> faqs = faqService.getFaqs();
         faqs.forEach(f -> System.out.println(f.title() + " - " + f.content() + " - " + f.username()));
+        if (keyword!= null &&!keyword.isEmpty()) {
+            faqs = faqService.searchFaqs(keyword);
+        } else {
+            faqs = faqService.getFaqs();
+        }
         request.setAttribute("faqs", faqs);
         SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
         if (sessionAdmin != null) {
             request.setAttribute("username", sessionAdmin.getUsername());
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String formattedNow = now.format(formatter);
+            request.setAttribute("currentDateTime", formattedNow);
         }
         return "admin/faq";
     }
@@ -89,6 +110,10 @@ public class AdminController {
         SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
         if (sessionAdmin != null) {
             request.setAttribute("username", sessionAdmin.getUsername());
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String formattedNow = now.format(formatter);
+            request.setAttribute("currentDateTime", formattedNow);
         }
         request.setAttribute("faq", faqDetail);
         request.setAttribute("title", faqDetail.title());
@@ -105,6 +130,10 @@ public class AdminController {
         SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
         if (sessionAdmin != null) {
             request.setAttribute("username", sessionAdmin.getUsername());
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String formattedNow = now.format(formatter);
+            request.setAttribute("currentDateTime", formattedNow);
         }
         request.setAttribute("notice", noticeDetail);
         request.setAttribute("title", noticeDetail.title());
@@ -141,6 +170,10 @@ public class AdminController {
         SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
         if (sessionAdmin != null) {
             request.setAttribute("username", sessionAdmin.getUsername());
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String formattedNow = now.format(formatter);
+            request.setAttribute("currentDateTime", formattedNow);
         }
         return "admin/faq-save";
     }
@@ -162,6 +195,10 @@ public class AdminController {
         SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
         if (sessionAdmin != null) {
             request.setAttribute("username", sessionAdmin.getUsername());
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String formattedNow = now.format(formatter);
+            request.setAttribute("currentDateTime", formattedNow);
         }
         return "admin/notice-save";
     }
