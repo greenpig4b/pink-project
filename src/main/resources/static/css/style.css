@@ -1,0 +1,645 @@
+@charset "UTF-8";
+@import url(common.css);
+@import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap');
+@import url(login-form.css);
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+    font-family: 'Pretendard', sans-serif;
+    box-sizing: border-box;
+}
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400,500,600,700,800;
+    font-style: normal;
+}
+
+body {
+    line-height: 1;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 20px;  /* 셀 내부의 여백을 늘려서 높이를 증가시킵니다 */
+    text-align: center;
+    vertical-align: middle; /* 텍스트를 중간에 정렬 */
+}
+
+th {
+    padding-top: 25px;
+}
+
+
+td {
+    border: 1px solid #ddd;
+    height: 80px;
+
+}
+
+tr {
+    border: 1px solid #ddd;
+    height: 70px;
+}
+
+.container {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+.content-tab-bar {
+    width: 100%;
+    height: 80%;
+}
+
+section {
+    min-height: 100vh;
+    display: flex;
+}
+
+aside {
+    width: 300px;
+    background-color: #343a40;
+    color: #fff;
+}
+
+.content-page {
+    width: calc(100% - 300px);
+}
+
+main {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.side-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.side-content.header {
+    display: flex;
+    align-items: center;
+    padding: 20px 10px;
+    border-bottom: 1px solid #444;
+}
+
+.side-content.header figure {
+    margin: 0;
+    padding: 0;
+}
+
+.side-content.header figure img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.side-content.header span {
+    margin-left: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.side-content.info {
+    padding: 20px;
+    border-bottom: 1px solid #444;
+    text-align: left;
+    width: 100%;
+}
+
+.side-content.info p {
+    margin-bottom: 10px;
+}
+
+.logout-btn {
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #FC7C9A;
+    border: 1px solid #FC7C9A;
+    color: #fff;
+}
+
+.side-menu {
+    border-bottom: 1px solid #444;
+}
+
+.side-menu p {
+    padding: 20px;
+    cursor: pointer;
+    border-bottom: 1px solid #444;
+}
+
+.side-menu ul {
+    display: none;
+    padding-left: 0px;
+}
+
+.side-menu.active ul {
+    display: block;
+}
+
+.side-menu ul li {
+    padding: 10px 10px;
+}
+
+.side-menu ul li.on {
+    background-color: #FC7C9A;
+}
+
+.side-menu ul li a {
+    display: block;
+    color: #fff;
+    padding: 20px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.side-menu ul li a::before {
+    content: "- ";
+    margin-right: 5px;
+}
+
+.side-menu ul li a {
+    display: block;
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.side-menu ul li a:hover {
+    background-color: #FC7C9A;
+    border-color: #FC7C9A;
+    color: #fff;
+}
+
+.tab-nav {
+    list-style: none;
+    padding: 20px 20px;
+    display: flex;
+    background-color: #fff;
+
+}
+
+.tab-nav li {
+    margin-left: 20px;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.tab-nav li.current a {
+    border-bottom: 3px solid #FC7C9A;
+    color: #FC7C9A;
+}
+
+.tab-content {
+    display: none;
+    padding: 30px;
+    background-color: #f8f8f8;
+}
+
+.tab-content.current {
+    display: block;
+    margin: 60px 50px 50px 30px;
+}
+
+.tab-head p {
+    font-size: 32px;
+    font-weight: 700;
+    margin-top: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid #ddd;
+}
+
+
+.tab-item {
+    display: flex;
+    flex-direction: column;
+    margin: 30px 20px 20px 20px;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.tab-item.detail {
+    align-items: flex-start;
+    margin-top: 40px;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+.search-box {
+    width: 100%;
+    display: flex;
+    margin: 20px 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    justify-content: space-between;
+    background: rgb(255, 255, 255);
+    margin: 0 auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.search-box > li {
+    display: flex;
+    padding: 20px;
+    align-items: center;
+}
+
+.search-box > li input-id {
+    height: 40px !important;
+    padding: 0 10px;
+    border-radius: 5px;
+    border: 1px solid #333;
+}
+
+.search-box > li label {
+    padding-right: 10px;
+    font-size: 14px;
+}
+
+.search-box > li > div:last-child {
+    margin-right: 0;
+}
+
+.search-box > li > div {
+    margin-right: 20px;
+}
+
+
+.search-box .search-left {
+    font-size: 1rem;
+}
+
+.search-box .search-right {
+    display: flex;
+}
+
+.search-box .tab-input-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.search-box .tab-input-wrapper input {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.search-box .tab-input-wrapper .submit-btn {
+    background-color: #FC7C9A;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.tab-item table {
+    width: 100%;
+    border-collapse: collapse;
+    flex-direction: column;
+}
+
+.tab-item table th, .tab-item table td {
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.tab-item table th {
+    background-color: #fff;
+    padding-top: 20px;
+}
+
+.tab-item table .title {
+    text-align: left;
+}
+
+.tab-item table .state {
+    padding: 10px 5px 10px 5px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.tab-item table .state.approval {
+    background-color: #FC7C9A;
+}
+
+.tab-item table .state.wait {
+    background-color: #FC7C9A;
+}
+
+.review-detail-wrapper {
+    width: 60%;
+    margin: 0 auto;
+    background: #fff;
+    padding: 30px;
+    margin-top: 30px;
+    border-radius: 5px;
+}
+
+.tab-item table tbody tr.review {
+    position: relative;
+}
+
+.tab-item table tbody tr.review:hover {
+    background: #d6d6d6;
+}
+
+.tab-item table tbody tr td.link {
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    left: -0;
+    padding: 0;
+
+}
+
+.tab-item table tbody tr td.link a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.tab-item table thead th {
+    padding: 25px 10px;
+    font-weight: 700;
+    border: 1px solid #ddd;
+    color: #FC7C9A;
+}
+
+.detail-btn {
+    display: inline-block; /* 버튼을 인라인 블록 요소로 설정 */
+    padding: 10px 5px; /* 버튼 내부 여백 설정 */
+    background-color: #FC7C9A;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    font-size: 12px; /* 버튼 글자 크기 설정 */
+    line-height: 20px; /* 텍스트 수직 중앙 정렬 */
+}
+
+.detail-btn:hover {
+    background-color: #333;
+}
+
+.tab-item table .detail {
+    cursor: pointer;
+    color: #FC7C9A;
+    text-decoration: underline;
+}
+
+.detail-head {
+    margin-top: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 20px;
+    width: 100%;
+}
+
+.detail-content {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+    overflow: hidden;
+}
+
+.detail-faq-content {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.detail-content .review-content {
+    background: #f8f8f8;
+    padding: 20px;
+    margin-bottom: 20px;
+    width: fit-content;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.detail-content .review-content p{
+    border-radius: 5px;
+    background: #f8f8f8;
+    line-height: 1.3;
+}
+.detail-content .review-content textarea {
+    width: 100%;
+    border-radius: 5px;
+    padding: 20px;
+    box-sizing: border-box;
+    outline: none;
+    line-height: 1.5;
+}
+
+.detail-content input {
+    width: 100%;
+    height: 40px;
+}
+
+.detail-content .review-title {
+    font-size: 16px;
+    color: #FC7C9A;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.review-detail-wrapper {
+    width: 80%;
+    margin: 0 auto;
+    background: #fff;
+    padding: 30px;
+    margin-top: 30px;
+    border-radius: 5px;
+}
+
+
+.review-detail-wrapper .title {
+    font-size: 22px;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.review-detail-wrapper span {
+    color: #999;
+}
+
+.review-detail-wrapper .back-button-wrapper {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.review-detail-wrapper .back-button-wrapper button {
+    background: #343a40;
+}
+
+.review-detail-wrapper .report-button-wrapper {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.review-detail-wrapper .report-button-wrapper button {
+    margin-right: 10px;
+
+}
+
+.faq-button-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.faq-button-wrapper a {
+
+    text-align: center;
+    color: #fff;
+    line-height: 40px;
+    border-radius: 5px;
+
+}
+
+.btn {
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    width: 90px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #FC7C9A;
+    border: 1px solid #FC7C9A;
+    color: #fff;
+}
+
+.black {
+    background-color: #333;
+}
+
+input[type="checkbox"] {
+    display: none;
+}
+
+input[type="checkbox"] + label {
+    display: inline-block;
+    position: relative;
+    padding-left: 35px;
+    cursor: pointer;
+}
+
+input[type="checkbox"] + label:before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    background: #fff;
+}
+
+input[type="checkbox"]:checked + label:before {
+    background-color: #FC7C9A;
+    border-color: #FC7C9A;
+}
+
+input[type="checkbox"]:checked + label:after {
+    content: '\2713';
+    display: inline-block;
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    font-size: 16px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #FC7C9A;
+    font-weight: 700;
+}
+
+.input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+textarea {
+    border: 1px solid #ddd; /* 테두리 추가 */
+    border-radius: 5px; /* 테두리 반경 추가 */
+    padding: 10px; /* 패딩 추가 */
+}

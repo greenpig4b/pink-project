@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 로그인</title>
+    <link rel="stylesheet" href="/css/login-form.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="login-container">
+    <figure>
+        <img src="/images/logo.png" alt="핑크피그 로고">
+    </figure>
+    <p class="login-title">관리자 로그인</p>
+    <form action="/admin/login" method="post">
+        <label for="username">아이디</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">비밀번호</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit">로그인</button>
+    </form>
+</div>
+</body>
+</html>

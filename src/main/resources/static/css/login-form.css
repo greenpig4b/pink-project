@@ -1,0 +1,86 @@
+:root {
+    --fa-style-family-classic: "Pretendard-regular", sans-serif;
+    --fa-font-solid: normal 900 1em/1 "Pretendard-regular", sans-serif;
+    --fa-font-regular: normal 400 1em/1 "Pretendard-regular", sans-serif;
+    --fa-style-family-brands: "Pretendard-regular", sans-serif;
+    --fa-font-brands: normal 400 1em/1 "Pretendard-regular", sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: "Pretendard-regular", Arial, sans-serif;
+    background-color: #f9f9f9;
+
+}
+
+.login-container {
+    width: 350px; /* 가로를 줄임 */
+    padding: 30px 20px; /* 세로를 줄임 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.login-container img {
+    width: 150px; /* 이미지 너비 */
+    margin-bottom: 5px; /* 이미지 아래쪽 마진 줄임 */
+}
+
+p.login-title {
+    width: 100%;
+    font-size: 20px; /* 폰트 크기 */
+    font-weight: bold;
+    padding-bottom: 10px; /* 관리자 로그인과 아이디 사이의 마진 */
+    text-align: left; /* 왼쪽 정렬 */
+    color: #333; /* 더 진한 색상 적용 */
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.login-container label {
+    margin-bottom: 5px;
+    margin-top: 10px;
+    font-family: "Pretendard-regular"; /* 폰트 설정 */
+    font-weight: bold;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px; /* 입력 필드 사이의 마진 */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: "Pretendard-regular"; /* 폰트 설정 */
+}
+
+.login-container input#password {
+    margin-bottom: 20px; /* 비밀번호 필드와 버튼 사이의 마진 */
+}
+
+.login-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #FC7C9A;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: "Pretendard-regular";
+}
+
+.login-container button:hover {
+    background-color: #ff4c4c;
+}
