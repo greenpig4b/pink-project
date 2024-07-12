@@ -5,6 +5,7 @@ public record _LoginRespRecord(
         String jwt
 ) {
     public record UserRecord(
+            Integer id,
             String email,
             String password
     ) {

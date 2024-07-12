@@ -1,6 +1,7 @@
 package com.pinkproject.user;
 
 import com.pinkproject._core.error.exception.Exception400;
+import com.pinkproject._core.error.exception.Exception404;
 import com.pinkproject._core.utils.JwtUtil;
 import com.pinkproject.user.UserRequest._JoinRecord;
 import com.pinkproject.user.UserRequest._LoginRecord;
@@ -8,6 +9,7 @@ import com.pinkproject.user.UserRequest._UserUpdateRecord;
 import com.pinkproject.user.UserResponse._JoinRespRecord;
 import com.pinkproject.user.UserResponse._LoginRespRecord;
 import com.pinkproject.user.UserResponse._UserRespRecord;
+import com.pinkproject.user.UserResponse._UserUpdateRespRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,17 +39,26 @@ public class UserService {
 
     public _LoginRespRecord getUser(_LoginRecord reqRecord) {
         User user = userRepository.findByEmailAndPassword(reqRecord.email(), reqRecord.password());
-        _LoginRespRecord.UserRecord userRecord = new _LoginRespRecord.UserRecord(user.getEmail(), user.getPassword());
+        _LoginRespRecord.UserRecord userRecord = new _LoginRespRecord.UserRecord(user.getId(),user.getEmail(), user.getPassword());
         String jwt = JwtUtil.create(user);
         
         return new _LoginRespRecord(userRecord, jwt);
     }
 
     public _UserRespRecord getUserInfo(Integer id) {
-        return null;
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new Exception400("사용자를 찾을 수 없습니다."));
+        return new _UserRespRecord(user.getId(), user.getEmail(), user.getPassword());
     }
 
-    public SessionUser updateUserInfo(_UserUpdateRecord reqRecord, Integer id) {
-        return null;
+    @Transactional
+    public _UserUpdateRespRecord updateUserInfo(_UserUpdateRecord reqRecord, Integer id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new Exception404("사용자를 찾을 수 없습니다."));
+
+        user.update(reqRecord);
+        userRepository.saveAndFlush(user);
+
+        return new _UserUpdateRespRecord(user.getId(), user.getPassword());
     }
 }
