@@ -41,7 +41,7 @@ public class UserService {
         User user = userRepository.findByEmailAndPassword(reqRecord.email(), reqRecord.password());
         _LoginRespRecord.UserRecord userRecord = new _LoginRespRecord.UserRecord(user.getId(),user.getEmail(), user.getPassword());
         String jwt = JwtUtil.create(user);
-        
+
         return new _LoginRespRecord(userRecord, jwt);
     }
 
@@ -52,13 +52,15 @@ public class UserService {
     }
 
     @Transactional
-    public _UserUpdateRespRecord updateUserInfo(_UserUpdateRecord reqRecord, Integer id) {
+    public SessionUser  updateUserInfo(_UserUpdateRecord reqRecord, Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new Exception404("사용자를 찾을 수 없습니다."));
 
         user.update(reqRecord);
         userRepository.saveAndFlush(user);
 
-        return new _UserUpdateRespRecord(user.getId(), user.getPassword());
+        SessionUser newSessionUser = new SessionUser(user);
+
+        return new SessionUser(user);
     }
 }

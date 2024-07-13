@@ -34,25 +34,27 @@ public class UserController {
         SessionUser sessionUser = new SessionUser(respRecord.user().id(), respRecord.user().email(), null);
         session.setAttribute("sessionUser", sessionUser);
 
+        System.out.println("로그인 성공, 세션 저장: " + sessionUser);
+
         return ResponseEntity.ok().header("Authorization", "Bearer " + respRecord.jwt()).body(new ApiUtil<>(respRecord.user()));
     }
 
     // 회원 정보 조회
-    @GetMapping("/users/{id}")
+    @GetMapping("/api/users/{id}")
     public ResponseEntity<?> getUser(@PathVariable("id") Integer id) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
 
         if (sessionUser == null) {
             return ResponseEntity.status(401).body(new ApiUtil<>("세션유저없음"));
         }
-
+        System.out.println("세션 유저: " + sessionUser);
         _UserRespRecord respRecord = userService.getUserInfo(sessionUser.getId());
 
         return ResponseEntity.ok(new ApiUtil<>(respRecord));
     }
 
     // 회원 정보 업데이트
-    @PutMapping("/users/{id}") // TODO: API 매핑 필요
+    @PutMapping("/api/users/{id}") // TODO: API 매핑 필요
     public ResponseEntity<?> updateUserInfo(@RequestBody _UserUpdateRecord reqRecord, @PathVariable("id") Integer id) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
 
@@ -64,10 +66,15 @@ public class UserController {
             return ResponseEntity.status(403).body(new ApiUtil<>("수정 권한 없음"));
         }
 
-        _UserUpdateRespRecord newSessionUser = userService.updateUserInfo(reqRecord, sessionUser.getId());
+        SessionUser newSessionUser = userService.updateUserInfo(reqRecord, sessionUser.getId());
         session.setAttribute("sessionUser", newSessionUser);
 
-        return ResponseEntity.ok(new ApiUtil<>(newSessionUser));
+        _UserUpdateRespRecord respRecord = new _UserUpdateRespRecord(
+                newSessionUser.getId(),
+                newSessionUser.getEmail()
+        );
+
+        return ResponseEntity.ok(new ApiUtil<>(respRecord));
     }
 
     // 로그아웃
