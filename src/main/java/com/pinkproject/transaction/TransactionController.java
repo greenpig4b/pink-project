@@ -18,7 +18,7 @@ public class TransactionController {
     private final HttpSession session;
 
     // 월간 transaction 랜더링
-    @GetMapping("/api/transactions/monthly")
+    @GetMapping("/transactions/monthly") // TODO: /api
     public ResponseEntity<?> monthlyTransactions(@RequestParam Integer year, @RequestParam Integer month) {
 //         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
 //         if (sessionUser == null) {
