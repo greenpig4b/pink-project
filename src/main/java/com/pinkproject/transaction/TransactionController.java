@@ -18,7 +18,7 @@ public class TransactionController {
     private final HttpSession session;
 
     // 월간 transaction 랜더링
-    @GetMapping("/transactions/monthly") // TODO: /api
+    @GetMapping("/api/transactions/monthly")
     public ResponseEntity<?> monthlyTransactions(@RequestParam Integer year, @RequestParam Integer month) {
 //         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
 //         if (sessionUser == null) {
@@ -30,7 +30,7 @@ public class TransactionController {
     }
 
     // 가계부 저장
-    @PostMapping("/transactions") // TODO: /api
+    @PostMapping("/api/transactions") // TODO: /api
     public ResponseEntity<?> saveTransaction(@RequestBody _SaveTransactionRecord reqRecord) {
 //         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
 //         if (sessionUser == null) {
@@ -42,7 +42,7 @@ public class TransactionController {
     }
 
     // 가계부 수정
-    @PutMapping("/transactions/{transactionId}") // TODO: /api
+    @PutMapping("/api/transactions/{transactionId}") // TODO: /api
     public ResponseEntity<?> updateTransaction(@PathVariable("transactionId") Integer transactionId, @RequestBody _UpdateTransactionRecord reqRecord) {
 //         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
 //         if (sessionUser == null) {
@@ -54,7 +54,7 @@ public class TransactionController {
     }
 
     // 가계부 삭제
-    @DeleteMapping("/transactions/{transactionId}") // TODO: /api
+    @DeleteMapping("/api/transactions/{transactionId}")
     public ResponseEntity<?> deleteTransaction(@PathVariable("transactionId") Integer transactionId) {
 //         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
 //         if (sessionUser == null) {
