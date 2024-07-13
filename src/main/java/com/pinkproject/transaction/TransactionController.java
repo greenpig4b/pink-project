@@ -19,13 +19,13 @@ public class TransactionController {
     private final HttpSession session;
 
     // 월간 transaction 랜더링
-    @GetMapping("/api/transactions/monthly") // TODO: API 경로 설정
+    @GetMapping("/api/transactions/monthly")
     public ResponseEntity<?> monthlyTransactions(@RequestParam Integer year, @RequestParam Integer month) {
-        // SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
-        // if (sessionUser == null) {
-        //     return ResponseEntity.status(401).build();
-        // }
-        _MonthlyTransactionMainRecord respDTO = transactionService.getMonthlyTransactionMain(1, year, month); // TODO: 세션유저 빼둠
+         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
+         if (sessionUser == null) {
+             return ResponseEntity.status(401).build();
+         }
+        _MonthlyTransactionMainRecord respDTO = transactionService.getMonthlyTransactionMain(sessionUser.getId(), year, month);
 
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
@@ -43,25 +43,25 @@ public class TransactionController {
     }
 
     // 가계부 수정
-    @PutMapping("/api/transactions/{id}")
-    public ResponseEntity<?> updateTransaction(@PathVariable("id") Integer id, @RequestBody _UpdateTransactionRecord reqRecord) {
+    @PutMapping("/api/transactions/{transactionId}")
+    public ResponseEntity<?> updateTransaction(@PathVariable("transactionId") Integer transactionId, @RequestBody _UpdateTransactionRecord reqRecord) {
          SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
          if (sessionUser == null) {
              return ResponseEntity.status(401).build();
          }
-        _UpdateTransactionRespRecord response = transactionService.updateTransaction(sessionUser.getId(), reqRecord);
+        _UpdateTransactionRespRecord response = transactionService.updateTransaction(transactionId, reqRecord);
 
         return ResponseEntity.ok(new ApiUtil<>(response));
     }
 
     // 가계부 삭제
-    @DeleteMapping("/api/transactions/{id}")
-    public ResponseEntity<?> deleteTransaction(@PathVariable("id") Integer id) {
+    @DeleteMapping("/api/transactions/{transactionId}")
+    public ResponseEntity<?> deleteTransaction(@PathVariable("transactionId") Integer transactionId) {
          SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
          if (sessionUser == null) {
              return ResponseEntity.status(401).build();
          }
-        transactionService.deleteTransaction(id, sessionUser.getId());
+        transactionService.deleteTransaction(transactionId, sessionUser.getId());
         return ResponseEntity.ok(new ApiUtil<>(null));
     }
 }
