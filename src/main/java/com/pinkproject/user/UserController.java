@@ -34,8 +34,6 @@ public class UserController {
         SessionUser sessionUser = new SessionUser(respRecord.user().id(), respRecord.user().email(), null);
         session.setAttribute("sessionUser", sessionUser);
 
-        System.out.println("로그인 성공, 세션 저장: " + sessionUser);
-
         return ResponseEntity.ok().header("Authorization", "Bearer " + respRecord.jwt()).body(new ApiUtil<>(respRecord.user()));
     }
 
@@ -47,14 +45,13 @@ public class UserController {
         if (sessionUser == null) {
             return ResponseEntity.status(401).body(new ApiUtil<>("세션유저없음"));
         }
-        System.out.println("세션 유저: " + sessionUser);
         _UserRespRecord respRecord = userService.getUserInfo(sessionUser.getId());
 
         return ResponseEntity.ok(new ApiUtil<>(respRecord));
     }
 
     // 회원 정보 업데이트
-    @PutMapping("/api/users/{id}") // TODO: API 매핑 필요
+    @PutMapping("/api/users/{id}")
     public ResponseEntity<?> updateUserInfo(@RequestBody _UserUpdateRecord reqRecord, @PathVariable("id") Integer id) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
 
@@ -66,13 +63,8 @@ public class UserController {
             return ResponseEntity.status(403).body(new ApiUtil<>("수정 권한 없음"));
         }
 
-        SessionUser newSessionUser = userService.updateUserInfo(reqRecord, sessionUser.getId());
-        session.setAttribute("sessionUser", newSessionUser);
-
-        _UserUpdateRespRecord respRecord = new _UserUpdateRespRecord(
-                newSessionUser.getId(),
-                newSessionUser.getEmail()
-        );
+        _UserUpdateRespRecord respRecord = userService.updateUserInfo(reqRecord, sessionUser.getId());
+        session.setAttribute("sessionUser", new SessionUser(respRecord.id(), respRecord.email(), sessionUser.getCreatedAt()));
 
         return ResponseEntity.ok(new ApiUtil<>(respRecord));
     }

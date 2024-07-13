@@ -52,15 +52,14 @@ public class UserService {
     }
 
     @Transactional
-    public SessionUser  updateUserInfo(_UserUpdateRecord reqRecord, Integer id) {
+    public _UserUpdateRespRecord updateUserInfo(_UserUpdateRecord reqRecord, Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new Exception404("사용자를 찾을 수 없습니다."));
 
         user.update(reqRecord);
         userRepository.saveAndFlush(user);
 
-        SessionUser newSessionUser = new SessionUser(user);
-
-        return new SessionUser(user);
+        return new _UserUpdateRespRecord(user.getId(), user.getEmail(), user.getPassword());
     }
+
 }
