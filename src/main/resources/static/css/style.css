@@ -619,6 +619,35 @@ input[type="checkbox"]:checked + label:after {
     font-size: 16px;
 }
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 0 5px;
+    border-radius: 5px;
+    background-color: #343a40;
+    color: #fff;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #FC7C9A;
+    color: #fff;
+}
+
+.pagination a.current {
+    background-color: #FC7C9A;
+    color: #fff;
+}
+
+
 .form-group {
     margin-bottom: 20px;
 }

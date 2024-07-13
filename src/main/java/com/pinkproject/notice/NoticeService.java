@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,29 +27,29 @@ public class NoticeService {
 
 
     @Transactional
-    public List<_DetailNoticeAdminRecord> searchNotices(String keyword) {
-        return noticeRepository.findByKeywordWithNotice(keyword).stream()
-                .map(notice -> new _DetailNoticeAdminRecord(
-                        notice.getId(),
-                        notice.getTitle(),
-                        notice.getContent(),
-                        notice.getAdmin().getUsername(),
-                        notice.getCreatedAt().toLocalDate()
-                ))
-                .collect(Collectors.toList());
+    public Page<_DetailNoticeAdminRecord> searchNotices(String keyword, int page) {
+        PageRequest pageRequest = PageRequest.of(page, 5); // 페이지 번호, 페이지 당 크기
+        Page<Notice> notices = noticeRepository.findByKeywordWithNotice(keyword, pageRequest);
+        return notices.map(notice -> new _DetailNoticeAdminRecord(
+                notice.getId(),
+                notice.getTitle(),
+                notice.getContent(),
+                notice.getAdmin().getUsername(),
+                notice.getCreatedAt().toLocalDate()
+        ));
     }
 
     @Transactional
-    public List<_DetailNoticeAdminRecord> getNotices() {
-        return noticeRepository.findAllWithAdmin().stream()
-                .map(notice -> new _DetailNoticeAdminRecord(
-                        notice.getId(),
-                        notice.getTitle(),
-                        notice.getContent(),
-                        notice.getAdmin().getUsername(),
-                        notice.getCreatedAt().toLocalDate()
-                ))
-                .collect(Collectors.toList());
+    public Page<_DetailNoticeAdminRecord> getNotices(int page) {
+        PageRequest pageRequest = PageRequest.of(page, 5); // 페이지 번호, 페이지 당 크기
+        Page<Notice> notices = noticeRepository.findAllWithAdmin(pageRequest);
+        return notices.map(notice -> new _DetailNoticeAdminRecord(
+                notice.getId(),
+                notice.getTitle(),
+                notice.getContent(),
+                notice.getAdmin().getUsername(),
+                notice.getCreatedAt().toLocalDate()
+        ));
     }
 
     @Transactional
