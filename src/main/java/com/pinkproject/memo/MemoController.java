@@ -6,7 +6,6 @@ import com.pinkproject.memo.MemoRequest._UpdateMemoRecord;
 import com.pinkproject.memo.MemoResponse._MonthlyMemoMainRecord;
 import com.pinkproject.memo.MemoResponse._SaveMemoRespRecord;
 import com.pinkproject.memo.MemoResponse._UpdateMemoRespRecord;
-import com.pinkproject.user.SessionUser;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,49 +18,49 @@ public class MemoController {
     private final HttpSession session;
 
     // 월간 메모 랜더링
-    @GetMapping("/api/memos/monthly")
+    @GetMapping("/memos/monthly") // TODO: /api
     public ResponseEntity<?> monthlyMemos(@RequestParam Integer year, @RequestParam Integer month) {
-         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
-         if (sessionUser == null) {
-             return ResponseEntity.status(401).build();
-         }
-        _MonthlyMemoMainRecord respDTO = memoService.getMonthlyMemoMain(sessionUser.getId(), year, month);
+//         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
+//         if (sessionUser == null) {
+//             return ResponseEntity.status(401).build();
+//         }
+        _MonthlyMemoMainRecord respDTO = memoService.getMonthlyMemoMain(1, year, month); // TODO: sessionUser.getId()
 
         return ResponseEntity.ok(new ApiUtil<>(respDTO));
     }
 
     // 메모 저장
-    @PostMapping("/api/memos")
+    @PostMapping("/memos") // TODO: /api
     public ResponseEntity<?> saveTransaction(@RequestBody _SaveMemoRecord reqRecord) {
-         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
-         if (sessionUser == null) {
-             return ResponseEntity.status(401).build();
-         }
-        _SaveMemoRespRecord respRecord = memoService.saveMemo(reqRecord, sessionUser.getId());
+//         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
+//         if (sessionUser == null) {
+//             return ResponseEntity.status(401).build();
+//         }
+        _SaveMemoRespRecord respRecord = memoService.saveMemo(reqRecord, 1); // TODO: sessionUser.getId()
         System.out.println(respRecord);
         return ResponseEntity.ok(new ApiUtil<>(respRecord));
     }
 
     // 메모 수정
-    @PutMapping("/api/memos/{memoId}")
+    @PutMapping("/memos/{memoId}") // TODO: /api
     public ResponseEntity<?> updateMemo(@PathVariable("memoId") Integer memoId, @RequestBody _UpdateMemoRecord reqRecord) {
-         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
-         if (sessionUser == null) {
-             return ResponseEntity.status(401).build();
-         }
-        _UpdateMemoRespRecord response = memoService.updateMemo(memoId, reqRecord);
+//         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
+//         if (sessionUser == null) {
+//             return ResponseEntity.status(401).build();
+//         }
+        _UpdateMemoRespRecord response = memoService.updateMemo(memoId, reqRecord); // TODO: sessionUser.getId()
 
         return ResponseEntity.ok(new ApiUtil<>(response));
     }
 
     // 메모 삭제
-    @DeleteMapping("/api/memos/{memoId}")
+    @DeleteMapping("/memos/{memoId}") // TODO: /api
     public ResponseEntity<?> deleteMemo(@PathVariable("memoId") Integer memoId) {
-         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
-         if (sessionUser == null) {
-             return ResponseEntity.status(401).build();
-         }
-        memoService.deleteMemo(memoId, sessionUser.getId());
+//         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
+//         if (sessionUser == null) {
+//             return ResponseEntity.status(401).build();
+//         }
+        memoService.deleteMemo(memoId, 1); // TODO: sessionUser.getId()
 
         return ResponseEntity.ok(new ApiUtil<>(null));
     }
