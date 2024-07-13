@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -43,9 +44,12 @@ public class MemoService {
                 .collect(Collectors.groupingBy(memo -> memo.getCreatedAt().toLocalDate().toString()));
 
         List<_MonthlyMemoMainRecord.DailyMemoRecords> dailyMemoRecordsList = memosByDate.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
                 .map(entry -> {
                     String date = entry.getKey();
-                    List<Memo> dailyMemoList = entry.getValue();
+                    List<Memo> dailyMemoList = entry.getValue().stream()
+                            .sorted(Comparator.comparing(Memo::getCreatedAt).reversed())
+                            .toList();
 
                     List<_MonthlyMemoMainRecord.DailyMemoRecords.DailyMemoRecord> dailyMemoRecordList = dailyMemoList.stream()
                             .map(memo -> new _MonthlyMemoMainRecord.DailyMemoRecords.DailyMemoRecord(
