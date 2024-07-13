@@ -87,6 +87,7 @@ public class AdminController {
         request.setAttribute("pages", IntStream.range(1, notices.getTotalPages() + 1)
                 .mapToObj(i -> Map.of("number", i, "isCurrent", i == page))
                 .collect(Collectors.toList()));
+        request.setAttribute("keyword", keyword);
 
         // 세션에서 admin 객체 가져와서 username 설정
         SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
@@ -127,6 +128,7 @@ public class AdminController {
         request.setAttribute("pages", IntStream.range(1, faqs.getTotalPages() + 1) // 1부터 시작하도록 수정
                 .mapToObj(i -> Map.of("number", i, "isCurrent", i == page))
                 .collect(Collectors.toList()));
+        request.setAttribute("keyword", keyword);
 
         // 세션에서 admin 객체 가져와서 username 설정
         SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
