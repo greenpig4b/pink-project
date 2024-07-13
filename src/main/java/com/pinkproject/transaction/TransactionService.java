@@ -4,7 +4,7 @@ import com.pinkproject._core.error.exception.Exception404;
 import com.pinkproject._core.utils.Formatter;
 import com.pinkproject.transaction.TransactionRequest._SaveTransactionRecord;
 import com.pinkproject.transaction.TransactionRequest._UpdateTransactionRecord;
-import com.pinkproject.transaction.TransactionResponse._DailyTransactionMainRecord;
+import com.pinkproject.transaction.TransactionResponse._MonthlyTransactionMainRecord;
 import com.pinkproject.transaction.TransactionResponse._SaveTransactionRespRecord;
 import com.pinkproject.transaction.TransactionResponse._UpdateTransactionRespRecord;
 import com.pinkproject.transaction.enums.TransactionType;
@@ -28,7 +28,7 @@ public class TransactionService {
     private final UserRepository userRepository;
     private final TransactionRepository transactionRepository;
 
-    public _DailyTransactionMainRecord getDailyTransactionMain(Integer sessionUserId, Integer year, Integer month) {
+    public _MonthlyTransactionMainRecord getMonthlyTransactionMain(Integer sessionUserId, Integer year, Integer month) {
         User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보가 없습니다."));
 
         LocalDate startDate = LocalDate.of(year, month, 1);
@@ -47,7 +47,7 @@ public class TransactionService {
 
         Map<String, List<Transaction>> transactionsByDate = transactions.stream().collect(Collectors.groupingBy(transaction -> transaction.getEffectiveDateTime().toLocalDate().toString()));
 
-        List<_DailyTransactionMainRecord.DailyTransactionRecord> dailyTransactionRecords = transactionsByDate.entrySet().stream().sorted(Map.Entry.comparingByKey())
+        List<_MonthlyTransactionMainRecord.DailyTransactionRecord> dailyTransactionRecords = transactionsByDate.entrySet().stream().sorted(Map.Entry.comparingByKey())
                 .map(entry -> {
                     LocalDate date = LocalDate.parse(entry.getKey());
                     List<Transaction> dailyTransactionList = entry.getValue();
@@ -58,9 +58,9 @@ public class TransactionService {
                             .filter(transaction -> transaction.getTransactionType() == TransactionType.EXPENSE).mapToInt(Transaction::getAmount).sum();
                     Integer dailyTotalAmount = dailyIncome - dailyExpense;
 
-                    List<_DailyTransactionMainRecord.DailyTransactionRecord.DailyTransactionDetailRecord> dailyTransactionDetailRecords = dailyTransactionList.stream()
+                    List<_MonthlyTransactionMainRecord.DailyTransactionRecord.DailyTransactionDetailRecord> dailyTransactionDetailRecords = dailyTransactionList.stream()
                             .sorted(Comparator.comparing(Transaction::getEffectiveDateTime))
-                            .map(transaction -> new _DailyTransactionMainRecord.DailyTransactionRecord.DailyTransactionDetailRecord(
+                            .map(transaction -> new _MonthlyTransactionMainRecord.DailyTransactionRecord.DailyTransactionDetailRecord(
                                     transaction.getId(),
                                     transaction.getTransactionType(),
                                     transaction.getCategoryIn() != null ? transaction.getCategoryIn().getKorean() : null,
@@ -69,10 +69,10 @@ public class TransactionService {
                                     Formatter.formatCreatedAtPeriodWithTime(transaction.getEffectiveDateTime()),
                                     transaction.getAssets() != null ? transaction.getAssets().getKorean() : null, Formatter.number(transaction.getAmount()))).toList();
 
-                    return new _DailyTransactionMainRecord.DailyTransactionRecord(Formatter.formatDayOnly(date), Formatter.number(dailyIncome), Formatter.number(dailyExpense), Formatter.number(dailyTotalAmount), dailyTransactionDetailRecords);
+                    return new _MonthlyTransactionMainRecord.DailyTransactionRecord(Formatter.formatDayOnly(date), Formatter.number(dailyIncome), Formatter.number(dailyExpense), Formatter.number(dailyTotalAmount), dailyTransactionDetailRecords);
                 }).toList();
 
-        return new _DailyTransactionMainRecord(sessionUserId, Formatter.formatYearWithSuffix(startDate), Formatter.formatMonthWithSuffix(startDate), Formatter.number(monthlyIncome), Formatter.number(monthlyExpense), Formatter.number(monthlyTotalAmount), dailyTransactionRecords);
+        return new _MonthlyTransactionMainRecord(sessionUserId, Formatter.formatYearWithSuffix(startDate), Formatter.formatMonthWithSuffix(startDate), Formatter.number(monthlyIncome), Formatter.number(monthlyExpense), Formatter.number(monthlyTotalAmount), dailyTransactionRecords);
     }
 
     @Transactional

@@ -8,7 +8,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
+import java.util.Locale;
 
 public class Formatter {
 
@@ -100,5 +102,21 @@ public class Formatter {
     // 밀리초를 제거한 LocalDateTime 반환
     public static LocalDateTime truncateToSeconds(LocalDateTime dateTime) {
         return dateTime.truncatedTo(ChronoUnit.SECONDS);
+    }
+
+    // LocalDate를 "MM.dd(요일)" 형식의 문자열로 변환
+    public static String formatDateWithDayOfWeek(LocalDate date) {
+        if (date == null) {
+            return null;
+        }
+        String monthDay = date.format(DateTimeFormatter.ofPattern("MM.dd"));
+        String dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.KOREAN);
+        return monthDay + "(" + dayOfWeek + ")";
+    }
+
+    // monthDateDay를 LocalDate로 변환
+    public static LocalDate parseMonthDateDay(String monthDateDay) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd(EEE)", Locale.KOREAN);
+        return LocalDate.parse(monthDateDay, formatter);
     }
 }

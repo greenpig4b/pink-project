@@ -34,10 +34,12 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     private Assets assets; // TODO: 이거 사실 좀 애매해요ㅠ 일단은 자산의 형태 CASH, BANK, CARD
 
+    // TransactionType이 수입일 경우 카테고리
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
     private CategoryIn categoryIn; // 월급 등의 소득
 
+    // TransactionType이 지출일 경우 카테고리
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
     private CategoryOut categoryOut; // 경조사 / 정기 지출 등
