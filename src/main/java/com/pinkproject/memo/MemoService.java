@@ -1,6 +1,7 @@
 package com.pinkproject.memo;
 
 import com.pinkproject._core.error.exception.Exception404;
+import com.pinkproject._core.utils.Formatter;
 import com.pinkproject.memo.MemoRequest._SaveMemoRecord;
 import com.pinkproject.memo.MemoRequest._UpdateMemoRecord;
 import com.pinkproject.memo.MemoResponse._MonthlyMemoMainRecord;
@@ -14,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Map;
@@ -60,18 +63,32 @@ public class MemoService {
     @Transactional
     public _SaveMemoRespRecord saveMemo(_SaveMemoRecord reqRecord, Integer sessionUserId) {
         User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보를 찾을 수 없습니다."));
+        System.out.println(1);
+
+        // 클라이언트로부터 받은 날짜 데이터를 LocalDate로 변환
+        LocalDate date = LocalDate.parse(reqRecord.yearMonthDate(), DateTimeFormatter.ISO_LOCAL_DATE);
+        LocalDateTime createdAt = LocalDateTime.of(date, LocalDateTime.now().toLocalTime()).truncatedTo(ChronoUnit.SECONDS); // 현재 시간 설정 및 밀리초 제거
+        System.out.println(2);
 
         Memo memo = Memo.builder()
                 .user(user)
                 .title(reqRecord.title())
                 .content(reqRecord.content())
+                .createdAt(createdAt)
                 .build();
+        System.out.println(3);
 
         memo = memoRepository.save(memo);
+        System.out.println(4);
+
+        // 응답 시 LocalDateTime을 "MM.dd(요일)" 형식으로 변환
+        String formattedMonthDateDay = Formatter.formatDateWithDayOfWeek(memo.getCreatedAt().toLocalDate());
+        System.out.println(5);
 
         return new _SaveMemoRespRecord(
                 memo.getId(),
                 memo.getUser().getId(),
+                formattedMonthDateDay,
                 memo.getTitle(),
                 memo.getContent()
         );

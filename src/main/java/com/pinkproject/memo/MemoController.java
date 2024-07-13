@@ -37,9 +37,9 @@ public class MemoController {
          if (sessionUser == null) {
              return ResponseEntity.status(401).build();
          }
-        _SaveMemoRespRecord respDTO = memoService.saveMemo(reqRecord, sessionUser.getId());
-
-        return ResponseEntity.ok(new ApiUtil<>(respDTO));
+        _SaveMemoRespRecord respRecord = memoService.saveMemo(reqRecord, sessionUser.getId());
+        System.out.println(respRecord);
+        return ResponseEntity.ok(new ApiUtil<>(respRecord));
     }
 
     // 메모 수정
