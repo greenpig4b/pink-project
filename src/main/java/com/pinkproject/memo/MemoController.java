@@ -18,7 +18,7 @@ public class MemoController {
     private final HttpSession session;
 
     // 월간 메모 랜더링
-    @GetMapping("/memos/monthly") // TODO: /api
+    @GetMapping("/api/memos/monthly")
     public ResponseEntity<?> monthlyMemos(@RequestParam Integer year, @RequestParam Integer month) {
 //         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
 //         if (sessionUser == null) {
@@ -30,7 +30,7 @@ public class MemoController {
     }
 
     // 메모 저장
-    @PostMapping("/memos") // TODO: /api
+    @PostMapping("/api/memos")
     public ResponseEntity<?> saveTransaction(@RequestBody _SaveMemoRecord reqRecord) {
 //         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
 //         if (sessionUser == null) {
@@ -42,7 +42,7 @@ public class MemoController {
     }
 
     // 메모 수정
-    @PutMapping("/memos/{memoId}") // TODO: /api
+    @PutMapping("/api/memos/{memoId}")
     public ResponseEntity<?> updateMemo(@PathVariable("memoId") Integer memoId, @RequestBody _UpdateMemoRecord reqRecord) {
 //         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
 //         if (sessionUser == null) {
@@ -54,7 +54,7 @@ public class MemoController {
     }
 
     // 메모 삭제
-    @DeleteMapping("/memos/{memoId}") // TODO: /api
+    @DeleteMapping("/api/memos/{memoId}")
     public ResponseEntity<?> deleteMemo(@PathVariable("memoId") Integer memoId) {
 //         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
 //         if (sessionUser == null) {
