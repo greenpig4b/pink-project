@@ -234,9 +234,8 @@ public class TransactionService {
         );
     }
 
-    // 결산 메인 페이지
     public _MonthlyFinancialReport getMonthlyFinancialReportMain(Integer sessionUserId, Integer year, Integer month) {
-        User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보가 없습니다."));
+        User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보를 찾을 수 없습니다."));
 
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfMonth());
@@ -256,8 +255,8 @@ public class TransactionService {
                 Formatter.number(summary.getMonthlyIncome()),
                 Formatter.number(summary.getMonthlyExpense()),
                 Formatter.number(summary.getMonthlyTotalAmount()),
-                Formatter.formatYearMonth(startDate),
-                Formatter.formatYearMonth(endDate),
+                Formatter.formatYearMonthDay(startDate),
+                Formatter.formatYearMonthDay(endDate),
                 new _MonthlyFinancialReport.MonthlyExpenseSummary(
                         previousMonthExpenseComparison,
                         Formatter.number(summary.getMonthlyExpense()),
@@ -282,7 +281,7 @@ public class TransactionService {
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
 
-        List<Transaction> transactions = transactionRepository.findByUserIdAndCreatedAtBetween(user.getId(), startDateTime, endDateTime);
-        return SummaryUtil.calculateSummary(transactions);
+        List<Transaction> previousTransactions = transactionRepository.findByUserIdAndCreatedAtBetween(user.getId(), startDateTime, endDateTime);
+        return SummaryUtil.calculateSummary(previousTransactions);
     }
 }
