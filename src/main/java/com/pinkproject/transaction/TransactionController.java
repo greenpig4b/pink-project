@@ -75,4 +75,17 @@ public class TransactionController {
 
         return ResponseEntity.ok(new ApiUtil<>(respRecord));
     }
+
+    // 달력 페이지
+    @GetMapping("/api/calendar")
+    public ResponseEntity<?> getCalendar(@RequestParam Integer year, @RequestParam Integer month){
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
+        if (sessionUser == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        _MonthlyCalendar respRecord = transactionService.getMonthlyCalendarSummaryAndDailyDetail(sessionUser.getId(), year, month);
+
+        return ResponseEntity.ok(new ApiUtil<>(respRecord));
+    }
 }
