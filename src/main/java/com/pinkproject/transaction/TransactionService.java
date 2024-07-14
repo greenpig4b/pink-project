@@ -4,6 +4,8 @@ import com.pinkproject._core.error.exception.Exception403;
 import com.pinkproject._core.error.exception.Exception404;
 import com.pinkproject._core.utils.Formatter;
 import com.pinkproject._core.utils.SummaryUtil;
+import com.pinkproject.memo.Memo;
+import com.pinkproject.memo.MemoRepository;
 import com.pinkproject.transaction.TransactionRequest._SaveTransactionRecord;
 import com.pinkproject.transaction.TransactionRequest._UpdateTransactionRecord;
 import com.pinkproject.transaction.TransactionResponse.*;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 public class TransactionService {
     private final UserRepository userRepository;
     private final TransactionRepository transactionRepository;
+    private final MemoRepository memoRepository;
 
     public _MonthlyTransactionMainRecord getMonthlyTransactionMain(Integer sessionUserId, Integer year, Integer month) {
         User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보가 없습니다."));
@@ -283,5 +286,74 @@ public class TransactionService {
 
         List<Transaction> previousTransactions = transactionRepository.findByUserIdAndCreatedAtBetween(user.getId(), startDateTime, endDateTime);
         return SummaryUtil.calculateSummary(previousTransactions);
+    }
+
+    // 달력 페이지
+    public _MonthlyCalendar getMonthlyCalendarSummaryAndDailyDetail(Integer sessionUserId, Integer year, Integer month) {
+        User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보가 없습니다."));
+
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfMonth());
+
+        List<Transaction> transactions = transactionRepository.findByUserIdAndCreatedAtBetween(user.getId(), startDate.atStartOfDay(), endDate.atTime(23, 59, 59));
+        SummaryUtil.Summary summary = SummaryUtil.calculateSummary(transactions);
+
+        List<Memo> memos = memoRepository.findByUserIdAndCreatedAtBetween(user.getId(), startDate.atStartOfDay(), endDate.atTime(23, 59, 59));
+
+        List<_MonthlyCalendar.DailySummary> dailySummaries = transactions.stream()
+                .collect(Collectors.groupingBy(transaction -> transaction.getCreatedAt().toLocalDate()))
+                .entrySet().stream()
+                .map(entry -> {
+                    LocalDate date = entry.getKey();
+                    List<Transaction> dailyTransactions = entry.getValue();
+
+                    boolean hasMemo = memos.stream().anyMatch(memo -> memo.getEffectiveDateTime().toLocalDate().equals(date));
+                    SummaryUtil.DailySummary dailySummary = SummaryUtil.calculateDailySummary(dailyTransactions);
+
+                    String dailyIncome = dailySummary.getDailyIncome() > 0 ? Formatter.number(dailySummary.getDailyIncome()) : "";
+                    String dailyExpense = dailySummary.getDailyExpense() > 0 ? Formatter.number(dailySummary.getDailyExpense()) : "";
+                    String dailyTotalAmount = (dailySummary.getDailyIncome() > 0 && dailySummary.getDailyExpense() > 0) ? Formatter.number(dailySummary.getDailyTotalAmount()) : "";
+
+                    List<_MonthlyCalendar.DailySummary.DailyDetail.Memo> dailyMemos = memos.stream()
+                            .filter(memo -> memo.getEffectiveDateTime().toLocalDate().equals(date))
+                            .map(memo -> new _MonthlyCalendar.DailySummary.DailyDetail.Memo(memo.getId(), memo.getContent()))
+                            .collect(Collectors.toList());
+
+                    List<_MonthlyCalendar.DailySummary.DailyDetail.TransactionDetail> transactionDetails = dailyTransactions.stream()
+                            .map(transaction -> new _MonthlyCalendar.DailySummary.DailyDetail.TransactionDetail(
+                                    transaction.getId(),
+                                    transaction.getTransactionType(),
+                                    transaction.getCategoryIn() != null ? transaction.getCategoryIn().getKorean() : transaction.getCategoryOut().getKorean(),
+                                    transaction.getDescription(),
+                                    transaction.getAssets().getKorean(),
+                                    Formatter.number(transaction.getAmount())
+                            ))
+                            .collect(Collectors.toList());
+
+                    _MonthlyCalendar.DailySummary.DailyDetail dailyDetail = new _MonthlyCalendar.DailySummary.DailyDetail(
+                            Formatter.formatDay(date),
+                            Formatter.formatYearMonth(date),
+                            Formatter.formatDayOfWeek(date),
+                            dailyMemos,
+                            transactionDetails
+                    );
+
+                    return new _MonthlyCalendar.DailySummary(
+                            Formatter.formatDay(date),
+                            hasMemo,
+                            dailyIncome,
+                            dailyExpense,
+                            dailyTotalAmount,
+                            dailyDetail
+                    );
+                })
+                .collect(Collectors.toList());
+
+        return new _MonthlyCalendar(
+                Formatter.number(summary.getMonthlyIncome()),
+                Formatter.number(summary.getMonthlyExpense()),
+                Formatter.number(summary.getMonthlyTotalAmount()),
+                dailySummaries
+        );
     }
 }

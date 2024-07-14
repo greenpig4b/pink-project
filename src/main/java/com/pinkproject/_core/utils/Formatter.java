@@ -37,6 +37,23 @@ public class Formatter {
         return date.format(YEAR_MONTH_DAY_FORMATTER);
     }
 
+    // LocalDate를 yyyy.MM 형식의 문자열로 변환
+    public static String formatYearMonth(LocalDate date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM");
+        return date.format(formatter);
+    }
+
+    // LocalDate에서 일 형식만 반환
+    public static String formatDay(LocalDate date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd");
+        return date.format(formatter);
+    }
+
+    // LocalDate를 요일 형식의 문자열로 반환
+    public static String formatDayOfWeek(LocalDate date) {
+        return date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREAN);
+    }
+
     // Timestamp를 yyyy-MM-dd HH:mm:ss 형식의 문자열로 변환
     public static String formatTimestamp(Timestamp timestamp) {
         LocalDateTime localDateTime = timestamp.toLocalDateTime();
