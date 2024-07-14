@@ -26,7 +26,4 @@ public class AdminService {
         return adminRepository.findByUsername(username);
     }
 
-    public List<_DetailNoticeAdminRecord> getNotices() {
-        return noticeService.getNotices();
-    }
 }

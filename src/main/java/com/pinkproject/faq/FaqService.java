@@ -6,6 +6,8 @@ import com.pinkproject.admin.AdminRequest._SaveFaqAdminRecord;
 import com.pinkproject.admin.enums.FaqEnum;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,31 +19,31 @@ public class FaqService {
     private final FaqRepository faqRepository;
 
     @Transactional
-    public List<_DetailFaqAdminRecord> searchFaqs(String keyword) {
-        return faqRepository.findByKeywordWithFaq(keyword).stream()
-                .map(faq -> new _DetailFaqAdminRecord(
-                        faq.getId(),
-                        faq.getTitle(),
-                        faq.getContent(),
-                        faq.getAdmin().getUsername(),
-                        faq.getClassification(),
-                        faq.getCreatedAt().toLocalDate()
-                ))
-                .collect(Collectors.toList());
+    public Page<_DetailFaqAdminRecord> getFaqs(int page) {
+        PageRequest pageRequest = PageRequest.of(page, 5); // 페이지 번호, 페이지 당 크기
+        Page<Faq> faqs = faqRepository.findAllWithAdmin(pageRequest);
+        return faqs.map(faq -> new _DetailFaqAdminRecord(
+                faq.getId(),
+                faq.getTitle(),
+                faq.getContent(),
+                faq.getAdmin().getUsername(),
+                faq.getClassification(),
+                faq.getCreatedAt().toLocalDate()
+        ));
     }
 
     @Transactional
-    public List<_DetailFaqAdminRecord> getFaqs() {
-        return faqRepository.findAllWithAdmin().stream()
-                .map(faq -> new _DetailFaqAdminRecord(
-                        faq.getId(),
-                        faq.getTitle(),
-                        faq.getContent(),
-                        faq.getAdmin().getUsername(),
-                        faq.getClassification(),
-                        faq.getCreatedAt().toLocalDate()
-                ))
-                .collect(Collectors.toList());
+    public Page<_DetailFaqAdminRecord> searchFaqs(String keyword, int page) {
+        PageRequest pageRequest = PageRequest.of(page, 5); // 페이지 번호, 페이지 당 크기
+        Page<Faq> faqs = faqRepository.findByKeywordWithFaq(keyword, pageRequest);
+        return faqs.map(faq -> new _DetailFaqAdminRecord(
+                faq.getId(),
+                faq.getTitle(),
+                faq.getContent(),
+                faq.getAdmin().getUsername(),
+                faq.getClassification(),
+                faq.getCreatedAt().toLocalDate()
+        ));
     }
 
     @Transactional

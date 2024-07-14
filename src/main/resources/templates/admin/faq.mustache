@@ -12,11 +12,9 @@
     <title>FAQ</title>
 </head>
 
-
 <body>
 <main role="main">
     <section id="section n1">
-
         <aside class="side-bar">
             <div class="side-content header">
                 <figure>
@@ -27,7 +25,8 @@
             <div class="side-content info">
                 <p>관리자 : {{username}}</p>
                 <p>접속일: {{currentDateTime}}</p>
-                <a href="/admin/logout" class="logout-btn" id="logoutBtn">로그아웃</a>            </div>
+                <a href="/admin/logout" class="logout-btn" id="logoutBtn">로그아웃</a>
+            </div>
 
             <div class="side-menu active">
                 <p class="head-menu"><i class="fa-solid fa-marker"></i>  관리</p>
@@ -64,7 +63,6 @@
                                     </div>
                                 </li>
                             </ul>
-
                         </form>
                         <table>
                             <colgroup>
@@ -93,9 +91,23 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="faq-button-wrapper">
+                    <div class="button-wrapper">
+                        <a class="btn list" href="/admin/faq">목록</a>
                         <a class="btn black" href="/admin/faq/save">작성</a>
                     </div>
+                </div>
+                <div class="pagination">
+                <a href="?page=1{{#keyword}}&keyword={{keyword}}{{/keyword}}">처음으로</a>
+                    {{#hasPrevious}}
+                        <a href="?page={{previousPage}}{{#keyword}}&keyword={{keyword}}{{/keyword}}">◀</a>
+                    {{/hasPrevious}}
+                    {{#pages}}
+                        <a href="?page={{number}}{{#keyword}}&keyword={{keyword}}{{/keyword}}" class="{{#isCurrent}}current{{/isCurrent}}">{{number}}</a>
+                    {{/pages}}
+                    {{#hasNext}}
+                        <a href="?page={{nextPage}}{{#keyword}}&keyword={{keyword}}{{/keyword}}">▶</a>
+                    {{/hasNext}}
+                    <a href="?page={{lastPage}}{{#keyword}}&keyword={{keyword}}{{/keyword}}">끝으로</a>
                 </div>
             </div>
         </div>
@@ -128,8 +140,6 @@
             userMenu.classList.toggle('active');
         });
     });
-
 </script>
 </body>
-
 </html>

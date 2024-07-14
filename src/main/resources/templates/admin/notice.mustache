@@ -84,10 +84,24 @@
               </tbody>
             </table>
           </div>
-          <div class="faq-button-wrapper">
-            <a class="btn black" href="/admin/notice/save">작성</a>
+          <div class="button-wrapper">
+              <a class="btn list" href="/admin/notice">목록</a>
+              <a class="btn black" href="/admin/notice/save">작성</a>
           </div>
         </div>
+          <div class="pagination">
+          <a href="?page=1{{#keyword}}&keyword={{keyword}}{{/keyword}}">처음으로</a>
+              {{#hasPrevious}}
+                  <a href="?page={{previousPage}}{{#keyword}}&keyword={{keyword}}{{/keyword}}">◀</a>
+              {{/hasPrevious}}
+              {{#pages}}
+                  <a href="?page={{number}}{{#keyword}}&keyword={{keyword}}{{/keyword}}" class="{{#isCurrent}}current{{/isCurrent}}">{{number}}</a>
+              {{/pages}}
+              {{#hasNext}}
+                  <a href="?page={{nextPage}}{{#keyword}}&keyword={{keyword}}{{/keyword}}">▶</a>
+              {{/hasNext}}
+              <a href="?page={{lastPage}}{{#keyword}}&keyword={{keyword}}{{/keyword}}">끝으로</a>
+          </div>
       </div>
     </div>
   </section>
