@@ -1,5 +1,7 @@
 package com.pinkproject.transaction.TransactionResponse;
 
+import com.pinkproject.transaction.enums.TransactionType;
+
 import java.util.List;
 
 public record _MonthlyCalendar(
@@ -30,7 +32,7 @@ public record _MonthlyCalendar(
 
             public record TransactionDetail(
                     Integer id,
-                    String transactionType, // 수입, 지출
+                    TransactionType transactionType, // 수입, 지출
                     String category, // 식비, 용돈
                     String description,
                     String assets, // 카드, 현금, 계좌

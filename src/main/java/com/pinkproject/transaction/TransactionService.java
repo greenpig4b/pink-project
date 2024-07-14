@@ -322,8 +322,8 @@ public class TransactionService {
                     List<_MonthlyCalendar.DailySummary.DailyDetail.TransactionDetail> transactionDetails = dailyTransactions.stream()
                             .map(transaction -> new _MonthlyCalendar.DailySummary.DailyDetail.TransactionDetail(
                                     transaction.getId(),
-                                    transaction.getTransactionType().name(),
-                                    transaction.getCategoryIn() != null ? transaction.getCategoryIn().name() : transaction.getCategoryOut().name(),
+                                    transaction.getTransactionType(),
+                                    transaction.getCategoryIn() != null ? transaction.getCategoryIn().getKorean() : transaction.getCategoryOut().getKorean(),
                                     transaction.getDescription(),
                                     transaction.getAssets().getKorean(),
                                     Formatter.number(transaction.getAmount())
