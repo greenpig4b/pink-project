@@ -20,10 +20,21 @@ public class Formatter {
     private static final DateTimeFormatter YEAR_FORMATTER = DateTimeFormatter.ofPattern("yyyy");
     private static final DateTimeFormatter MONTH_FORMATTER = DateTimeFormatter.ofPattern("M"); // 월 앞의 0 제거
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm"); // 시간과 분만 포함
+    private static final DateTimeFormatter YEAR_MONTH_DAY_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
 
     // LocalDateTime을 yyyy-MM-dd 형식의 문자열로 변환
     public static String formatDate(LocalDateTime date) {
         return date.format(DATE_FORMATTER);
+    }
+
+    // LocalDate를 yyyy-MM-dd 형식의 문자열로 반환
+    public static String formatDate(LocalDate date) {
+        return date.format(DATE_FORMATTER);
+    }
+
+    // LocalDate를 yyyy.MM.dd 형식의 문자열로 반환
+    public static String formatYearMonthDay(LocalDate date) {
+        return date.format(YEAR_MONTH_DAY_FORMATTER);
     }
 
     // Timestamp를 yyyy-MM-dd HH:mm:ss 형식의 문자열로 변환
@@ -118,5 +129,14 @@ public class Formatter {
     public static LocalDate parseMonthDateDay(String monthDateDay) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd(EEE)", Locale.KOREAN);
         return LocalDate.parse(monthDateDay, formatter);
+    }
+
+    // 퍼센트 변화를 계산하여 문자열로 반환
+    public static String calculatePercentageChange(int previous, int current) {
+        if (previous == 0) {
+            return current > 0 ? "∞%" : "0%";
+        }
+        double change = ((double) (current - previous) / previous) * 100;
+        return String.format("%.1f%%", change);
     }
 }

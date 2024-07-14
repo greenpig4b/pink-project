@@ -6,10 +6,8 @@ import com.pinkproject._core.utils.Formatter;
 import com.pinkproject._core.utils.SummaryUtil;
 import com.pinkproject.transaction.TransactionRequest._SaveTransactionRecord;
 import com.pinkproject.transaction.TransactionRequest._UpdateTransactionRecord;
-import com.pinkproject.transaction.TransactionResponse._DeleteTransactionRespRecord;
-import com.pinkproject.transaction.TransactionResponse._MonthlyTransactionMainRecord;
-import com.pinkproject.transaction.TransactionResponse._SaveTransactionRespRecord;
-import com.pinkproject.transaction.TransactionResponse._UpdateTransactionRespRecord;
+import com.pinkproject.transaction.TransactionResponse.*;
+import com.pinkproject.transaction.enums.Assets;
 import com.pinkproject.user.User;
 import com.pinkproject.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -234,5 +232,56 @@ public class TransactionService {
                 )),
                 "삭제가 완료되었습니다."
         );
+    }
+
+    public _MonthlyFinancialReport getMonthlyFinancialReportMain(Integer sessionUserId, Integer year, Integer month) {
+        User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보를 찾을 수 없습니다."));
+
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfMonth());
+
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
+
+        List<Transaction> transactions = transactionRepository.findByUserIdAndCreatedAtBetween(user.getId(), startDateTime, endDateTime);
+        SummaryUtil.Summary summary = SummaryUtil.calculateSummary(transactions);
+
+        SummaryUtil.Summary previousSummary = calculatePreviousMonthSummary(user, year, month);
+
+        String previousMonthExpenseComparison = Formatter.calculatePercentageChange(previousSummary.getMonthlyExpense(), summary.getMonthlyExpense());
+        String previousMonthIncomeComparison = Formatter.calculatePercentageChange(previousSummary.getMonthlyIncome(), summary.getMonthlyIncome());
+
+        return new _MonthlyFinancialReport(
+                Formatter.number(summary.getMonthlyIncome()),
+                Formatter.number(summary.getMonthlyExpense()),
+                Formatter.number(summary.getMonthlyTotalAmount()),
+                Formatter.formatYearMonthDay(startDate),
+                Formatter.formatYearMonthDay(endDate),
+                new _MonthlyFinancialReport.MonthlyExpenseSummary(
+                        previousMonthExpenseComparison,
+                        Formatter.number(summary.getMonthlyExpense()),
+                        Formatter.number(summary.getMonthlyExpenseByAsset(Assets.CARD)),
+                        Formatter.number(summary.getMonthlyExpenseByAsset(Assets.CASH)),
+                        Formatter.number(summary.getMonthlyExpenseByAsset(Assets.BANK))
+                ),
+                new _MonthlyFinancialReport.MonthlyIncomeSummary(
+                        previousMonthIncomeComparison,
+                        Formatter.number(summary.getMonthlyIncome()),
+                        Formatter.number(summary.getMonthlyIncomeByAsset(Assets.CARD)),
+                        Formatter.number(summary.getMonthlyIncomeByAsset(Assets.CASH)),
+                        Formatter.number(summary.getMonthlyIncomeByAsset(Assets.BANK))
+                )
+        );
+    }
+
+    private SummaryUtil.Summary calculatePreviousMonthSummary(User user, Integer year, Integer month) {
+        LocalDate startDate = LocalDate.of(year, month, 1).minusMonths(1);
+        LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfMonth());
+
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
+
+        List<Transaction> previousTransactions = transactionRepository.findByUserIdAndCreatedAtBetween(user.getId(), startDateTime, endDateTime);
+        return SummaryUtil.calculateSummary(previousTransactions);
     }
 }
