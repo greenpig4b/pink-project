@@ -3,6 +3,7 @@ package com.pinkproject.transaction;
 import com.pinkproject._core.utils.ApiUtil;
 import com.pinkproject.transaction.TransactionRequest._SaveTransactionRecord;
 import com.pinkproject.transaction.TransactionRequest._UpdateTransactionRecord;
+import com.pinkproject.transaction.TransactionResponse._DeleteTransactionRespRecord;
 import com.pinkproject.transaction.TransactionResponse._MonthlyTransactionMainRecord;
 import com.pinkproject.transaction.TransactionResponse._SaveTransactionRespRecord;
 import com.pinkproject.transaction.TransactionResponse._UpdateTransactionRespRecord;
@@ -24,9 +25,9 @@ public class TransactionController {
 //         if (sessionUser == null) {
 //             return ResponseEntity.status(401).build();
 //         }
-        _MonthlyTransactionMainRecord respDTO = transactionService.getMonthlyTransactionMain(1, year, month); // TODO: sessionUser.getId()
+        _MonthlyTransactionMainRecord respRecord = transactionService.getMonthlyTransactionMain(1, year, month); // TODO: sessionUser.getId()
 
-        return ResponseEntity.ok(new ApiUtil<>(respDTO));
+        return ResponseEntity.ok(new ApiUtil<>(respRecord));
     }
 
     // 가계부 저장
@@ -36,9 +37,9 @@ public class TransactionController {
 //         if (sessionUser == null) {
 //             return ResponseEntity.status(401).build();
 //         }
-        _SaveTransactionRespRecord respDTO = transactionService.saveTransaction(reqRecord, 1); // TODO: sessionUser.getId()
+        _SaveTransactionRespRecord respRecord = transactionService.saveTransaction(reqRecord, 1); // TODO: sessionUser.getId()
 
-        return ResponseEntity.ok(new ApiUtil<>(respDTO));
+        return ResponseEntity.ok(new ApiUtil<>(respRecord));
     }
 
     // 가계부 수정
@@ -48,9 +49,9 @@ public class TransactionController {
 //         if (sessionUser == null) {
 //             return ResponseEntity.status(401).build();
 //         }
-        _UpdateTransactionRespRecord response = transactionService.updateTransaction(transactionId, reqRecord);
+        _UpdateTransactionRespRecord respRecord = transactionService.updateTransaction(transactionId, reqRecord);
 
-        return ResponseEntity.ok(new ApiUtil<>(response));
+        return ResponseEntity.ok(new ApiUtil<>(respRecord));
     }
 
     // 가계부 삭제
@@ -60,7 +61,9 @@ public class TransactionController {
 //         if (sessionUser == null) {
 //             return ResponseEntity.status(401).build();
 //         }
-        transactionService.deleteTransaction(transactionId, 1); // TODO: sessionUser.getId()
-        return ResponseEntity.ok(new ApiUtil<>(null));
+        System.out.println("transactionId = " + transactionId);
+        _DeleteTransactionRespRecord respRecord = transactionService.deleteTransaction(transactionId, 1);
+        System.out.println("respRecord = " + respRecord);
+        return ResponseEntity.ok(new ApiUtil<>(respRecord));
     }
 }
