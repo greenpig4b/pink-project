@@ -92,6 +92,7 @@ public class TransactionController {
     // 통계페이지
     @GetMapping("/api/chart")
     public ResponseEntity<?> getChart(@RequestParam Integer year, @RequestParam Integer month, @RequestParam Integer week){
+
         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         _ChartRespRecord respRecord = transactionService.getChartTransaction(sessionUser.getId(),year,month,week);
 

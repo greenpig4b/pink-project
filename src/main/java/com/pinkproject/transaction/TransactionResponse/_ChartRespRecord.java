@@ -6,6 +6,7 @@ import java.util.List;
 
 public record  _ChartRespRecord(
         Integer monthCount,
+        Integer weekCount,
         MonthDTO chartMonth,
         WeeklyDTO chartWeekly
 ) {

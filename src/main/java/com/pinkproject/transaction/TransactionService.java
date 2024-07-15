@@ -42,7 +42,7 @@ public class TransactionService {
         _ChartRespRecord.MonthDTO monthDTO = getMonthtransaction(user.getId(),year,month);
         _ChartRespRecord.WeeklyDTO weeklyDTO = getWeeklyTransaction(user.getId(),year,month,week);
 
-        return new _ChartRespRecord(month,monthDTO,weeklyDTO);
+        return new _ChartRespRecord(month,week,monthDTO,weeklyDTO);
     }
 
 
