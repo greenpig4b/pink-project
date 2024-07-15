@@ -6,6 +6,8 @@ import java.util.List;
 
 public record _UpdateTransactionRespRecord(
         Integer userId,
+        String year,
+        String month,
         String monthlyIncome,
         String monthlyExpense,
         String monthlyTotalAmount,

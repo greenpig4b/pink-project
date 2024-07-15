@@ -4,6 +4,8 @@ import java.util.List;
 
 public record _MonthlyMemoMainRecord(
         Integer userId,
+        String year,
+        String month,
         List<DailyMemoRecords> dailyMemoRecordList
 ) {
     public record DailyMemoRecords(

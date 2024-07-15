@@ -1,6 +1,9 @@
 package com.pinkproject.transaction.TransactionResponse;
 
 public record _MonthlyFinancialReport(
+        Integer userId,
+        String year,
+        String month,
         String monthlyIncome,
         String monthlyExpense,
         String monthlyTotalAmount,

@@ -4,6 +4,8 @@ import java.util.List;
 
 public record _DeleteTransactionRespRecord(
         Integer userId,
+        String year,
+        String month,
         String monthlyIncome,
         String monthlyExpense,
         String monthlyTotalAmount,

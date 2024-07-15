@@ -5,6 +5,9 @@ import com.pinkproject.transaction.enums.TransactionType;
 import java.util.List;
 
 public record _MonthlyCalendar(
+        Integer userId,
+        String year,
+        String month,
         String monthlyIncome,
         String monthlyExpense,
         String monthlyTotalAmount,
