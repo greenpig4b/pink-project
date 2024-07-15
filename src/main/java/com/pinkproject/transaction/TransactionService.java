@@ -119,6 +119,8 @@ public class TransactionService {
 
         return new _SaveTransactionRespRecord(
                 transaction.getUser().getId(),
+                Formatter.formatYearWithSuffix(startDate),
+                Formatter.formatMonthWithSuffix(startDate),
                 Formatter.number(summary.getMonthlyIncome()),
                 Formatter.number(summary.getMonthlyExpense()),
                 Formatter.number(summary.getMonthlyTotalAmount()),
@@ -177,6 +179,8 @@ public class TransactionService {
 
         return new _UpdateTransactionRespRecord(
                 transaction.getUser().getId(),
+                Formatter.formatYearWithSuffix(startDate),
+                Formatter.formatMonthWithSuffix(startDate),
                 Formatter.number(summary.getMonthlyIncome()),
                 Formatter.number(summary.getMonthlyExpense()),
                 Formatter.number(summary.getMonthlyTotalAmount()),
@@ -224,6 +228,8 @@ public class TransactionService {
 
         return new _DeleteTransactionRespRecord(
                 user.getId(),
+                Formatter.formatYearWithSuffix(startDate),
+                Formatter.formatMonthWithSuffix(startDate),
                 Formatter.number(summary.getMonthlyIncome()),
                 Formatter.number(summary.getMonthlyExpense()),
                 Formatter.number(summary.getMonthlyTotalAmount()),
@@ -255,6 +261,9 @@ public class TransactionService {
         String previousMonthIncomeComparison = Formatter.calculatePercentageChange(previousSummary.getMonthlyIncome(), summary.getMonthlyIncome());
 
         return new _MonthlyFinancialReport(
+                sessionUserId,
+                Formatter.formatYearWithSuffix(startDate),
+                Formatter.formatMonthWithSuffix(startDate),
                 Formatter.number(summary.getMonthlyIncome()),
                 Formatter.number(summary.getMonthlyExpense()),
                 Formatter.number(summary.getMonthlyTotalAmount()),
@@ -350,6 +359,9 @@ public class TransactionService {
                 .collect(Collectors.toList());
 
         return new _MonthlyCalendar(
+                sessionUserId,
+                Formatter.formatYearWithSuffix(startDate),
+                Formatter.formatMonthWithSuffix(startDate),
                 Formatter.number(summary.getMonthlyIncome()),
                 Formatter.number(summary.getMonthlyExpense()),
                 Formatter.number(summary.getMonthlyTotalAmount()),
