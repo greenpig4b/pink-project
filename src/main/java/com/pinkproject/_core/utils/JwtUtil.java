@@ -3,6 +3,7 @@ package com.pinkproject._core.utils;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.pinkproject.admin.Admin;
 import com.pinkproject.user.SessionUser;
 import com.pinkproject.user.User;
 
@@ -34,5 +35,15 @@ public class JwtUtil {
                 .id(id)
                 .email(email)
                 .build();
+    }
+
+    // Admin 토큰 생성
+    public static String create(Admin admin) {
+        String jwt = JWT.create()
+                .withSubject("admin")
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1000L * 60L * 60L * 24L * 365L)) // 1년간 지속
+                .withClaim("id", admin.getId())
+                .sign(Algorithm.HMAC512("admintoken"));
+        return jwt;
     }
 }
