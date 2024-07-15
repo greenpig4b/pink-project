@@ -10,6 +10,7 @@ import com.pinkproject.transaction.TransactionRequest._SaveTransactionRecord;
 import com.pinkproject.transaction.TransactionRequest._UpdateTransactionRecord;
 import com.pinkproject.transaction.TransactionResponse.*;
 import com.pinkproject.transaction.enums.Assets;
+import com.pinkproject.transaction.enums.TransactionType;
 import com.pinkproject.user.User;
 import com.pinkproject.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.WeekFields;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -30,6 +33,115 @@ public class TransactionService {
     private final UserRepository userRepository;
     private final TransactionRepository transactionRepository;
     private final MemoRepository memoRepository;
+
+
+
+    public _ChartRespRecord getChartTransaction(Integer sessionUserId, Integer year, Integer month, Integer week){
+        User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보가 없습니다."));
+
+        _ChartRespRecord.MonthDTO monthDTO = getMonthtransaction(user.getId(),year,month);
+        _ChartRespRecord.WeeklyDTO weeklyDTO = getWeeklyTransaction(user.getId(),year,month,week);
+
+        return new _ChartRespRecord(month,monthDTO,weeklyDTO);
+    }
+
+
+    // 월간 수입 지출
+    public _ChartRespRecord.MonthDTO getMonthtransaction(Integer sessionUserId, Integer year, Integer month){
+
+        // 0. 인증처리
+        User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보가 없습니다."));
+
+        // 1. 권한처리
+        if (user.getId() != sessionUserId){
+            throw new Exception403("해당 수입 및 지출을 확인할 권한이 없습니다.");
+        }
+
+        List<Transaction> monthDTO = transactionRepository.findAllByYearAndMonth(year, month,sessionUserId);
+
+        // 2. 수입 및 지출 찾기
+
+        // 2-1 수입
+        List<_ChartRespRecord.MonthDTO.MonthIcomeDTO> monthIncomeList = monthDTO.stream().filter(transaction ->
+                transaction.getTransactionType() == TransactionType.INCOME).map(transaction -> _ChartRespRecord.MonthDTO.MonthIcomeDTO.builder()
+                .id(transaction.getId())
+                .category(transaction.getTransactionType().getKorean())
+                .amount(transaction.getAmount())
+                .categoryImagePath("이건 나중에 넣을 수 도 있어서^^")
+                .build()).toList();
+
+        // 2-2 지출
+        List<_ChartRespRecord.MonthDTO.MonthSpendingDTO> monthSpendingList = monthDTO.stream().filter(transaction ->
+                transaction.getTransactionType() == TransactionType.EXPENSE).map(transaction -> _ChartRespRecord.MonthDTO.MonthSpendingDTO.builder()
+                .id(transaction.getId())
+                .category(transaction.getTransactionType().getKorean())
+                .amount(transaction.getAmount())
+                //TODO : 회의 후 결정 하기 위해서 일단 생성 해놨습니다.
+                .categoryImagePath("이건 나중에 넣을 수 도 있어서^^")
+                .build()).toList();
+
+
+        return new _ChartRespRecord.MonthDTO(monthIncomeList,monthSpendingList);
+
+    }
+
+    //-------------
+
+    // 주간 수입 지출
+    public _ChartRespRecord.WeeklyDTO getWeeklyTransaction(Integer sessionUserId, Integer year, Integer month, Integer week){
+
+        // 0. 인증처리
+        User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보가 없습니다."));
+
+        // 1. 권한처리
+        if (user.getId() != sessionUserId){
+            throw new Exception403("해당 수입 및 지출을 확인할 권한이 없습니다.");
+        }
+
+        // 2.주의 시작 날짜와 끝 날짜 계산
+        LocalDateTime startDate = getStartOfWeek(year, month, week);
+        LocalDateTime endDate = startDate.plusDays(6);
+
+        LocalDateTime startDateTime = startDate;
+        LocalDateTime endDateTime = endDate;
+
+
+        List<Transaction> weeklyDTO = transactionRepository.findAllByYearAndMonthAndWeek(year, month, startDateTime, endDateTime, sessionUserId);
+
+        // 3. 수입 및 지출 나누기
+
+        // 3-1  수입
+        List<_ChartRespRecord.WeeklyDTO.WeekIcomeDTO> weekIncomeDTO = weeklyDTO.stream().filter(transaction ->
+                transaction.getTransactionType() == TransactionType.INCOME).map(transaction -> _ChartRespRecord.WeeklyDTO.WeekIcomeDTO.builder()
+                .id(transaction.getId())
+                .category(transaction.getTransactionType().getKorean())
+                .amount(transaction.getAmount())
+                .categoryImagePath("회의하고 결정~~")
+                .build()).toList();
+
+
+        // 3-2 지출
+        List<_ChartRespRecord.WeeklyDTO.WeekSpendingDTO> weekSpendingDTO = weeklyDTO.stream().filter(transaction ->
+                transaction.getTransactionType() == TransactionType.EXPENSE).map(transaction -> _ChartRespRecord.WeeklyDTO.WeekSpendingDTO.builder()
+                .id(transaction.getId())
+                .category(transaction.getTransactionType().getKorean())
+                .amount(transaction.getAmount())
+                .categoryImagePath("회의하고 결정~~")
+                .build()).toList();
+
+        return new _ChartRespRecord.WeeklyDTO(weekIncomeDTO,weekSpendingDTO);
+    }
+
+
+    // 주 시작 날짜 계산 메서드
+    private LocalDateTime getStartOfWeek(Integer year, Integer month, Integer week) {
+        LocalDate firstDayOfMonth = LocalDate.of(year, month, 1);
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        LocalDate firstDayOfWeek = firstDayOfMonth.with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()));
+
+        return firstDayOfWeek.plusWeeks(week - 1).atStartOfDay();
+    }
+
 
     public _MonthlyTransactionMainRecord getMonthlyTransactionMain(Integer sessionUserId, Integer year, Integer month) {
         User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보가 없습니다."));
@@ -356,4 +468,6 @@ public class TransactionService {
                 dailySummaries
         );
     }
+
+
 }
