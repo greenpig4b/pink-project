@@ -3,9 +3,12 @@ package com.pinkproject.admin;
 import com.pinkproject._core.error.exception.Exception401;
 import com.pinkproject._core.utils.ApiUtil;
 import com.pinkproject._core.utils.JwtUtil;
+import com.pinkproject.admin.AdminRequest._DetailFaqAdminRecord;
 import com.pinkproject.admin.AdminRequest._DetailNoticeAdminRecord;
 import com.pinkproject.admin.AdminRequest._LoginAdminRecord;
+import com.pinkproject.admin.AdminRequest._SaveNoticeAdminRecord;
 import com.pinkproject.faq.FaqService;
+import com.pinkproject.notice.Notice;
 import com.pinkproject.notice.NoticeService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -87,28 +90,4 @@ public class AdminRestController {
         return new ResponseEntity<>(new ApiUtil<>(response), HttpStatus.OK);
     }
 
-
-    @GetMapping("api/admin/notice")
-    public ResponseEntity<?> getAllNotices() {
-        List<_DetailNoticeAdminRecord> notices = noticeService.getAllNotices();
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("notices", notices);
-
-        // 세션에서 admin 객체 가져와서 username 설정
-        SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
-        if (sessionAdmin != null) {
-            response.put("username", sessionAdmin.getUsername());
-        } else {
-            response.put("username", ""); // 기본값 설정
-        }
-
-        // currentDateTime 설정
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String formattedNow = now.format(formatter);
-        response.put("currentDateTime", formattedNow);
-
-        return new ResponseEntity<>(new ApiUtil<>(response), HttpStatus.OK);
-    }
 }

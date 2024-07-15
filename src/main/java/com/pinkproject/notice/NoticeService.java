@@ -2,6 +2,7 @@ package com.pinkproject.notice;
 
 import com.pinkproject._core.error.exception.Exception404;
 import com.pinkproject.admin.Admin;
+import com.pinkproject.admin.AdminRepository;
 import com.pinkproject.admin.AdminRequest._DetailNoticeAdminRecord;
 import com.pinkproject.admin.AdminRequest._SaveNoticeAdminRecord;
 import com.pinkproject.admin.SessionAdmin;
@@ -25,6 +26,7 @@ public class NoticeService {
 
     private final NoticeRepository noticeRepository;
     private final HttpSession session;
+    private final AdminRepository adminRepository;
 
 
     @Transactional
@@ -84,11 +86,6 @@ public class NoticeService {
     }
 
     @Transactional
-    public void deleteNotice(Integer id) {
-        noticeRepository.deleteById(id);
-    }
-
-    @Transactional
     public Integer saveNotice(_SaveNoticeAdminRecord saveNoticeAdminRecord, Admin admin) {
         Notice notice = Notice.builder()
                 .admin(admin)
@@ -97,6 +94,58 @@ public class NoticeService {
                 .build();
         notice = noticeRepository.save(notice);
         return notice.getId();
+    }
+
+    @Transactional
+    public _DetailNoticeAdminRecord getNoticeById(Integer id) {
+        return noticeRepository.findById(id)
+                .map(notice -> new _DetailNoticeAdminRecord(
+                        notice.getId(),
+                        notice.getTitle(),
+                        notice.getContent(),
+                        notice.getAdmin().getUsername(),
+                        notice.getCreatedAt().toLocalDate()
+                ))
+                .orElseThrow(() -> new RuntimeException("Notice not found with id: " + id));
+    }
+
+    @Transactional
+    public Notice createNotice(_SaveNoticeAdminRecord request) {
+        SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
+        if (sessionAdmin == null) {
+            throw new RuntimeException("Admin session not found");
+        }
+
+        Admin admin = adminRepository.findById(sessionAdmin.getId())
+                .orElseThrow(() -> new RuntimeException("Admin not found with id: " + sessionAdmin.getId()));
+
+        Notice notice = Notice.builder()
+                .title(request.title())
+                .content(request.content())
+                .admin(admin)
+                .build();
+
+        return noticeRepository.save(notice);
+    }
+
+    @Transactional
+    public void deleteNotice(Integer noticeId) {
+        SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
+        if (sessionAdmin == null) {
+            throw new RuntimeException("Admin session not found");
+        }
+
+        Admin admin = adminRepository.findById(sessionAdmin.getId())
+                .orElseThrow(() -> new RuntimeException("Admin not found with id: " + sessionAdmin.getId()));
+
+        Notice notice = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new RuntimeException("Notice not found with id: " + noticeId));
+
+        if (!notice.getAdmin().equals(admin)) {
+            throw new RuntimeException("Admin not authorized to delete this notice");
+        }
+
+        noticeRepository.delete(notice);
     }
 
 }
