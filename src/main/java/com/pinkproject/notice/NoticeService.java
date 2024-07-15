@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,6 +51,21 @@ public class NoticeService {
                 notice.getAdmin().getUsername(),
                 notice.getCreatedAt().toLocalDate()
         ));
+    }
+
+
+    @Transactional
+    public List<_DetailNoticeAdminRecord> getAllNotices() {
+        return noticeRepository.findAll()
+                .stream()
+                .map(notice -> new _DetailNoticeAdminRecord(
+                        notice.getId(),
+                        notice.getTitle(),
+                        notice.getContent(),
+                        notice.getAdmin().getUsername(),
+                        notice.getCreatedAt().toLocalDate()
+                ))
+                .collect(Collectors.toList());
     }
 
     @Transactional

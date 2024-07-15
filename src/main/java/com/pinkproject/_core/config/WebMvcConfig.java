@@ -14,7 +14,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor())
                 .addPathPatterns("/api/**")
-                .excludePathPatterns("");
+                .excludePathPatterns("/api/admin/**");
     }
 
     // 외부 폴더에서 이미지파일 리소스를 가져오는 방법
