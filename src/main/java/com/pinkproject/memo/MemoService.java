@@ -61,7 +61,11 @@ public class MemoService {
                     return new _MonthlyMemoMainRecord.DailyMemoRecords(date, dailyMemoRecordList);
                 }).toList();
 
-        return new _MonthlyMemoMainRecord(sessionUserId, dailyMemoRecordsList);
+        return new _MonthlyMemoMainRecord(
+                sessionUserId,
+                Formatter.formatYearWithSuffix(startDate),
+                Formatter.formatMonthWithSuffix(startDate),
+                dailyMemoRecordsList);
     }
 
     @Transactional
