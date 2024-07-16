@@ -40,7 +40,7 @@ public class TransactionService {
         _ChartRespRecord.MonthDTO monthDTO = getMonthtransaction(user.getId(), year, month);
         _ChartRespRecord.WeeklyDTO weeklyDTO = getWeeklyTransaction(user.getId(), year, month, week);
 
-        return new _ChartRespRecord(month, week, monthDTO, weeklyDTO);
+        return new _ChartRespRecord(month, monthDTO, weeklyDTO);
     }
 
 
@@ -60,12 +60,22 @@ public class TransactionService {
         // 2. 수입 및 지출 찾기
 
         // 2-1 수입
-        List<_ChartRespRecord.MonthDTO.MonthIcomeDTO> monthIncomeList = monthDTO.stream().filter(transaction -> transaction.getTransactionType() == TransactionType.INCOME).map(transaction -> _ChartRespRecord.MonthDTO.MonthIcomeDTO.builder().id(transaction.getId()).category(transaction.getTransactionType().getKorean()).amount(transaction.getAmount()).categoryImage(transaction.getCategoryIn().getEmoji()).build()).toList();
+        List<_ChartRespRecord.MonthDTO.MonthIcomeDTO> monthIncomeList = monthDTO.stream().filter(transaction ->
+                transaction.getTransactionType() == TransactionType.INCOME).map(transaction -> _ChartRespRecord.MonthDTO.MonthIcomeDTO.builder()
+                .id(transaction.getId())
+                .category(transaction.getTransactionType().getKorean())
+                .amount(Integer.toString(transaction.getAmount()))
+                .categoryImagePath(transaction.getCategoryIn().getEmoji())
+                .build()).toList();
 
         // 2-2 지출
-        List<_ChartRespRecord.MonthDTO.MonthSpendingDTO> monthSpendingList = monthDTO.stream().filter(transaction -> transaction.getTransactionType() == TransactionType.EXPENSE).map(transaction -> _ChartRespRecord.MonthDTO.MonthSpendingDTO.builder().id(transaction.getId()).category(transaction.getTransactionType().getKorean()).amount(transaction.getAmount())
-                //TODO : 회의 후 결정 하기 위해서 일단 생성 해놨습니다.
-                .categoryImage(transaction.getCategoryOut().getEmoji()).build()).toList();
+        List<_ChartRespRecord.MonthDTO.MonthSpendingDTO> monthSpendingList = monthDTO.stream().filter(transaction ->
+                transaction.getTransactionType() == TransactionType.EXPENSE).map(transaction -> _ChartRespRecord.MonthDTO.MonthSpendingDTO.builder()
+                .id(transaction.getId())
+                .category(transaction.getTransactionType().getKorean())
+                .amount(Integer.toString(transaction.getAmount()))
+                .categoryImagePath(transaction.getCategoryOut().getEmoji())
+                .build()).toList();
 
 
         return new _ChartRespRecord.MonthDTO(monthIncomeList, monthSpendingList);
@@ -98,11 +108,23 @@ public class TransactionService {
         // 3. 수입 및 지출 나누기
 
         // 3-1  수입
-        List<_ChartRespRecord.WeeklyDTO.WeekIcomeDTO> weekIncomeDTO = weeklyDTO.stream().filter(transaction -> transaction.getTransactionType() == TransactionType.INCOME).map(transaction -> _ChartRespRecord.WeeklyDTO.WeekIcomeDTO.builder().id(transaction.getId()).category(transaction.getTransactionType().getKorean()).amount(transaction.getAmount()).categoryImage(transaction.getCategoryOut().getEmoji()).build()).toList();
+        List<_ChartRespRecord.WeeklyDTO.WeekIcomeDTO> weekIncomeDTO = weeklyDTO.stream().filter(transaction ->
+                transaction.getTransactionType() == TransactionType.INCOME).map(transaction -> _ChartRespRecord.WeeklyDTO.WeekIcomeDTO.builder()
+                .id(transaction.getId())
+                .category(transaction.getTransactionType().getKorean())
+                .amount(Integer.toString(transaction.getAmount()))
+                .categoryImagePath(transaction.getCategoryOut().getEmoji())
+                .build()).toList();
 
 
         // 3-2 지출
-        List<_ChartRespRecord.WeeklyDTO.WeekSpendingDTO> weekSpendingDTO = weeklyDTO.stream().filter(transaction -> transaction.getTransactionType() == TransactionType.EXPENSE).map(transaction -> _ChartRespRecord.WeeklyDTO.WeekSpendingDTO.builder().id(transaction.getId()).category(transaction.getTransactionType().getKorean()).amount(transaction.getAmount()).categoryImage(transaction.getCategoryOut().getEmoji()).build()).toList();
+        List<_ChartRespRecord.WeeklyDTO.WeekSpendingDTO> weekSpendingDTO = weeklyDTO.stream().filter(transaction ->
+                transaction.getTransactionType() == TransactionType.EXPENSE).map(transaction -> _ChartRespRecord.WeeklyDTO.WeekSpendingDTO.builder()
+                .id(transaction.getId())
+                .category(transaction.getTransactionType().getKorean())
+                .amount(Integer.toString(transaction.getAmount()))
+                .categoryImagePath(transaction.getCategoryOut().getEmoji())
+                .build()).toList();
 
         return new _ChartRespRecord.WeeklyDTO(weekIncomeDTO, weekSpendingDTO);
     }
