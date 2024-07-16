@@ -2,8 +2,6 @@ package com.pinkproject.transaction.TransactionResponse;
 
 import com.pinkproject.transaction.enums.TransactionType;
 
-import java.util.List;
-
 public record _UpdateTransactionRespRecord(
         Integer userId,
         String year,
@@ -11,7 +9,7 @@ public record _UpdateTransactionRespRecord(
         String monthlyIncome,
         String monthlyExpense,
         String monthlyTotalAmount,
-        List<DailyUpdateTransactionRecord> dailyUpdateTransactionRecords
+        DailyUpdateTransactionRecord dailyUpdateTransactionRecord
 ) {
     public record DailyUpdateTransactionRecord(
             String date,
