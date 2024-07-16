@@ -16,16 +16,17 @@ public class AdminRepositoryTest {
     private AdminRepository adminRepository;
 
    @Test
-    public void findByUsername_Test() {
+   public void findByUsername_Test() {
 
-       //given
+      //when
+      Admin findAdmin = adminRepository.findByUsername("admin");
 
+      //then
+      assertEquals("admin", findAdmin.getUsername());
 
-       //when
-       Admin findAdmin = adminRepository.findByUsername("admin");
-
-       //then
-       assertNotNull(findAdmin);
-       assertEquals(findAdmin.getUsername(), "admin");
+      //eye
+      System.out.println("관리자 아이디: " + findAdmin.getUsername());
+      System.out.println("관리자 비밀번호: " + findAdmin.getPassword());
+      System.out.println("계정 생성 시간: " + findAdmin.getCreatedAt());
    }
 }
