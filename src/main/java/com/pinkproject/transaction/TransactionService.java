@@ -60,23 +60,12 @@ public class TransactionService {
         // 2. 수입 및 지출 찾기
 
         // 2-1 수입
-        List<_ChartRespRecord.MonthDTO.MonthIcomeDTO> monthIncomeList = monthDTO.stream().filter(transaction ->
-                transaction.getTransactionType() == TransactionType.INCOME).map(transaction -> _ChartRespRecord.MonthDTO.MonthIcomeDTO.builder()
-                .id(transaction.getId())
-                .category(transaction.getTransactionType().getKorean())
-                .amount(transaction.getAmount())
-                .categoryImage(transaction.getCategoryIn().getEmoji())
-                .build()).toList();
+        List<_ChartRespRecord.MonthDTO.MonthIcomeDTO> monthIncomeList = monthDTO.stream().filter(transaction -> transaction.getTransactionType() == TransactionType.INCOME).map(transaction -> _ChartRespRecord.MonthDTO.MonthIcomeDTO.builder().id(transaction.getId()).category(transaction.getTransactionType().getKorean()).amount(transaction.getAmount()).categoryImage(transaction.getCategoryIn().getEmoji()).build()).toList();
 
         // 2-2 지출
-        List<_ChartRespRecord.MonthDTO.MonthSpendingDTO> monthSpendingList = monthDTO.stream().filter(transaction ->
-                transaction.getTransactionType() == TransactionType.EXPENSE).map(transaction -> _ChartRespRecord.MonthDTO.MonthSpendingDTO.builder()
-                .id(transaction.getId())
-                .category(transaction.getTransactionType().getKorean())
-                .amount(transaction.getAmount())
+        List<_ChartRespRecord.MonthDTO.MonthSpendingDTO> monthSpendingList = monthDTO.stream().filter(transaction -> transaction.getTransactionType() == TransactionType.EXPENSE).map(transaction -> _ChartRespRecord.MonthDTO.MonthSpendingDTO.builder().id(transaction.getId()).category(transaction.getTransactionType().getKorean()).amount(transaction.getAmount())
                 //TODO : 회의 후 결정 하기 위해서 일단 생성 해놨습니다.
-                .categoryImage(transaction.getCategoryOut().getEmoji())
-                .build()).toList();
+                .categoryImage(transaction.getCategoryOut().getEmoji()).build()).toList();
 
 
         return new _ChartRespRecord.MonthDTO(monthIncomeList, monthSpendingList);
@@ -109,23 +98,11 @@ public class TransactionService {
         // 3. 수입 및 지출 나누기
 
         // 3-1  수입
-        List<_ChartRespRecord.WeeklyDTO.WeekIcomeDTO> weekIncomeDTO = weeklyDTO.stream().filter(transaction ->
-                transaction.getTransactionType() == TransactionType.INCOME).map(transaction -> _ChartRespRecord.WeeklyDTO.WeekIcomeDTO.builder()
-                .id(transaction.getId())
-                .category(transaction.getTransactionType().getKorean())
-                .amount(transaction.getAmount())
-                .categoryImage(transaction.getCategoryOut().getEmoji())
-                .build()).toList();
+        List<_ChartRespRecord.WeeklyDTO.WeekIcomeDTO> weekIncomeDTO = weeklyDTO.stream().filter(transaction -> transaction.getTransactionType() == TransactionType.INCOME).map(transaction -> _ChartRespRecord.WeeklyDTO.WeekIcomeDTO.builder().id(transaction.getId()).category(transaction.getTransactionType().getKorean()).amount(transaction.getAmount()).categoryImage(transaction.getCategoryOut().getEmoji()).build()).toList();
 
 
         // 3-2 지출
-        List<_ChartRespRecord.WeeklyDTO.WeekSpendingDTO> weekSpendingDTO = weeklyDTO.stream().filter(transaction ->
-                transaction.getTransactionType() == TransactionType.EXPENSE).map(transaction -> _ChartRespRecord.WeeklyDTO.WeekSpendingDTO.builder()
-                .id(transaction.getId())
-                .category(transaction.getTransactionType().getKorean())
-                .amount(transaction.getAmount())
-                .categoryImage(transaction.getCategoryOut().getEmoji())
-                .build()).toList();
+        List<_ChartRespRecord.WeeklyDTO.WeekSpendingDTO> weekSpendingDTO = weeklyDTO.stream().filter(transaction -> transaction.getTransactionType() == TransactionType.EXPENSE).map(transaction -> _ChartRespRecord.WeeklyDTO.WeekSpendingDTO.builder().id(transaction.getId()).category(transaction.getTransactionType().getKorean()).amount(transaction.getAmount()).categoryImage(transaction.getCategoryOut().getEmoji()).build()).toList();
 
         return new _ChartRespRecord.WeeklyDTO(weekIncomeDTO, weekSpendingDTO);
     }
@@ -154,49 +131,20 @@ public class TransactionService {
 
         SummaryUtil.Summary summary = SummaryUtil.calculateSummary(transactions);
 
-        Map<String, List<Transaction>> transactionsByDate = transactions.stream()
-                .collect(Collectors.groupingBy(transaction -> transaction.getEffectiveDateTime().toLocalDate().toString()));
+        Map<String, List<Transaction>> transactionsByDate = transactions.stream().collect(Collectors.groupingBy(transaction -> transaction.getEffectiveDateTime().toLocalDate().toString()));
 
-        List<_MonthlyTransactionMainRecord.DailyTransactionRecord> dailyTransactionRecords = transactionsByDate.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
-                .map(entry -> {
-                    LocalDate date = LocalDate.parse(entry.getKey());
-                    List<Transaction> dailyTransactionList = entry.getValue();
+        List<_MonthlyTransactionMainRecord.DailyTransactionRecord> dailyTransactionRecords = transactionsByDate.entrySet().stream().sorted(Map.Entry.comparingByKey(Comparator.reverseOrder())).map(entry -> {
+            LocalDate date = LocalDate.parse(entry.getKey());
+            List<Transaction> dailyTransactionList = entry.getValue();
 
-                    SummaryUtil.DailySummary dailySummary = SummaryUtil.calculateDailySummary(dailyTransactionList);
+            SummaryUtil.DailySummary dailySummary = SummaryUtil.calculateDailySummary(dailyTransactionList);
 
-                    List<_MonthlyTransactionMainRecord.DailyTransactionRecord.DailyTransactionDetailRecord> dailyTransactionDetailRecords = dailyTransactionList.stream()
-                            .sorted(Comparator.comparing(Transaction::getEffectiveDateTime).reversed())
-                            .map(transaction -> new _MonthlyTransactionMainRecord.DailyTransactionRecord.DailyTransactionDetailRecord(
-                                    transaction.getId(),
-                                    transaction.getTransactionType(),
-                                    transaction.getCategoryIn() != null ? transaction.getCategoryIn().getKorean() : null,
-                                    transaction.getCategoryIn() != null ? transaction.getCategoryIn().getEmoji() : null,
-                                    transaction.getCategoryOut() != null ? transaction.getCategoryOut().getKorean() : null,
-                                    transaction.getCategoryOut() != null ? transaction.getCategoryOut().getEmoji() : null,
-                                    transaction.getDescription(),
-                                    Formatter.formatCreatedAtPeriodWithTime(transaction.getEffectiveDateTime()),
-                                    transaction.getAssets() != null ? transaction.getAssets().getKorean() : null,
-                                    Formatter.number(transaction.getAmount())))
-                            .toList();
+            List<_MonthlyTransactionMainRecord.DailyTransactionRecord.DailyTransactionDetailRecord> dailyTransactionDetailRecords = dailyTransactionList.stream().sorted(Comparator.comparing(Transaction::getEffectiveDateTime).reversed()).map(transaction -> new _MonthlyTransactionMainRecord.DailyTransactionRecord.DailyTransactionDetailRecord(transaction.getId(), transaction.getTransactionType(), transaction.getCategoryIn() != null ? transaction.getCategoryIn().getKorean() : null, transaction.getCategoryIn() != null ? transaction.getCategoryIn().getEmoji() : null, transaction.getCategoryOut() != null ? transaction.getCategoryOut().getKorean() : null, transaction.getCategoryOut() != null ? transaction.getCategoryOut().getEmoji() : null, transaction.getDescription(), Formatter.formatCreatedAtPeriodWithTime(transaction.getEffectiveDateTime()), transaction.getAssets() != null ? transaction.getAssets().getKorean() : null, Formatter.number(transaction.getAmount()))).toList();
 
-                    return new _MonthlyTransactionMainRecord.DailyTransactionRecord(
-                            Formatter.formatDayOnly(date),
-                            Formatter.number(dailySummary.getDailyIncome()),
-                            Formatter.number(dailySummary.getDailyExpense()),
-                            Formatter.number(dailySummary.getDailyTotalAmount()),
-                            dailyTransactionDetailRecords);
-                })
-                .toList();
+            return new _MonthlyTransactionMainRecord.DailyTransactionRecord(Formatter.formatDayOnly(date), Formatter.number(dailySummary.getDailyIncome()), Formatter.number(dailySummary.getDailyExpense()), Formatter.number(dailySummary.getDailyTotalAmount()), dailyTransactionDetailRecords);
+        }).toList();
 
-        return new _MonthlyTransactionMainRecord(
-                sessionUserId,
-                Formatter.formatYearWithSuffix(startDate),
-                Formatter.formatMonthWithSuffix(startDate),
-                Formatter.number(summary.getMonthlyIncome()),
-                Formatter.number(summary.getMonthlyExpense()),
-                Formatter.number(summary.getMonthlyTotalAmount()),
-                dailyTransactionRecords);
+        return new _MonthlyTransactionMainRecord(sessionUserId, Formatter.formatYearWithSuffix(startDate), Formatter.formatMonthWithSuffix(startDate), Formatter.number(summary.getMonthlyIncome()), Formatter.number(summary.getMonthlyExpense()), Formatter.number(summary.getMonthlyTotalAmount()), dailyTransactionRecords);
     }
 
     @Transactional
@@ -209,16 +157,7 @@ public class TransactionService {
 
         LocalDateTime createdAt = Formatter.truncateToSeconds(LocalDateTime.parse(reqRecord.yearMonthDate() + "T" + reqRecord.time()));
 
-        Transaction transaction = Transaction.builder()
-                .user(user)
-                .transactionType(reqRecord.transactionType())
-                .categoryIn(reqRecord.categoryIn() != null ? reqRecord.categoryIn() : null)
-                .categoryOut(reqRecord.categoryOut() != null ? reqRecord.categoryOut() : null)
-                .assets(reqRecord.assets())
-                .amount(reqRecord.amount())
-                .description(reqRecord.description())
-                .createdAt(createdAt)
-                .build();
+        Transaction transaction = Transaction.builder().user(user).transactionType(reqRecord.transactionType()).categoryIn(reqRecord.categoryIn() != null ? reqRecord.categoryIn() : null).categoryOut(reqRecord.categoryOut() != null ? reqRecord.categoryOut() : null).assets(reqRecord.assets()).amount(reqRecord.amount()).description(reqRecord.description()).createdAt(createdAt).build();
 
         transaction = transactionRepository.saveAndFlush(transaction);
 
@@ -229,40 +168,14 @@ public class TransactionService {
         SummaryUtil.Summary summary = SummaryUtil.calculateSummary(transactions);
         SummaryUtil.DailySummary dailySummary = summary.getDailySummaries().get(createdAt.toLocalDate());
 
-        return new _SaveTransactionRespRecord(
-                transaction.getUser().getId(),
-                Formatter.formatYearWithSuffix(startDate),
-                Formatter.formatMonthWithSuffix(startDate),
-                Formatter.number(summary.getMonthlyIncome()),
-                Formatter.number(summary.getMonthlyExpense()),
-                Formatter.number(summary.getMonthlyTotalAmount()),
-                List.of(new _SaveTransactionRespRecord.DailySaveTransactionRecord(
-                        Formatter.formatDayOnly(createdAt.toLocalDate()),
-                        Formatter.number(dailySummary.getDailyIncome()),
-                        Formatter.number(dailySummary.getDailyExpense()),
-                        Formatter.number(dailySummary.getDailyTotalAmount()),
-                        new _SaveTransactionRespRecord.DailySaveTransactionRecord.DailySaveTransactionDetailRecord(
-                                transaction.getId(),
-                                transaction.getTransactionType(),
-                                transaction.getCategoryIn() != null ? transaction.getCategoryIn().getKorean() : null,
-                                transaction.getCategoryIn() != null ? transaction.getCategoryIn().getEmoji() : null,
-                                transaction.getCategoryOut() != null ? transaction.getCategoryOut().getKorean() : null,
-                                transaction.getCategoryOut() != null ? transaction.getCategoryOut().getEmoji() : null,
-                                transaction.getDescription(),
-                                Formatter.formatCreatedAtPeriodWithTime(transaction.getEffectiveDateTime()),
-                                transaction.getAssets() != null ? transaction.getAssets().getKorean() : null,
-                                Formatter.number(transaction.getAmount())
-                        )
-                ))
-        );
+        return new _SaveTransactionRespRecord(transaction.getUser().getId(), Formatter.formatYearWithSuffix(startDate), Formatter.formatMonthWithSuffix(startDate), Formatter.number(summary.getMonthlyIncome()), Formatter.number(summary.getMonthlyExpense()), Formatter.number(summary.getMonthlyTotalAmount()), new _SaveTransactionRespRecord.DailySaveTransactionRecord(Formatter.formatDayOnly(createdAt.toLocalDate()), Formatter.number(dailySummary.getDailyIncome()), Formatter.number(dailySummary.getDailyExpense()), Formatter.number(dailySummary.getDailyTotalAmount()), new _SaveTransactionRespRecord.DailySaveTransactionRecord.DailySaveTransactionDetailRecord(transaction.getId(), transaction.getTransactionType(), transaction.getCategoryIn() != null ? transaction.getCategoryIn().getKorean() : null, transaction.getCategoryIn() != null ? transaction.getCategoryIn().getEmoji() : null, transaction.getCategoryOut() != null ? transaction.getCategoryOut().getKorean() : null, transaction.getCategoryOut() != null ? transaction.getCategoryOut().getEmoji() : null, transaction.getDescription(), Formatter.formatCreatedAtPeriodWithTime(transaction.getEffectiveDateTime()), transaction.getAssets() != null ? transaction.getAssets().getKorean() : null, Formatter.number(transaction.getAmount()))));
     }
 
     @Transactional
     public _UpdateTransactionRespRecord updateTransaction(Integer transactionId, _UpdateTransactionRecord reqRecord) {
         User user = userRepository.findById(reqRecord.userId()).orElseThrow(() -> new Exception404("유저 정보를 찾을 수 없습니다."));
 
-        Transaction transaction = transactionRepository.findById(transactionId)
-                .orElseThrow(() -> new Exception404("거래 정보를 찾을 수 없습니다."));
+        Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(() -> new Exception404("거래 정보를 찾을 수 없습니다."));
 
         if (!transaction.getUser().getId().equals(user.getId())) {
             throw new Exception403("사용자 권한이 없습니다.");
@@ -291,32 +204,7 @@ public class TransactionService {
         SummaryUtil.Summary summary = SummaryUtil.calculateSummary(transactions);
         SummaryUtil.DailySummary dailySummary = summary.getDailySummaries().get(updatedAt.toLocalDate());
 
-        return new _UpdateTransactionRespRecord(
-                transaction.getUser().getId(),
-                Formatter.formatYearWithSuffix(startDate),
-                Formatter.formatMonthWithSuffix(startDate),
-                Formatter.number(summary.getMonthlyIncome()),
-                Formatter.number(summary.getMonthlyExpense()),
-                Formatter.number(summary.getMonthlyTotalAmount()),
-                List.of(new _UpdateTransactionRespRecord.DailyUpdateTransactionRecord(
-                        Formatter.formatDayOnly(updatedAt.toLocalDate()),
-                        Formatter.number(dailySummary.getDailyIncome()),
-                        Formatter.number(dailySummary.getDailyExpense()),
-                        Formatter.number(dailySummary.getDailyTotalAmount()),
-                        new _UpdateTransactionRespRecord.DailyUpdateTransactionRecord.DailyUpdateTransactionDetailRecord(
-                                transaction.getId(),
-                                transaction.getTransactionType(),
-                                transaction.getCategoryIn() != null ? transaction.getCategoryIn().getKorean() : null,
-                                transaction.getCategoryIn() != null ? transaction.getCategoryIn().getEmoji() : null,
-                                transaction.getCategoryOut() != null ? transaction.getCategoryOut().getKorean() : null,
-                                transaction.getCategoryOut() != null ? transaction.getCategoryOut().getEmoji() : null,
-                                transaction.getDescription(),
-                                Formatter.formatCreatedAtPeriodWithTime(transaction.getEffectiveDateTime()),
-                                transaction.getAssets() != null ? transaction.getAssets().getKorean() : null,
-                                Formatter.number(transaction.getAmount())
-                        )
-                ))
-        );
+        return new _UpdateTransactionRespRecord(transaction.getUser().getId(), Formatter.formatYearWithSuffix(startDate), Formatter.formatMonthWithSuffix(startDate), Formatter.number(summary.getMonthlyIncome()), Formatter.number(summary.getMonthlyExpense()), Formatter.number(summary.getMonthlyTotalAmount()), new _UpdateTransactionRespRecord.DailyUpdateTransactionRecord(Formatter.formatDayOnly(updatedAt.toLocalDate()), Formatter.number(dailySummary.getDailyIncome()), Formatter.number(dailySummary.getDailyExpense()), Formatter.number(dailySummary.getDailyTotalAmount()), new _UpdateTransactionRespRecord.DailyUpdateTransactionRecord.DailyUpdateTransactionDetailRecord(transaction.getId(), transaction.getTransactionType(), transaction.getCategoryIn() != null ? transaction.getCategoryIn().getKorean() : null, transaction.getCategoryIn() != null ? transaction.getCategoryIn().getEmoji() : null, transaction.getCategoryOut() != null ? transaction.getCategoryOut().getKorean() : null, transaction.getCategoryOut() != null ? transaction.getCategoryOut().getEmoji() : null, transaction.getDescription(), Formatter.formatCreatedAtPeriodWithTime(transaction.getEffectiveDateTime()), transaction.getAssets() != null ? transaction.getAssets().getKorean() : null, Formatter.number(transaction.getAmount()))));
     }
 
     @Transactional
@@ -325,8 +213,7 @@ public class TransactionService {
         System.out.println("sessionUserId = " + sessionUserId);
         User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보를 찾을 수 없습니다."));
 
-        Transaction transaction = transactionRepository.findById(transactionId)
-                .orElseThrow(() -> new Exception404("거래 정보를 찾을 수 없습니다."));
+        Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(() -> new Exception404("거래 정보를 찾을 수 없습니다."));
         System.out.println(1);
         if (!transaction.getUser().getId().equals(user.getId())) {
             throw new Exception403("사용자 권한이 없습니다.");
@@ -342,21 +229,7 @@ public class TransactionService {
         SummaryUtil.Summary summary = SummaryUtil.calculateSummary(transactions);
         SummaryUtil.DailySummary dailySummary = summary.getDailySummaries().getOrDefault(dateTime.toLocalDate(), new SummaryUtil.DailySummary(0, 0, 0));
 
-        return new _DeleteTransactionRespRecord(
-                user.getId(),
-                Formatter.formatYearWithSuffix(startDate),
-                Formatter.formatMonthWithSuffix(startDate),
-                Formatter.number(summary.getMonthlyIncome()),
-                Formatter.number(summary.getMonthlyExpense()),
-                Formatter.number(summary.getMonthlyTotalAmount()),
-                List.of(new _DeleteTransactionRespRecord.DailyDeleteTransactionRecord(
-                        Formatter.formatDayOnly(dateTime.toLocalDate()),
-                        Formatter.number(dailySummary.getDailyIncome()),
-                        Formatter.number(dailySummary.getDailyExpense()),
-                        Formatter.number(dailySummary.getDailyTotalAmount())
-                )),
-                "삭제가 완료되었습니다."
-        );
+        return new _DeleteTransactionRespRecord(user.getId(), Formatter.formatYearWithSuffix(startDate), Formatter.formatMonthWithSuffix(startDate), Formatter.number(summary.getMonthlyIncome()), Formatter.number(summary.getMonthlyExpense()), Formatter.number(summary.getMonthlyTotalAmount()), new _DeleteTransactionRespRecord.DailyDeleteTransactionRecord(Formatter.formatDayOnly(dateTime.toLocalDate()), Formatter.number(dailySummary.getDailyIncome()), Formatter.number(dailySummary.getDailyExpense()), Formatter.number(dailySummary.getDailyTotalAmount())), "삭제가 완료되었습니다.");
     }
 
     public _MonthlyFinancialReport getMonthlyFinancialReportMain(Integer sessionUserId, Integer year, Integer month) {
@@ -376,30 +249,7 @@ public class TransactionService {
         String previousMonthExpenseComparison = Formatter.calculatePercentageChange(previousSummary.getMonthlyExpense(), summary.getMonthlyExpense());
         String previousMonthIncomeComparison = Formatter.calculatePercentageChange(previousSummary.getMonthlyIncome(), summary.getMonthlyIncome());
 
-        return new _MonthlyFinancialReport(
-                sessionUserId,
-                Formatter.formatYearWithSuffix(startDate),
-                Formatter.formatMonthWithSuffix(startDate),
-                Formatter.number(summary.getMonthlyIncome()),
-                Formatter.number(summary.getMonthlyExpense()),
-                Formatter.number(summary.getMonthlyTotalAmount()),
-                Formatter.formatYearMonthDay(startDate),
-                Formatter.formatYearMonthDay(endDate),
-                new _MonthlyFinancialReport.MonthlyExpenseSummary(
-                        previousMonthExpenseComparison,
-                        Formatter.number(summary.getMonthlyExpense()),
-                        Formatter.number(summary.getMonthlyExpenseByAsset(Assets.CARD)),
-                        Formatter.number(summary.getMonthlyExpenseByAsset(Assets.CASH)),
-                        Formatter.number(summary.getMonthlyExpenseByAsset(Assets.BANK))
-                ),
-                new _MonthlyFinancialReport.MonthlyIncomeSummary(
-                        previousMonthIncomeComparison,
-                        Formatter.number(summary.getMonthlyIncome()),
-                        Formatter.number(summary.getMonthlyIncomeByAsset(Assets.CARD)),
-                        Formatter.number(summary.getMonthlyIncomeByAsset(Assets.CASH)),
-                        Formatter.number(summary.getMonthlyIncomeByAsset(Assets.BANK))
-                )
-        );
+        return new _MonthlyFinancialReport(sessionUserId, Formatter.formatYearWithSuffix(startDate), Formatter.formatMonthWithSuffix(startDate), Formatter.number(summary.getMonthlyIncome()), Formatter.number(summary.getMonthlyExpense()), Formatter.number(summary.getMonthlyTotalAmount()), Formatter.formatYearMonthDay(startDate), Formatter.formatYearMonthDay(endDate), new _MonthlyFinancialReport.MonthlyExpenseSummary(previousMonthExpenseComparison, Formatter.number(summary.getMonthlyExpense()), Formatter.number(summary.getMonthlyExpenseByAsset(Assets.CARD)), Formatter.number(summary.getMonthlyExpenseByAsset(Assets.CASH)), Formatter.number(summary.getMonthlyExpenseByAsset(Assets.BANK))), new _MonthlyFinancialReport.MonthlyIncomeSummary(previousMonthIncomeComparison, Formatter.number(summary.getMonthlyIncome()), Formatter.number(summary.getMonthlyIncomeByAsset(Assets.CARD)), Formatter.number(summary.getMonthlyIncomeByAsset(Assets.CASH)), Formatter.number(summary.getMonthlyIncomeByAsset(Assets.BANK))));
     }
 
     private SummaryUtil.Summary calculatePreviousMonthSummary(User user, Integer year, Integer month) {
@@ -425,64 +275,27 @@ public class TransactionService {
 
         List<Memo> memos = memoRepository.findByUserIdAndCreatedAtBetween(user.getId(), startDate.atStartOfDay(), endDate.atTime(23, 59, 59));
 
-        List<_MonthlyCalendar.DailySummary> dailySummaries = transactions.stream()
-                .collect(Collectors.groupingBy(transaction -> transaction.getCreatedAt().toLocalDate()))
-                .entrySet().stream()
-                .map(entry -> {
-                    LocalDate date = entry.getKey();
-                    List<Transaction> dailyTransactions = entry.getValue();
+        List<_MonthlyCalendar.DailySummary> dailySummaries = transactions.stream().collect(Collectors.groupingBy(transaction -> transaction.getCreatedAt().toLocalDate())).entrySet().stream().map(entry -> {
+            LocalDate date = entry.getKey();
+            List<Transaction> dailyTransactions = entry.getValue();
 
-                    boolean hasMemo = memos.stream().anyMatch(memo -> memo.getEffectiveDateTime().toLocalDate().equals(date));
-                    SummaryUtil.DailySummary dailySummary = SummaryUtil.calculateDailySummary(dailyTransactions);
+            boolean hasMemo = memos.stream().anyMatch(memo -> memo.getEffectiveDateTime().toLocalDate().equals(date));
+            SummaryUtil.DailySummary dailySummary = SummaryUtil.calculateDailySummary(dailyTransactions);
 
-                    String dailyIncome = dailySummary.getDailyIncome() > 0 ? Formatter.number(dailySummary.getDailyIncome()) : "";
-                    String dailyExpense = dailySummary.getDailyExpense() > 0 ? Formatter.number(dailySummary.getDailyExpense()) : "";
-                    String dailyTotalAmount = (dailySummary.getDailyIncome() > 0 && dailySummary.getDailyExpense() > 0) ? Formatter.number(dailySummary.getDailyTotalAmount()) : "";
+            String dailyIncome = dailySummary.getDailyIncome() > 0 ? Formatter.number(dailySummary.getDailyIncome()) : "";
+            String dailyExpense = dailySummary.getDailyExpense() > 0 ? Formatter.number(dailySummary.getDailyExpense()) : "";
+            String dailyTotalAmount = (dailySummary.getDailyIncome() > 0 && dailySummary.getDailyExpense() > 0) ? Formatter.number(dailySummary.getDailyTotalAmount()) : "";
 
-                    List<_MonthlyCalendar.DailySummary.DailyDetail.Memo> dailyMemos = memos.stream()
-                            .filter(memo -> memo.getEffectiveDateTime().toLocalDate().equals(date))
-                            .map(memo -> new _MonthlyCalendar.DailySummary.DailyDetail.Memo(memo.getId(), memo.getContent()))
-                            .collect(Collectors.toList());
+            List<_MonthlyCalendar.DailySummary.DailyDetail.Memo> dailyMemos = memos.stream().filter(memo -> memo.getEffectiveDateTime().toLocalDate().equals(date)).map(memo -> new _MonthlyCalendar.DailySummary.DailyDetail.Memo(memo.getId(), memo.getContent())).collect(Collectors.toList());
 
-                    List<_MonthlyCalendar.DailySummary.DailyDetail.TransactionDetail> transactionDetails = dailyTransactions.stream()
-                            .map(transaction -> new _MonthlyCalendar.DailySummary.DailyDetail.TransactionDetail(
-                                    transaction.getId(),
-                                    transaction.getTransactionType(),
-                                    transaction.getCategoryIn() != null ? transaction.getCategoryIn().getKorean() : transaction.getCategoryOut().getKorean(),
-                                    transaction.getDescription(),
-                                    transaction.getAssets().getKorean(),
-                                    Formatter.number(transaction.getAmount())
-                            ))
-                            .collect(Collectors.toList());
+            List<_MonthlyCalendar.DailySummary.DailyDetail.TransactionDetail> transactionDetails = dailyTransactions.stream().map(transaction -> new _MonthlyCalendar.DailySummary.DailyDetail.TransactionDetail(transaction.getId(), transaction.getTransactionType(), transaction.getCategoryIn() != null ? transaction.getCategoryIn().getKorean() : transaction.getCategoryOut().getKorean(), transaction.getDescription(), transaction.getAssets().getKorean(), Formatter.number(transaction.getAmount()))).collect(Collectors.toList());
 
-                    _MonthlyCalendar.DailySummary.DailyDetail dailyDetail = new _MonthlyCalendar.DailySummary.DailyDetail(
-                            Formatter.formatDay(date),
-                            Formatter.formatYearMonth(date),
-                            Formatter.formatDayOfWeek(date),
-                            dailyMemos,
-                            transactionDetails
-                    );
+            _MonthlyCalendar.DailySummary.DailyDetail dailyDetail = new _MonthlyCalendar.DailySummary.DailyDetail(Formatter.formatDay(date), Formatter.formatYearMonth(date), Formatter.formatDayOfWeek(date), dailyMemos, transactionDetails);
 
-                    return new _MonthlyCalendar.DailySummary(
-                            Formatter.formatDay(date),
-                            hasMemo,
-                            dailyIncome,
-                            dailyExpense,
-                            dailyTotalAmount,
-                            dailyDetail
-                    );
-                })
-                .collect(Collectors.toList());
+            return new _MonthlyCalendar.DailySummary(Formatter.formatDay(date), hasMemo, dailyIncome, dailyExpense, dailyTotalAmount, dailyDetail);
+        }).collect(Collectors.toList());
 
-        return new _MonthlyCalendar(
-                sessionUserId,
-                Formatter.formatYearWithSuffix(startDate),
-                Formatter.formatMonthWithSuffix(startDate),
-                Formatter.number(summary.getMonthlyIncome()),
-                Formatter.number(summary.getMonthlyExpense()),
-                Formatter.number(summary.getMonthlyTotalAmount()),
-                dailySummaries
-        );
+        return new _MonthlyCalendar(sessionUserId, Formatter.formatYearWithSuffix(startDate), Formatter.formatMonthWithSuffix(startDate), Formatter.number(summary.getMonthlyIncome()), Formatter.number(summary.getMonthlyExpense()), Formatter.number(summary.getMonthlyTotalAmount()), dailySummaries);
     }
 
 

@@ -2,8 +2,6 @@ package com.pinkproject.transaction.TransactionResponse;
 
 import com.pinkproject.transaction.enums.TransactionType;
 
-import java.util.List;
-
 public record _SaveTransactionRespRecord(
         Integer userId,
         String year,
@@ -11,7 +9,7 @@ public record _SaveTransactionRespRecord(
         String monthlyIncome,
         String monthlyExpense,
         String monthlyTotalAmount,
-        List<DailySaveTransactionRecord> dailySaveTransactionRecords
+        DailySaveTransactionRecord dailySaveTransactionRecord
 ) {
     public record DailySaveTransactionRecord(
             String date,
