@@ -6,7 +6,7 @@ import java.util.List;
 
 public record _ChartRespRecord(
         Integer monthCount,
-        Integer weekCount,
+//        Integer weekCount,
         MonthDTO chartMonth,
         WeeklyDTO chartWeekly
 ) {
@@ -19,8 +19,8 @@ public record _ChartRespRecord(
         public record MonthIcomeDTO(
                 Integer id,
                 String category,
-                Integer amount,
-                String categoryImage
+                String amount,
+                String categoryImagePath
         ) {
         }
 
@@ -28,8 +28,8 @@ public record _ChartRespRecord(
         public record MonthSpendingDTO(
                 Integer id,
                 String category,
-                Integer amount,
-                String categoryImage
+                String amount,
+                String categoryImagePath
         ) {
         }
     }
@@ -43,8 +43,8 @@ public record _ChartRespRecord(
         public record WeekIcomeDTO(
                 Integer id,
                 String category,
-                Integer amount,
-                String categoryImage
+                String amount,
+                String categoryImagePath
         ) {
         }
 
@@ -52,8 +52,8 @@ public record _ChartRespRecord(
         public record WeekSpendingDTO(
                 Integer id,
                 String category,
-                Integer amount,
-                String categoryImage
+                String amount,
+                String categoryImagePath
         ) {
         }
     }
