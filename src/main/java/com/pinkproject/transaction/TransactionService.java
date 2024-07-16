@@ -229,7 +229,7 @@ public class TransactionService {
         SummaryUtil.Summary summary = SummaryUtil.calculateSummary(transactions);
         SummaryUtil.DailySummary dailySummary = summary.getDailySummaries().getOrDefault(dateTime.toLocalDate(), new SummaryUtil.DailySummary(0, 0, 0));
 
-        return new _DeleteTransactionRespRecord(user.getId(), Formatter.formatYearWithSuffix(startDate), Formatter.formatMonthWithSuffix(startDate), Formatter.number(summary.getMonthlyIncome()), Formatter.number(summary.getMonthlyExpense()), Formatter.number(summary.getMonthlyTotalAmount()), List.of(new _DeleteTransactionRespRecord.DailyDeleteTransactionRecord(Formatter.formatDayOnly(dateTime.toLocalDate()), Formatter.number(dailySummary.getDailyIncome()), Formatter.number(dailySummary.getDailyExpense()), Formatter.number(dailySummary.getDailyTotalAmount()))), "삭제가 완료되었습니다.");
+        return new _DeleteTransactionRespRecord(user.getId(), Formatter.formatYearWithSuffix(startDate), Formatter.formatMonthWithSuffix(startDate), Formatter.number(summary.getMonthlyIncome()), Formatter.number(summary.getMonthlyExpense()), Formatter.number(summary.getMonthlyTotalAmount()), new _DeleteTransactionRespRecord.DailyDeleteTransactionRecord(Formatter.formatDayOnly(dateTime.toLocalDate()), Formatter.number(dailySummary.getDailyIncome()), Formatter.number(dailySummary.getDailyExpense()), Formatter.number(dailySummary.getDailyTotalAmount())), "삭제가 완료되었습니다.");
     }
 
     public _MonthlyFinancialReport getMonthlyFinancialReportMain(Integer sessionUserId, Integer year, Integer month) {

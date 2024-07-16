@@ -1,7 +1,5 @@
 package com.pinkproject.transaction.TransactionResponse;
 
-import java.util.List;
-
 public record _DeleteTransactionRespRecord(
         Integer userId,
         String year,
@@ -9,7 +7,7 @@ public record _DeleteTransactionRespRecord(
         String monthlyIncome,
         String monthlyExpense,
         String monthlyTotalAmount,
-        List<DailyDeleteTransactionRecord> dailyDeleteTransactionRecords,
+        DailyDeleteTransactionRecord dailyDeleteTransactionRecord,
         String message
 ) {
     public record DailyDeleteTransactionRecord(
