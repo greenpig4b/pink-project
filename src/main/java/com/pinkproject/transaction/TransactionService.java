@@ -236,7 +236,7 @@ public class TransactionService {
                 Formatter.number(summary.getMonthlyIncome()),
                 Formatter.number(summary.getMonthlyExpense()),
                 Formatter.number(summary.getMonthlyTotalAmount()),
-                List.of(new _SaveTransactionRespRecord.DailySaveTransactionRecord(
+                new _SaveTransactionRespRecord.DailySaveTransactionRecord(
                         Formatter.formatDayOnly(createdAt.toLocalDate()),
                         Formatter.number(dailySummary.getDailyIncome()),
                         Formatter.number(dailySummary.getDailyExpense()),
@@ -253,7 +253,7 @@ public class TransactionService {
                                 transaction.getAssets() != null ? transaction.getAssets().getKorean() : null,
                                 Formatter.number(transaction.getAmount())
                         )
-                ))
+                )
         );
     }
 
