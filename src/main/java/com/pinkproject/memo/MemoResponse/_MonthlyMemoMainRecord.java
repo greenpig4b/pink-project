@@ -6,17 +6,17 @@ public record _MonthlyMemoMainRecord(
         Integer userId,
         String year,
         String month,
-        List<DailyMemoRecords> dailyMemoRecordList
+        List<DailyMemoRecords> dailyMemoRecords
 ) {
     public record DailyMemoRecords(
             String date,
             List<DailyMemoRecord> dailyMemoRecordList
-    ){
+    ) {
         public record DailyMemoRecord(
                 Integer id,
                 String title,
                 String content
-        ){
+        ) {
         }
     }
 }
