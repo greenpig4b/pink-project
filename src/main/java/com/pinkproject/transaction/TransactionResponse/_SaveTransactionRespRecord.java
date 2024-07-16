@@ -19,16 +19,19 @@ public record _SaveTransactionRespRecord(
             String dailyExpense,
             String dailyTotalAmount,
             DailySaveTransactionDetailRecord dailySaveTransactionDetailRecord
-    ){
+    ) {
         public record DailySaveTransactionDetailRecord(
                 Integer id,
                 TransactionType transactionType,
                 String categoryIn,
+                String categoryInImage,
                 String categoryOut,
+                String categoryOutImage,
                 String description,
                 String time,
                 String assets,
                 String amount
-        ){}
+        ) {
+        }
     }
 }
