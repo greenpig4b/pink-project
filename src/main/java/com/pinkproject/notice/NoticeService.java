@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -56,10 +57,15 @@ public class NoticeService {
     }
 
 
+
     @Transactional
     public List<_DetailNoticeAdminRecord> getAllNotices() {
-        return noticeRepository.findAll()
-                .stream()
+        List<Notice> notices = noticeRepository.findAll();
+        System.out.println("Notice 리스트: " + notices); // 디버그 로그 추가
+
+        notices.forEach(notice -> Hibernate.initialize(notice.getAdmin()));
+
+        List<_DetailNoticeAdminRecord> result = notices.stream()
                 .map(notice -> new _DetailNoticeAdminRecord(
                         notice.getId(),
                         notice.getTitle(),
@@ -68,6 +74,9 @@ public class NoticeService {
                         notice.getCreatedAt().toLocalDate()
                 ))
                 .collect(Collectors.toList());
+
+        System.out.println("변환된 결과 리스트: " + result); // 디버그 로그 추가
+        return result;
     }
 
     @Transactional
