@@ -39,7 +39,7 @@ public class UserService {
 
     public _LoginRespRecord getUser(_LoginRecord reqRecord) {
         User user = userRepository.findByEmailAndPassword(reqRecord.email(), reqRecord.password());
-        _LoginRespRecord.UserRecord userRecord = new _LoginRespRecord.UserRecord(user.getId(),user.getEmail(), user.getPassword());
+        _LoginRespRecord.UserRecord userRecord = new _LoginRespRecord.UserRecord(user.getId(), user.getEmail(), user.getPassword());
         String jwt = JwtUtil.create(user);
 
         return new _LoginRespRecord(userRecord, jwt);
@@ -62,4 +62,7 @@ public class UserService {
         return new _UserUpdateRespRecord(user.getId(), user.getEmail(), user.getPassword());
     }
 
+    public boolean checkEmailDuplicate(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
 }

@@ -10,6 +10,7 @@ import com.pinkproject.user.UserResponse._UserRespRecord;
 import com.pinkproject.user.UserResponse._UserUpdateRespRecord;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,17 @@ public class UserController {
         _JoinRespRecord respRecord = userService.saveUser(reqRecord);
 
         return ResponseEntity.ok(new ApiUtil<>(respRecord));
+    }
+
+    // 이메일 중복 체크
+    @GetMapping("/check-email")
+    public ResponseEntity<?> checkEmail(@RequestParam String email) {
+        boolean isDuplicate = userService.checkEmailDuplicate(email);
+        if (isDuplicate) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 가입된 이메일입니다.");
+        } else {
+            return ResponseEntity.ok("사용 가능한 이메일입니다");
+        }
     }
 
     // 로그인
