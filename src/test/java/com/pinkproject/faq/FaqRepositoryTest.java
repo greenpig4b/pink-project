@@ -18,9 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class FaqRepositoryTest {
 
     @Autowired
-    private AdminRepository adminRepository;
-
-    @Autowired
     private FaqRepository faqRepository;
 
 
@@ -42,6 +39,8 @@ public class FaqRepositoryTest {
         assertEquals("회원 탈퇴 방법", faqPage.getContent().get(3).getTitle());
         assertEquals("프로모션 코드 사용 방법", faqPage.getContent().get(4).getTitle());
 //        assertEquals("비밀번호 변경", faqPage.getContent().get(4).getTitle());
+
+        // 해당 관리자가 작성한 글인지
         assertEquals("admin", faqPage.getContent().get(0).getAdmin().getUsername());
         assertEquals("admin", faqPage.getContent().get(1).getAdmin().getUsername());
         assertEquals("admin", faqPage.getContent().get(2).getAdmin().getUsername());
