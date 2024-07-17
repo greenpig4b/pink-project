@@ -1,5 +1,6 @@
 package com.pinkproject.user;
 
+import com.pinkproject._core.error.exception.Exception400;
 import com.pinkproject._core.utils.ApiUtil;
 import com.pinkproject.user.UserRequest._JoinRecord;
 import com.pinkproject.user.UserRequest._LoginRecord;
@@ -13,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,12 +34,15 @@ public class UserController {
 
     // 이메일 중복 체크
     @GetMapping("/check-email")
-    public ResponseEntity<?> checkEmail(@RequestParam String email) {
-        boolean isDuplicate = userService.checkEmailDuplicate(email);
-        if (isDuplicate) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 가입된 이메일입니다.");
-        } else {
-            return ResponseEntity.ok("사용 가능한 이메일입니다");
+    public ResponseEntity<Map<String, String>> checkEmail(@RequestParam String email) {
+        Map<String, String> response = new HashMap<>();
+        try {
+            userService.validateAndCheckEmailDuplicate(email);
+            response.put("msg", "사용 가능한 이메일입니다.");
+            return ResponseEntity.ok(response);
+        } catch (Exception400 e) {
+            response.put("msg", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 
@@ -48,6 +55,9 @@ public class UserController {
 
         return ResponseEntity.ok().header("Authorization", "Bearer " + respRecord.jwt()).body(new ApiUtil<>(respRecord.user()));
     }
+
+    // 네이버 로그인
+
 
     // 회원 정보 조회
     @GetMapping("/api/users/{id}")

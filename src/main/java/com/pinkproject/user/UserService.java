@@ -37,6 +37,12 @@ public class UserService {
                 .build();
     }
 
+    public void validateAndCheckEmailDuplicate(String email) {
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new Exception400("이미 가입된 이메일입니다.");
+        }
+    }
+
     public _LoginRespRecord getUser(_LoginRecord reqRecord) {
         User user = userRepository.findByEmailAndPassword(reqRecord.email(), reqRecord.password());
         _LoginRespRecord.UserRecord userRecord = new _LoginRespRecord.UserRecord(user.getId(), user.getEmail(), user.getPassword());
@@ -60,9 +66,5 @@ public class UserService {
         userRepository.saveAndFlush(user);
 
         return new _UserUpdateRespRecord(user.getId(), user.getEmail(), user.getPassword());
-    }
-
-    public boolean checkEmailDuplicate(String email) {
-        return userRepository.findByEmail(email).isPresent();
     }
 }
