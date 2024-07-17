@@ -63,7 +63,7 @@ public class UserController {
 
         String pinkAccessToken = userService.kakaoLogin(kakaoAccessToken);
 
-        return ResponseEntity.ok().header("Authorization", "Bearer "+kakaoAccessToken).body(new ApiUtil<>(null));
+        return ResponseEntity.ok().header("Authorization", "Bearer "+pinkAccessToken).body(new ApiUtil<>(null));
     }
 
     // 회원 정보 조회
