@@ -57,7 +57,7 @@ public class UserController {
     }
 
     // 카카오 로그인
-    @GetMapping("/oauth/callback")
+    @GetMapping("/oauth/callback/kakao")
     public ResponseEntity<?> oauthCcallback(@RequestParam("accessToken") String kakaoAccessToken) {
         System.out.println("스프링에서 받은 카카오토큰: " + kakaoAccessToken);
 
