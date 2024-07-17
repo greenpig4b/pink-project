@@ -2,6 +2,7 @@ package com.pinkproject.user;
 
 import com.pinkproject.user.UserRequest._JoinRecord;
 import com.pinkproject.user.UserRequest._UserUpdateRecord;
+import com.pinkproject.user.enums.OAuthProvider;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +21,7 @@ public class User {
     private Integer id; // 유저 번호
 
     @Column(nullable = true)
-    private String oauthProvider;  // 오어스프로바이더
+    private OAuthProvider oauthProvider;  // 오어스프로바이더
 
     @Column(nullable = false, unique = true)
     private String email; // 이메일
@@ -32,7 +33,7 @@ public class User {
     private LocalDateTime createdAt; // 유저 가입 일자
 
     @Builder
-    public User(Integer id, String oauthProvider, String email, String password, LocalDateTime createdAt) {
+    public User(Integer id, OAuthProvider oauthProvider, String email, String password, LocalDateTime createdAt) {
         this.id = id;
         this.oauthProvider = oauthProvider;
         this.email = email;

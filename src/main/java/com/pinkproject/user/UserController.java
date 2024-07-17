@@ -56,8 +56,15 @@ public class UserController {
         return ResponseEntity.ok().header("Authorization", "Bearer " + respRecord.jwt()).body(new ApiUtil<>(respRecord.user()));
     }
 
-    // 네이버 로그인
+    // 카카오 로그인
+    @GetMapping("/oauth/callback/kakao")
+    public ResponseEntity<?> oauthCcallback(@RequestParam("accessToken") String kakaoAccessToken) {
+        System.out.println("스프링에서 받은 카카오토큰: " + kakaoAccessToken);
 
+        String pinkAccessToken = userService.kakaoLogin(kakaoAccessToken);
+
+        return ResponseEntity.ok().header("Authorization", "Bearer "+kakaoAccessToken).body(new ApiUtil<>(null));
+    }
 
     // 회원 정보 조회
     @GetMapping("/api/users/{id}")
