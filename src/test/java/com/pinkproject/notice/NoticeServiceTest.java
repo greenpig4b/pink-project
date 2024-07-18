@@ -155,11 +155,12 @@ public class NoticeServiceTest {
         _SaveNoticeAdminRecord saveNoticeAdminRecord = new _SaveNoticeAdminRecord("notice1", "content1");
         when(noticeRepository.save(any(Notice.class))).thenReturn(notice1);
 
-        _SaveNoticeAdminRecord result = noticeService.saveNotice(saveNoticeAdminRecord, admin);
+        Integer result = noticeService.saveNotice(saveNoticeAdminRecord, admin);
 
         assertNotNull(result);
-        assertEquals(saveNoticeAdminRecord, result);
+        assertEquals(notice1.getId(), result);
     }
+
 
     @Test
     public void getNoticeById_test() {

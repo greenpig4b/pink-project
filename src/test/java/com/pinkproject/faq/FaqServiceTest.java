@@ -6,9 +6,12 @@ import com.pinkproject.admin.AdminRequest._DetailFaqAdminRecord;
 import com.pinkproject.admin.AdminRequest._SaveFaqAdminRecord;
 import com.pinkproject.admin.SessionAdmin;
 import com.pinkproject.admin.enums.FaqEnum;
+import com.pinkproject.notice.NoticeRepository;
 import jakarta.servlet.http.HttpSession;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -23,10 +26,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.pinkproject._core.utils.JwtUtil.verify;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.client.ExpectedCount.times;
 
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -132,5 +137,18 @@ public class FaqServiceTest {
 
         assertNotNull(result);
         assertEquals(faq1.getId(), result);
+    }
+
+    @Test
+    @Transactional
+    public void deleteFaq_test() {
+        SessionAdmin sessionAdmin = new SessionAdmin(admin);
+        when(session.getAttribute("admin")).thenReturn(sessionAdmin);
+        when(adminRepository.findById(admin.getId())).thenReturn(Optional.of(admin));
+        when(faqRepository.findById(faq1.getId())).thenReturn(Optional.of(faq1));
+
+        Assertions.assertDoesNotThrow(() -> faqService.deleteFaq(faq1.getId()));
+
+        Mockito.verify(faqRepository).delete(faq1);
     }
 }
