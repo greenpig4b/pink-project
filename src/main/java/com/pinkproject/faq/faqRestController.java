@@ -2,11 +2,13 @@ package com.pinkproject.faq;
 
 
 import com.pinkproject._core.utils.ApiUtil;
+import com.pinkproject.admin.Admin;
 import com.pinkproject.admin.AdminRequest._DetailFaqAdminRecord;
 import com.pinkproject.admin.AdminRequest._SaveFaqAdminRecord;
 import com.pinkproject.admin.AdminService;
 import com.pinkproject.admin.SessionAdmin;
 import com.pinkproject.notice.NoticeService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -78,16 +80,31 @@ public class faqRestController {
     }
 
     @PostMapping("/api/admin/faq/save")
-    public ResponseEntity<?> createFaq(@RequestBody _SaveFaqAdminRecord request) {
+    public ResponseEntity<?> saveFaq(@RequestBody _SaveFaqAdminRecord request, HttpServletRequest httpRequest) {
         try {
-            Faq faq = faqService.createFaq(request);
+            SessionAdmin sessionAdmin = (SessionAdmin) httpRequest.getSession().getAttribute("admin");
+            if (sessionAdmin == null) {
+                ApiUtil<String> errorResponse = new ApiUtil<>(HttpStatus.UNAUTHORIZED.value(), "Admin session not found.");
+                return new ResponseEntity<>(401, HttpStatus.UNAUTHORIZED);
+            }
+
+            Admin admin = adminService.findByUsername(sessionAdmin.getUsername());
+            if (admin == null) {
+                ApiUtil<String> errorResponse = new ApiUtil<>(HttpStatus.NOT_FOUND.value(), "Admin not found.");
+                return new ResponseEntity<>(404, HttpStatus.NOT_FOUND);
+            }
+
+            Integer faqId = faqService.saveFaq(request, admin);
+            _DetailFaqAdminRecord faq = faqService.getFaqById(faqId);
+
             return new ResponseEntity<>(new ApiUtil<>(faq), HttpStatus.CREATED);
         } catch (Exception e) {
             log.error("Error creating FAQ: {}", e.getMessage());
             ApiUtil<String> errorResponse = new ApiUtil<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "FAQ를 작성하기를 실패하였습니다.");
-            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(500, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @DeleteMapping("/api/admin/faq/delete/{id}")
     public ResponseEntity<?> deleteFaq(@PathVariable Integer id) {

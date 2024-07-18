@@ -171,18 +171,6 @@ public class NoticeServiceTest {
         assertEquals("notice1", result.title());
     }
 
-    @Test
-    public void createNotice_test() {
-        _SaveNoticeAdminRecord request = new _SaveNoticeAdminRecord("notice1", "content1");
-        when(session.getAttribute("admin")).thenReturn(new SessionAdmin(admin));
-        when(adminRepository.findById(admin.getId())).thenReturn(Optional.of(admin));
-        when(noticeRepository.save(any(Notice.class))).thenReturn(notice1);
-
-        Notice result = noticeService.createNotice(request);
-
-        assertNotNull(result);
-        assertEquals("notice1", result.getTitle());
-    }
 
     @Test
     public void deleteNotice_test() {

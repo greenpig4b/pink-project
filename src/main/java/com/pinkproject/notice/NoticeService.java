@@ -100,15 +100,17 @@ public class NoticeService {
     }
 
     @Transactional
-    public _SaveNoticeAdminRecord saveNotice(_SaveNoticeAdminRecord saveNoticeAdminRecord, Admin admin) {
+    public Integer saveNotice(_SaveNoticeAdminRecord saveNoticeAdminRecord, Admin admin) {
         Notice notice = Notice.builder()
                 .admin(admin)
                 .title(saveNoticeAdminRecord.title())
                 .content(saveNoticeAdminRecord.content())
                 .build();
         notice = noticeRepository.save(notice);
-        return saveNoticeAdminRecord;
+        return notice.getId();
     }
+
+
 
 
     @Transactional
@@ -124,24 +126,6 @@ public class NoticeService {
                 .orElseThrow(() -> new RuntimeException("Notice not found with id: " + id));
     }
 
-    @Transactional
-    public Notice createNotice(_SaveNoticeAdminRecord request) {
-        SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
-        if (sessionAdmin == null) {
-            throw new RuntimeException("Admin session not found");
-        }
-
-        Admin admin = adminRepository.findById(sessionAdmin.getId())
-                .orElseThrow(() -> new RuntimeException("Admin not found with id: " + sessionAdmin.getId()));
-
-        Notice notice = Notice.builder()
-                .title(request.title())
-                .content(request.content())
-                .admin(admin)
-                .build();
-
-        return noticeRepository.save(notice);
-    }
 
     @Transactional
     public void deleteNotice(Integer noticeId) {
