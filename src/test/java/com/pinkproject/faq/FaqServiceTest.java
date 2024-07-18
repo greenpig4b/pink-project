@@ -92,4 +92,18 @@ public class FaqServiceTest {
         assertEquals("faq1", result.get(0).title());
         assertEquals("faq2", result.get(1).title());
     }
+
+    @Test
+    public void searchFaqs_test() {
+        PageRequest pageRequest = PageRequest.of(0, 5);
+        Page<Faq> faqPage = new PageImpl<>(Arrays.asList(faq1, faq2));
+        when(faqRepository.findByKeywordWithFaq("faq", pageRequest)).thenReturn(faqPage);
+
+        Page<_DetailFaqAdminRecord> result = faqService.searchFaqs("faq",0);
+
+        assertEquals(2, result.getTotalElements());
+        assertEquals("faq1", result.getContent().get(0).title());
+        assertEquals("faq2", result.getContent().get(1).title());
+
+    }
 }
