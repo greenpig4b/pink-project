@@ -3,6 +3,8 @@ package com.pinkproject.faq;
 import com.pinkproject.admin.Admin;
 import com.pinkproject.admin.AdminRepository;
 import com.pinkproject.admin.AdminRequest._DetailFaqAdminRecord;
+import com.pinkproject.admin.AdminRequest._SaveFaqAdminRecord;
+import com.pinkproject.admin.SessionAdmin;
 import com.pinkproject.admin.enums.FaqEnum;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,14 +16,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
 public class FaqServiceTest {
@@ -104,6 +111,26 @@ public class FaqServiceTest {
         assertEquals(2, result.getTotalElements());
         assertEquals("faq1", result.getContent().get(0).title());
         assertEquals("faq2", result.getContent().get(1).title());
+    }
 
+    @Test
+    public void getFaqById_test() {
+        when(faqRepository.findById(1)).thenReturn(Optional.of(faq1));
+
+        _DetailFaqAdminRecord result = faqService.getFaqById(1);
+
+        assertNotNull(result);
+        assertEquals("faq1", result.title());
+    }
+
+    @Test
+    public void saveFaq_test() {
+        _SaveFaqAdminRecord saveFaqAdminRecord = new _SaveFaqAdminRecord("faq1", "content1", "COMMON");
+        when(faqRepository.save(any(Faq.class))).thenReturn(faq1);
+
+        Integer result = faqService.saveFaq(saveFaqAdminRecord, admin);
+
+        assertNotNull(result);
+        assertEquals(faq1.getId(), result);
     }
 }

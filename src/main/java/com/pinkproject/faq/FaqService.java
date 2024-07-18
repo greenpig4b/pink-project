@@ -6,6 +6,7 @@ import com.pinkproject.admin.AdminRequest._DetailFaqAdminRecord;
 import com.pinkproject.admin.AdminRequest._SaveFaqAdminRecord;
 import com.pinkproject.admin.SessionAdmin;
 import com.pinkproject.admin.enums.FaqEnum;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

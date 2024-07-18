@@ -4,8 +4,12 @@ import com.pinkproject._core.error.exception.Exception404;
 import com.pinkproject.admin.Admin;
 import com.pinkproject.admin.AdminRepository;
 import com.pinkproject.admin.AdminRequest._DetailNoticeAdminRecord;
+import com.pinkproject.admin.AdminRequest._SaveFaqAdminRecord;
 import com.pinkproject.admin.AdminRequest._SaveNoticeAdminRecord;
 import com.pinkproject.admin.SessionAdmin;
+import com.pinkproject.admin.enums.FaqEnum;
+import com.pinkproject.faq.Faq;
+import com.pinkproject.faq.FaqRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
@@ -28,6 +32,7 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final HttpSession session;
     private final AdminRepository adminRepository;
+    private final FaqRepository faqRepository;
 
 
     @Transactional
@@ -95,15 +100,16 @@ public class NoticeService {
     }
 
     @Transactional
-    public Integer saveNotice(_SaveNoticeAdminRecord saveNoticeAdminRecord, Admin admin) {
+    public _SaveNoticeAdminRecord saveNotice(_SaveNoticeAdminRecord saveNoticeAdminRecord, Admin admin) {
         Notice notice = Notice.builder()
                 .admin(admin)
                 .title(saveNoticeAdminRecord.title())
                 .content(saveNoticeAdminRecord.content())
                 .build();
         notice = noticeRepository.save(notice);
-        return notice.getId();
+        return saveNoticeAdminRecord;
     }
+
 
     @Transactional
     public _DetailNoticeAdminRecord getNoticeById(Integer id) {

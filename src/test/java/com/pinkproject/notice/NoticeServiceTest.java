@@ -27,9 +27,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+@Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
@@ -86,7 +89,7 @@ public class NoticeServiceTest {
     }
 
     @Test
-    @Transactional
+
     public void getAllNotices_test() {
         List<Notice> notices = Arrays.asList(notice1, notice2);
         when(noticeRepository.findAll()).thenReturn(notices);
@@ -99,17 +102,16 @@ public class NoticeServiceTest {
         // 변환된 데이터 확인
         System.out.println("결과 리스트: " + result);
 
-        Assertions.assertEquals(2, result.size());
-        Assertions.assertEquals("notice1", result.get(0).title());
-        Assertions.assertEquals("notice2", result.get(1).title());
-        Assertions.assertEquals("content1", result.get(0).content());
-        Assertions.assertEquals("content2", result.get(1).content());
-        Assertions.assertEquals("admin", result.get(0).username());
-        Assertions.assertEquals("admin", result.get(1).username());
+        assertEquals(2, result.size());
+        assertEquals("notice1", result.get(0).title());
+        assertEquals("notice2", result.get(1).title());
+        assertEquals("content1", result.get(0).content());
+        assertEquals("content2", result.get(1).content());
+        assertEquals("admin", result.get(0).username());
+        assertEquals("admin", result.get(1).username());
     }
 
     @Test
-    @Transactional
     public void searchNotices_test() {
 
         PageRequest pageRequest = PageRequest.of(0, 5);
@@ -118,13 +120,12 @@ public class NoticeServiceTest {
 
         Page<_DetailNoticeAdminRecord> result = noticeService.searchNotices("notice", 0);
 
-        Assertions.assertEquals(2, result.getTotalElements());
-        Assertions.assertEquals("notice1", result.getContent().get(0).title());
-        Assertions.assertEquals("notice2", result.getContent().get(1).title());
+        assertEquals(2, result.getTotalElements());
+        assertEquals("notice1", result.getContent().get(0).title());
+        assertEquals("notice2", result.getContent().get(1).title());
     }
 
     @Test
-    @Transactional
     public void getNotices_test() {
         PageRequest pageRequest = PageRequest.of(0, 5);
         Page<Notice> noticePage = new PageImpl<>(Arrays.asList(notice1, notice2));
@@ -132,49 +133,45 @@ public class NoticeServiceTest {
 
         Page<_DetailNoticeAdminRecord> result = noticeService.getNotices(0);
 
-        Assertions.assertEquals(2, result.getTotalElements());
-        Assertions.assertEquals("notice1", result.getContent().get(0).title());
-        Assertions.assertEquals("notice2", result.getContent().get(1).title());
+        assertEquals(2, result.getTotalElements());
+        assertEquals("notice1", result.getContent().get(0).title());
+        assertEquals("notice2", result.getContent().get(1).title());
     }
 
     @Test
-    @Transactional
     public void detailNoticeAdminRecord_test() {
         when(noticeRepository.findById(1)).thenReturn(Optional.of(notice1));
 
         _DetailNoticeAdminRecord result = noticeService.detailNoticeAdminRecord(1);
 
-        Assertions.assertNotNull(result);
-        Assertions.assertEquals("notice1", result.title());
-        Assertions.assertEquals("content1", result.content());
-        Assertions.assertEquals("admin", result.username());
+        assertNotNull(result);
+        assertEquals("notice1", result.title());
+        assertEquals("content1", result.content());
+        assertEquals("admin", result.username());
     }
 
     @Test
-    @Transactional
     public void saveNotice_test() {
         _SaveNoticeAdminRecord saveNoticeAdminRecord = new _SaveNoticeAdminRecord("notice1", "content1");
         when(noticeRepository.save(any(Notice.class))).thenReturn(notice1);
 
-        Integer result = noticeService.saveNotice(saveNoticeAdminRecord, admin);
+        _SaveNoticeAdminRecord result = noticeService.saveNotice(saveNoticeAdminRecord, admin);
 
-        Assertions.assertNotNull(result);
-        Assertions.assertEquals(notice1.getId(), result);
+        assertNotNull(result);
+        assertEquals(saveNoticeAdminRecord, result);
     }
 
     @Test
-    @Transactional
     public void getNoticeById_test() {
         when(noticeRepository.findById(1)).thenReturn(Optional.of(notice1));
 
         _DetailNoticeAdminRecord result = noticeService.getNoticeById(1);
 
-        Assertions.assertNotNull(result);
-        Assertions.assertEquals("notice1", result.title());
+        assertNotNull(result);
+        assertEquals("notice1", result.title());
     }
 
     @Test
-    @Transactional
     public void createNotice_test() {
         _SaveNoticeAdminRecord request = new _SaveNoticeAdminRecord("notice1", "content1");
         when(session.getAttribute("admin")).thenReturn(new SessionAdmin(admin));
@@ -183,12 +180,11 @@ public class NoticeServiceTest {
 
         Notice result = noticeService.createNotice(request);
 
-        Assertions.assertNotNull(result);
-        Assertions.assertEquals("notice1", result.getTitle());
+        assertNotNull(result);
+        assertEquals("notice1", result.getTitle());
     }
 
     @Test
-    @Transactional
     public void deleteNotice_test() {
         when(session.getAttribute("admin")).thenReturn(new SessionAdmin(admin));
         when(adminRepository.findById(admin.getId())).thenReturn(Optional.of(admin));
