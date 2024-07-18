@@ -38,10 +38,12 @@ public class Faq {
     private FaqEnum classification;
 
     @Builder
-    public Faq(Admin admin, String title, String content, FaqEnum classification) {
+    public Faq(Integer id, Admin admin, String title, String content, FaqEnum classification, LocalDateTime createdAt) {
+        this.id = id;
         this.admin = admin;
         this.title = title;
         this.content = content;
         this.classification = classification;
+        this.createdAt = createdAt;
     }
 }
