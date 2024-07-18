@@ -1,6 +1,6 @@
 package com.pinkproject.user.enums;
 
-public enum OAuthProvider {
+public enum OauthProvider {
     KAKAO,
     NAVER,
     GOOGLE
