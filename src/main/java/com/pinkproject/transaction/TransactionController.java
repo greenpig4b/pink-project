@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @RestController
 @RequiredArgsConstructor
 public class TransactionController {
@@ -88,13 +91,32 @@ public class TransactionController {
 
         return ResponseEntity.ok(new ApiUtil<>(respRecord));
     }
-
-    // 통계페이지
-    @GetMapping("/api/chart")
-    public ResponseEntity<?> getChart(@RequestParam Integer year, @RequestParam Integer month, @RequestParam Integer week){
+    @GetMapping("/api/chart/monthly")
+    public ResponseEntity<?> getMonthlyChart(
+            @RequestParam Integer year,
+            @RequestParam Integer month) {
 
         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
-        _ChartRespRecord respRecord = transactionService.getChartTransaction(sessionUser.getId(),year,month,week);
+        Object respRecord = transactionService.getMonthtransaction(sessionUser.getId(), year, month);
+
+        System.out.println(respRecord);
+
+        return ResponseEntity.ok(new ApiUtil<>(respRecord));
+    }
+
+    @GetMapping("/api/chart/weekly")
+    public ResponseEntity<?> getWeeklyChart(
+            @RequestParam Integer year,
+            @RequestParam Integer month,
+            @RequestParam String startDate,
+            @RequestParam String endDate) {
+
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
+        LocalDateTime startDateTime = LocalDateTime.parse(startDate);
+        LocalDateTime endDateTime = LocalDateTime.parse(endDate);
+        Object respRecord = transactionService.getWeeklyTransaction(sessionUser.getId(), year, month, startDateTime, endDateTime);
+
+        System.out.println(respRecord);
 
         return ResponseEntity.ok(new ApiUtil<>(respRecord));
     }

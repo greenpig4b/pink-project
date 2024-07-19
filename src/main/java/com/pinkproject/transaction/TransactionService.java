@@ -14,8 +14,10 @@ import com.pinkproject.transaction.enums.TransactionType;
 import com.pinkproject.user.User;
 import com.pinkproject.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,15 +36,15 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final MemoRepository memoRepository;
 
-    public _ChartRespRecord getChartTransaction(Integer sessionUserId, Integer year, Integer month, Integer week) {
+    // 월간 주간 다합친 DTO
+    public _ChartRespRecord getChartTransaction(Integer sessionUserId, Integer year, Integer month,LocalDateTime startDate, LocalDateTime endDate ) {
         User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보가 없습니다."));
 
         _ChartRespRecord.MonthDTO monthDTO = getMonthtransaction(user.getId(), year, month);
-        _ChartRespRecord.WeeklyDTO weeklyDTO = getWeeklyTransaction(user.getId(), year, month, week);
+        _ChartRespRecord.WeeklyDTO weeklyDTO = getWeeklyTransaction(user.getId(), year, month, startDate, endDate);
 
         return new _ChartRespRecord(month, monthDTO, weeklyDTO);
     }
-
 
     // 월간 수입 지출
     public _ChartRespRecord.MonthDTO getMonthtransaction(Integer sessionUserId, Integer year, Integer month) {
@@ -63,18 +65,18 @@ public class TransactionService {
         List<_ChartRespRecord.MonthDTO.MonthIcomeDTO> monthIncomeList = monthDTO.stream().filter(transaction ->
                 transaction.getTransactionType() == TransactionType.INCOME).map(transaction -> _ChartRespRecord.MonthDTO.MonthIcomeDTO.builder()
                 .id(transaction.getId())
-                .category(transaction.getTransactionType().getKorean())
+                .category(transaction.getCategoryIn().getKorean())
                 .amount(Integer.toString(transaction.getAmount()))
-                .categoryImagePath(transaction.getCategoryIn().getEmoji())
+//                .categoryImagePath(transaction.getCategoryIn().getEmoji())
                 .build()).toList();
 
         // 2-2 지출
         List<_ChartRespRecord.MonthDTO.MonthSpendingDTO> monthSpendingList = monthDTO.stream().filter(transaction ->
                 transaction.getTransactionType() == TransactionType.EXPENSE).map(transaction -> _ChartRespRecord.MonthDTO.MonthSpendingDTO.builder()
                 .id(transaction.getId())
-                .category(transaction.getTransactionType().getKorean())
+                .category(transaction.getCategoryOut().getKorean())
                 .amount(Integer.toString(transaction.getAmount()))
-                .categoryImagePath(transaction.getCategoryOut().getEmoji())
+//                .categoryImagePath(transaction.getCategoryOut().getEmoji())
                 .build()).toList();
 
 
@@ -84,8 +86,14 @@ public class TransactionService {
 
     //-------------
 
+
     // 주간 수입 지출
-    public _ChartRespRecord.WeeklyDTO getWeeklyTransaction(Integer sessionUserId, Integer year, Integer month, Integer week) {
+    public _ChartRespRecord.WeeklyDTO getWeeklyTransaction(Integer sessionUserId,
+                                                           Integer year,
+                                                           Integer month,
+                                                           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+                                                           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate)
+                                                            {
 
         // 0. 인증처리
         User user = userRepository.findById(sessionUserId).orElseThrow(() -> new Exception404("유저 정보가 없습니다."));
@@ -95,48 +103,29 @@ public class TransactionService {
             throw new Exception403("해당 수입 및 지출을 확인할 권한이 없습니다.");
         }
 
-        // 2.주의 시작 날짜와 끝 날짜 계산
-        LocalDateTime startDate = getStartOfWeek(year, month, week);
-        LocalDateTime endDate = startDate.plusDays(6);
+        List<Transaction> weeklyDTO = transactionRepository.findAllByYearAndMonthAndWeek(year,month,startDate, endDate, sessionUserId);
 
-        LocalDateTime startDateTime = startDate;
-        LocalDateTime endDateTime = endDate;
+        // 2. 수입 및 지출 나누기
 
-
-        List<Transaction> weeklyDTO = transactionRepository.findAllByYearAndMonthAndWeek(year, month, startDateTime, endDateTime, sessionUserId);
-
-        // 3. 수입 및 지출 나누기
-
-        // 3-1  수입
+        // 2-1  수입
         List<_ChartRespRecord.WeeklyDTO.WeekIcomeDTO> weekIncomeDTO = weeklyDTO.stream().filter(transaction ->
                 transaction.getTransactionType() == TransactionType.INCOME).map(transaction -> _ChartRespRecord.WeeklyDTO.WeekIcomeDTO.builder()
                 .id(transaction.getId())
-                .category(transaction.getTransactionType().getKorean())
+                .category(transaction.getCategoryIn().getKorean())
                 .amount(Integer.toString(transaction.getAmount()))
-                .categoryImagePath(transaction.getCategoryOut().getEmoji())
+//                .categoryImagePath(transaction.getCategoryOut().getEmoji())
                 .build()).toList();
 
-
-        // 3-2 지출
+        // 2-2 지출
         List<_ChartRespRecord.WeeklyDTO.WeekSpendingDTO> weekSpendingDTO = weeklyDTO.stream().filter(transaction ->
                 transaction.getTransactionType() == TransactionType.EXPENSE).map(transaction -> _ChartRespRecord.WeeklyDTO.WeekSpendingDTO.builder()
                 .id(transaction.getId())
-                .category(transaction.getTransactionType().getKorean())
+                .category(transaction.getCategoryOut().getKorean())
                 .amount(Integer.toString(transaction.getAmount()))
-                .categoryImagePath(transaction.getCategoryOut().getEmoji())
+//                .categoryImagePath(transaction.getCategoryOut().getEmoji())
                 .build()).toList();
 
         return new _ChartRespRecord.WeeklyDTO(weekIncomeDTO, weekSpendingDTO);
-    }
-
-
-    // 주 시작 날짜 계산 메서드
-    private LocalDateTime getStartOfWeek(Integer year, Integer month, Integer week) {
-        LocalDate firstDayOfMonth = LocalDate.of(year, month, 1);
-        WeekFields weekFields = WeekFields.of(Locale.getDefault());
-        LocalDate firstDayOfWeek = firstDayOfMonth.with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()));
-
-        return firstDayOfWeek.plusWeeks(week - 1).atStartOfDay();
     }
 
 

@@ -19,8 +19,8 @@ public record _ChartRespRecord(
         public record MonthIcomeDTO(
                 Integer id,
                 String category,
-                String amount,
-                String categoryImagePath
+                String amount
+
         ) {
         }
 
@@ -28,8 +28,8 @@ public record _ChartRespRecord(
         public record MonthSpendingDTO(
                 Integer id,
                 String category,
-                String amount,
-                String categoryImagePath
+                String amount
+
         ) {
         }
     }
@@ -43,8 +43,8 @@ public record _ChartRespRecord(
         public record WeekIcomeDTO(
                 Integer id,
                 String category,
-                String amount,
-                String categoryImagePath
+                String amount
+
         ) {
         }
 
@@ -52,8 +52,8 @@ public record _ChartRespRecord(
         public record WeekSpendingDTO(
                 Integer id,
                 String category,
-                String amount,
-                String categoryImagePath
+                String amount
+
         ) {
         }
     }
