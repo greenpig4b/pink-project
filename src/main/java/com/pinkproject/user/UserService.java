@@ -73,9 +73,15 @@ public class UserService {
                 request,
                 _KakaoUserRecord.class);
 
-        String email = response.getBody().properties().nickname() + "@kakao.com";
-        User userPS = userRepository.findByEmail(email)
-                .orElse(null);
+        _KakaoUserRecord kakaoUserRecord = Optional.ofNullable(response.getBody())
+                .orElseThrow(() -> new RuntimeException("카카오 사용자 정보를 가져오지 못했습니다."));
+
+        String email = Optional.ofNullable(kakaoUserRecord.properties())
+                .map(_KakaoUserRecord.Properties::nickname)
+                .map(nickname -> nickname + "@kakao.com")
+                .orElseThrow(() -> new RuntimeException("카카오 사용자 정보에 이메일이 없습니다."));
+
+        User userPS = userRepository.findByEmail(email).orElse(null);
 
         if (userPS != null) {
             return JwtUtil.create(userPS);
@@ -90,6 +96,48 @@ public class UserService {
             return JwtUtil.create(returnUser);
         }
     }
+
+
+    // 네이버 로그인
+    @Transactional
+    public String naverLogin(String naverAccessToken) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        headers.add("Authorization", "Bearer " + naverAccessToken);
+
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+
+        ResponseEntity<_NaverUserRecord> response = restTemplate.exchange(
+                "https://openapi.naver.com/v1/nid/me",
+                HttpMethod.GET,
+                request,
+                _NaverUserRecord.class);
+
+        _NaverUserRecord naverUserRecord = Optional.ofNullable(response.getBody())
+                .orElseThrow(() -> new RuntimeException("네이버 사용자 정보를 가져오지 못했습니다."));
+
+        String email = Optional.ofNullable(naverUserRecord.response())
+                .map(_NaverUserRecord.Response::email)
+                .orElseThrow(() -> new RuntimeException("네이버 사용자 정보에 이메일이 없습니다."));
+
+        User userPS = userRepository.findByEmail(email).orElse(null);
+
+        if (userPS != null) {
+            return JwtUtil.create(userPS);
+        } else {
+            User user = User.builder()
+                    .email(email)
+                    .password(UUID.randomUUID().toString())
+                    .oauthProvider(OauthProvider.NAVER)
+                    .build();
+
+            User returnUser = userRepository.save(user);
+            return JwtUtil.create(returnUser);
+        }
+    }
+
 
     public _UserRespRecord getUserInfo(Integer id) {
         User user = userRepository.findById(id)
@@ -107,4 +155,5 @@ public class UserService {
 
         return new _UserUpdateRespRecord(user.getId(), user.getEmail(), user.getPassword());
     }
+
 }
