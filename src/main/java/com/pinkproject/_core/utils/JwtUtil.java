@@ -12,6 +12,7 @@ import java.util.Date;
 
 public class JwtUtil {
 
+    public static String SECRET_KEY = "default-secret";
     // user 토큰 생성
     public static String create(User user) {
 
