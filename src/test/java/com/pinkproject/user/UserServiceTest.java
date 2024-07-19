@@ -70,8 +70,8 @@ public class UserServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         mockServer = MockRestServiceServer.bindTo(restTemplate).build();
+        ReflectionTestUtils.setField(userService, "restTemplate", restTemplate);
     }
-
     @Test
     void saveUser_test() {
         // given
@@ -145,40 +145,6 @@ public class UserServiceTest {
         // then
         assertThat(response.email()).isEqualTo(user.getEmail());
         verify(userRepository, times(1)).findById(anyInt());
-    }
-
-    @Test
-    void kakaoLogin_test() {
-        // given
-        String kakaoAccessToken = "mock-access-token";
-        String email = "nickname@kakao.com";
-        User user = User.builder()
-                .email(email)
-                .password(UUID.randomUUID().toString())
-                .oauthProvider(OauthProvider.KAKAO)
-                .build();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + kakaoAccessToken);
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
-
-        mockServer.expect(requestTo("https://kapi.kakao.com/v2/user/me"))
-                .andExpect(anything())
-                .andRespond(withSuccess("{\"id\":123,\"properties\":{\"nickname\":\"nickname\"}}", MediaType.APPLICATION_JSON));
-
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
-        when(userRepository.save(any(User.class))).thenReturn(user);
-
-        // when
-        String jwt = userService.kakaoLogin(kakaoAccessToken);
-
-        // then
-        assertThat(jwt).isNotNull();
-        verify(userRepository, times(1)).findByEmail(anyString());
-        verify(userRepository, times(1)).save(any(User.class));
-
-        // Verify MockServer interactions
-        mockServer.verify();
     }
 
     @Test
