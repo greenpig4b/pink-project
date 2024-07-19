@@ -58,10 +58,20 @@ public class UserController {
 
     // 카카오 로그인
     @GetMapping("/oauth/callback/kakao")
-    public ResponseEntity<?> oauthCcallback(@RequestParam("accessToken") String kakaoAccessToken) {
+    public ResponseEntity<?> kakaoOauthcallback(@RequestParam("accessToken") String kakaoAccessToken) {
         System.out.println("스프링에서 받은 카카오토큰: " + kakaoAccessToken);
 
         String pinkAccessToken = userService.kakaoLogin(kakaoAccessToken);
+
+        return ResponseEntity.ok().header("Authorization", "Bearer "+pinkAccessToken).body(new ApiUtil<>(null));
+    }
+
+    // 네이버 로그인
+    @GetMapping("/oauth/callback/naver")
+    public ResponseEntity<?> naverOauthcallback(@RequestParam("accessToken") String naverAccessToken) {
+        System.out.println("스프링에서 받은 카카오토큰: " + naverAccessToken);
+
+        String pinkAccessToken = userService.naverLogin(naverAccessToken);
 
         return ResponseEntity.ok().header("Authorization", "Bearer "+pinkAccessToken).body(new ApiUtil<>(null));
     }
