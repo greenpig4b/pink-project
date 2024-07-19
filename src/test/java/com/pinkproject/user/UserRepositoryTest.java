@@ -36,4 +36,24 @@ public class UserRepositoryTest {
         assertThat(findUser.get().getEmail()).isEqualTo("ssar1@kakao.com");
         // 확인
     }
+
+    @Test
+    void findByEmailAndPassword_test(){
+
+        //given
+        User user = User.builder()
+                .email("ssar1@kakao.com")
+                .password("12345")
+                .oauthProvider(OauthProvider.KAKAO)
+                .build();
+        userRepository.save(user);
+
+        //when
+        User findUser = userRepository.findByEmailAndPassword("ssar1@kakao.com", "12345");
+
+        //then
+        assertThat(findUser).isNotNull();
+        assertThat(findUser.getEmail()).isEqualTo("ssar1@kakao.com");
+        assertThat(findUser.getPassword()).isEqualTo("12345");
+    }
 }
