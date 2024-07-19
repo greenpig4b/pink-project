@@ -25,6 +25,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final RestTemplate restTemplate;
 
     @Transactional
     public _JoinRespRecord saveUser(_JoinRecord reqRecord) {
@@ -59,7 +60,6 @@ public class UserService {
     // 카카오 로그인
     @Transactional
     public String kakaoLogin(String kakaoAccessToken) {
-        RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -101,7 +101,6 @@ public class UserService {
     // 네이버 로그인
     @Transactional
     public String naverLogin(String naverAccessToken) {
-        RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
