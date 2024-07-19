@@ -2,8 +2,8 @@ package com.pinkproject.faq;
 
 import com.pinkproject.admin.Admin;
 import com.pinkproject.admin.AdminRepository;
-import com.pinkproject.admin.AdminRequest._DetailFaqAdminRecord;
-import com.pinkproject.admin.AdminRequest._SaveFaqAdminRecord;
+import com.pinkproject.faq.faqRequest._DetailFaqAdminRecord;
+import com.pinkproject.faq.faqRequest._SaveFaqAdminRecord;
 import com.pinkproject.admin.SessionAdmin;
 import com.pinkproject.admin.enums.FaqEnum;
 import jakarta.servlet.http.HttpSession;
@@ -95,6 +95,8 @@ public class FaqService {
         return faq.getId();
     }
 
+
+
     @Transactional
     public _DetailFaqAdminRecord getFaqById(Integer id) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -110,32 +112,6 @@ public class FaqService {
                 .orElseThrow(() -> new RuntimeException("FAQ not found with id: " + id));
     }
 
-    @Transactional
-    public Faq createFaq(_SaveFaqAdminRecord request) {
-        SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
-        if (sessionAdmin == null) {
-            throw new RuntimeException("Admin session not found");
-        }
-
-        Admin admin = adminRepository.findById(sessionAdmin.getId())
-                .orElseThrow(() -> new RuntimeException("Admin not found with id: " + sessionAdmin.getId()));
-
-        FaqEnum classification;
-        try {
-            classification = FaqEnum.valueOf(request.classification());
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid classification value: " + request.classification());
-        }
-
-        Faq faq = Faq.builder()
-                .title(request.title())
-                .content(request.content())
-                .classification(classification)
-                .admin(admin)
-                .build();
-
-        return faqRepository.save(faq);
-    }
 
     @Transactional
     public void deleteFaq(Integer faqId) {

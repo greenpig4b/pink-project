@@ -1,4 +1,4 @@
-package com.pinkproject.admin.AdminRequest;
+package com.pinkproject.notice.noticeRequest;
 
 public record _SaveNoticeAdminRecord(
         String title,

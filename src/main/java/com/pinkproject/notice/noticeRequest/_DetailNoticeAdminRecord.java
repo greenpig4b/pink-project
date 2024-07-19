@@ -1,4 +1,4 @@
-package com.pinkproject.admin.AdminRequest;
+package com.pinkproject.notice.noticeRequest;
 
 import java.time.LocalDate;
 

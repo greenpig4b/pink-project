@@ -1,4 +1,4 @@
-package com.pinkproject.admin.AdminRequest;
+package com.pinkproject.faq.faqRequest;
 
 import com.pinkproject.admin.enums.FaqEnum;
 

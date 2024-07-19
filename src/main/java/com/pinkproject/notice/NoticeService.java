@@ -1,22 +1,19 @@
 package com.pinkproject.notice;
 
-import com.pinkproject._core.error.exception.Exception404;
 import com.pinkproject.admin.Admin;
 import com.pinkproject.admin.AdminRepository;
-import com.pinkproject.admin.AdminRequest._DetailNoticeAdminRecord;
-import com.pinkproject.admin.AdminRequest._SaveNoticeAdminRecord;
+import com.pinkproject.notice.noticeRequest._DetailNoticeAdminRecord;
+import com.pinkproject.notice.noticeRequest._SaveNoticeAdminRecord;
 import com.pinkproject.admin.SessionAdmin;
-import jakarta.servlet.http.HttpServletRequest;
+import com.pinkproject.faq.FaqRepository;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +24,7 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final HttpSession session;
     private final AdminRepository adminRepository;
+    private final FaqRepository faqRepository;
 
 
     @Transactional
@@ -56,10 +54,15 @@ public class NoticeService {
     }
 
 
+
     @Transactional
     public List<_DetailNoticeAdminRecord> getAllNotices() {
-        return noticeRepository.findAll()
-                .stream()
+        List<Notice> notices = noticeRepository.findAll();
+        System.out.println("Notice 리스트: " + notices); // 디버그 로그 추가
+
+        notices.forEach(notice -> Hibernate.initialize(notice.getAdmin()));
+
+        List<_DetailNoticeAdminRecord> result = notices.stream()
                 .map(notice -> new _DetailNoticeAdminRecord(
                         notice.getId(),
                         notice.getTitle(),
@@ -68,6 +71,9 @@ public class NoticeService {
                         notice.getCreatedAt().toLocalDate()
                 ))
                 .collect(Collectors.toList());
+
+        System.out.println("변환된 결과 리스트: " + result); // 디버그 로그 추가
+        return result;
     }
 
     @Transactional
@@ -96,6 +102,9 @@ public class NoticeService {
         return notice.getId();
     }
 
+
+
+
     @Transactional
     public _DetailNoticeAdminRecord getNoticeById(Integer id) {
         return noticeRepository.findById(id)
@@ -109,24 +118,6 @@ public class NoticeService {
                 .orElseThrow(() -> new RuntimeException("Notice not found with id: " + id));
     }
 
-    @Transactional
-    public Notice createNotice(_SaveNoticeAdminRecord request) {
-        SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
-        if (sessionAdmin == null) {
-            throw new RuntimeException("Admin session not found");
-        }
-
-        Admin admin = adminRepository.findById(sessionAdmin.getId())
-                .orElseThrow(() -> new RuntimeException("Admin not found with id: " + sessionAdmin.getId()));
-
-        Notice notice = Notice.builder()
-                .title(request.title())
-                .content(request.content())
-                .admin(admin)
-                .build();
-
-        return noticeRepository.save(notice);
-    }
 
     @Transactional
     public void deleteNotice(Integer noticeId) {

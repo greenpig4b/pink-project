@@ -1,5 +1,6 @@
 package com.pinkproject.user;
 
+import com.pinkproject._core.error.exception.Exception400;
 import com.pinkproject._core.utils.ApiUtil;
 import com.pinkproject.user.UserRequest._JoinRecord;
 import com.pinkproject.user.UserRequest._LoginRecord;
@@ -10,8 +11,12 @@ import com.pinkproject.user.UserResponse._UserRespRecord;
 import com.pinkproject.user.UserResponse._UserUpdateRespRecord;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +32,20 @@ public class UserController {
         return ResponseEntity.ok(new ApiUtil<>(respRecord));
     }
 
+    // 이메일 중복 체크
+    @GetMapping("/check-email")
+    public ResponseEntity<Map<String, String>> checkEmail(@RequestParam String email) {
+        Map<String, String> response = new HashMap<>();
+        try {
+            userService.validateAndCheckEmailDuplicate(email);
+            response.put("msg", "사용 가능한 이메일입니다.");
+            return ResponseEntity.ok(response);
+        } catch (Exception400 e) {
+            response.put("msg", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
     // 로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody _LoginRecord reqRecord) {
@@ -35,6 +54,16 @@ public class UserController {
         session.setAttribute("sessionUser", sessionUser);
 
         return ResponseEntity.ok().header("Authorization", "Bearer " + respRecord.jwt()).body(new ApiUtil<>(respRecord.user()));
+    }
+
+    // 카카오 로그인
+    @GetMapping("/oauth/callback/kakao")
+    public ResponseEntity<?> oauthCcallback(@RequestParam("accessToken") String kakaoAccessToken) {
+        System.out.println("스프링에서 받은 카카오토큰: " + kakaoAccessToken);
+
+        String pinkAccessToken = userService.kakaoLogin(kakaoAccessToken);
+
+        return ResponseEntity.ok().header("Authorization", "Bearer "+pinkAccessToken).body(new ApiUtil<>(null));
     }
 
     // 회원 정보 조회

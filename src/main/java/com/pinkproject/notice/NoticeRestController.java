@@ -4,12 +4,11 @@ package com.pinkproject.notice;
 import com.pinkproject._core.utils.ApiUtil;
 import com.pinkproject.admin.Admin;
 import com.pinkproject.admin.AdminRepository;
-import com.pinkproject.admin.AdminRequest._DetailNoticeAdminRecord;
-import com.pinkproject.admin.AdminRequest._SaveNoticeAdminRecord;
+import com.pinkproject.notice.noticeRequest._DetailNoticeAdminRecord;
+import com.pinkproject.notice.noticeRequest._SaveNoticeAdminRecord;
 import com.pinkproject.admin.AdminService;
 import com.pinkproject.admin.SessionAdmin;
 import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -31,6 +30,7 @@ public class NoticeRestController {
     private final HttpSession session;
     private final AdminRepository adminRepository;
     private final NoticeRepository noticeRepository;
+    private final AdminService adminService;
 
     @GetMapping("/api/admin/notice")
     public ResponseEntity<?> getAllNotices() {
@@ -81,9 +81,18 @@ public class NoticeRestController {
     }
 
     @PostMapping("/api/admin/notice/save")
-    public ResponseEntity<?> createNotice(@RequestBody _SaveNoticeAdminRecord request) {
+    public ResponseEntity<?> saveNotice(@RequestBody _SaveNoticeAdminRecord request) {
         try {
-            Notice notice = noticeService.createNotice(request);
+            SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
+            Admin admin = adminService.findByUsername(sessionAdmin.getUsername());
+            if (admin == null) {
+                ApiUtil<String> errorResponse = new ApiUtil<>(HttpStatus.NOT_FOUND.value(), "Admin not found");
+                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            }
+
+            Integer noticeId = noticeService.saveNotice(request, admin);
+            _DetailNoticeAdminRecord notice = noticeService.getNoticeById(noticeId);
+
             return new ResponseEntity<>(new ApiUtil<>(notice), HttpStatus.CREATED);
         } catch (Exception e) {
             log.error("Error creating notice: {}", e.getMessage());
@@ -91,6 +100,7 @@ public class NoticeRestController {
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @DeleteMapping("/api/admin/notice/delete/{id}")
     public ResponseEntity<?> deleteNotice(@PathVariable Integer id) {
