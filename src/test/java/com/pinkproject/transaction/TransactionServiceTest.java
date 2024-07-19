@@ -1,10 +1,11 @@
-package com.pinkproject.transaction;
-
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-@ExtendWith(MockitoExtension.class)
-class TransactionServiceTest {
+//package com.pinkproject.transaction;
+//
+//import org.junit.jupiter.api.extension.ExtendWith;
+//import org.mockito.InjectMocks;
+//import org.mockito.junit.jupiter.MockitoExtension;
+//
+//@ExtendWith(MockitoExtension.class)
+//class TransactionServiceTest {
 //    @InjectMocks
 //    private RecordService recordService;
 //
@@ -36,4 +37,4 @@ class TransactionServiceTest {
 //        // then
 //        System.out.println("getDailyMain_test: " + result);
 //    }
-}
+//}
