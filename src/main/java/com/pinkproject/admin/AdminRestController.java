@@ -3,29 +3,18 @@ package com.pinkproject.admin;
 import com.pinkproject._core.error.exception.Exception401;
 import com.pinkproject._core.utils.ApiUtil;
 import com.pinkproject._core.utils.JwtUtil;
-import com.pinkproject.admin.AdminRequest._DetailFaqAdminRecord;
-import com.pinkproject.admin.AdminRequest._DetailNoticeAdminRecord;
 import com.pinkproject.admin.AdminRequest._LoginAdminRecord;
-import com.pinkproject.admin.AdminRequest._SaveNoticeAdminRecord;
 import com.pinkproject.faq.FaqService;
-import com.pinkproject.notice.Notice;
 import com.pinkproject.notice.NoticeService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Slf4j
 @RestController

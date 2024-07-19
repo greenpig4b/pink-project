@@ -1,16 +1,11 @@
 package com.pinkproject.notice;
 
-import com.pinkproject._core.error.exception.Exception404;
 import com.pinkproject.admin.Admin;
 import com.pinkproject.admin.AdminRepository;
-import com.pinkproject.admin.AdminRequest._DetailNoticeAdminRecord;
-import com.pinkproject.admin.AdminRequest._SaveFaqAdminRecord;
-import com.pinkproject.admin.AdminRequest._SaveNoticeAdminRecord;
+import com.pinkproject.notice.noticeRequest._DetailNoticeAdminRecord;
+import com.pinkproject.notice.noticeRequest._SaveNoticeAdminRecord;
 import com.pinkproject.admin.SessionAdmin;
-import com.pinkproject.admin.enums.FaqEnum;
-import com.pinkproject.faq.Faq;
 import com.pinkproject.faq.FaqRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +13,7 @@ import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 

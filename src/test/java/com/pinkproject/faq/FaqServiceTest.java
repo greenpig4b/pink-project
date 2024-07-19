@@ -2,11 +2,10 @@ package com.pinkproject.faq;
 
 import com.pinkproject.admin.Admin;
 import com.pinkproject.admin.AdminRepository;
-import com.pinkproject.admin.AdminRequest._DetailFaqAdminRecord;
-import com.pinkproject.admin.AdminRequest._SaveFaqAdminRecord;
+import com.pinkproject.faq.faqRequest._DetailFaqAdminRecord;
+import com.pinkproject.faq.faqRequest._SaveFaqAdminRecord;
 import com.pinkproject.admin.SessionAdmin;
 import com.pinkproject.admin.enums.FaqEnum;
-import com.pinkproject.notice.NoticeRepository;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,12 +25,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.pinkproject._core.utils.JwtUtil.verify;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.client.ExpectedCount.times;
 
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)

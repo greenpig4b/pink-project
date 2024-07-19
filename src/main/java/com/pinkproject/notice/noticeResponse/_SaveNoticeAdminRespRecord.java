@@ -1,4 +1,4 @@
-package com.pinkproject.admin.AdminResponse;
+package com.pinkproject.notice.noticeResponse;
 
 public record _SaveNoticeAdminRespRecord(
         Integer id,
