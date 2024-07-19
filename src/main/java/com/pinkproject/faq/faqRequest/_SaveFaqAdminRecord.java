@@ -1,4 +1,4 @@
-package com.pinkproject.admin.AdminRequest;
+package com.pinkproject.faq.faqRequest;
 
 public record _SaveFaqAdminRecord(
         String title,

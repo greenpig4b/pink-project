@@ -2,8 +2,8 @@ package com.pinkproject.notice;
 
 import com.pinkproject._core.utils.ApiUtil;
 import com.pinkproject.admin.Admin;
-import com.pinkproject.admin.AdminRequest._DetailNoticeAdminRecord;
-import com.pinkproject.admin.AdminRequest._SaveNoticeAdminRecord;
+import com.pinkproject.notice.noticeRequest._DetailNoticeAdminRecord;
+import com.pinkproject.notice.noticeRequest._SaveNoticeAdminRecord;
 import com.pinkproject.admin.AdminService;
 import com.pinkproject.admin.SessionAdmin;
 import jakarta.servlet.http.HttpServletRequest;

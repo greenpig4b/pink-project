@@ -2,11 +2,10 @@ package com.pinkproject.faq;
 
 import com.pinkproject.admin.Admin;
 import com.pinkproject.admin.AdminRepository;
-import com.pinkproject.admin.AdminRequest._DetailFaqAdminRecord;
-import com.pinkproject.admin.AdminRequest._SaveFaqAdminRecord;
+import com.pinkproject.faq.faqRequest._DetailFaqAdminRecord;
+import com.pinkproject.faq.faqRequest._SaveFaqAdminRecord;
 import com.pinkproject.admin.SessionAdmin;
 import com.pinkproject.admin.enums.FaqEnum;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

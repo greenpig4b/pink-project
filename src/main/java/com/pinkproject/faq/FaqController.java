@@ -2,8 +2,8 @@ package com.pinkproject.faq;
 
 import com.pinkproject._core.utils.ApiUtil;
 import com.pinkproject.admin.Admin;
-import com.pinkproject.admin.AdminRequest._DetailFaqAdminRecord;
-import com.pinkproject.admin.AdminRequest._SaveFaqAdminRecord;
+import com.pinkproject.faq.faqRequest._DetailFaqAdminRecord;
+import com.pinkproject.faq.faqRequest._SaveFaqAdminRecord;
 import com.pinkproject.admin.AdminService;
 import com.pinkproject.admin.SessionAdmin;
 import jakarta.servlet.http.HttpServletRequest;

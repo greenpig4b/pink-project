@@ -1,14 +1,11 @@
 package com.pinkproject.admin;
 
-import com.pinkproject.admin.AdminRequest._DetailNoticeAdminRecord;
 import com.pinkproject.admin.AdminRequest._LoginAdminRecord;
 import com.pinkproject.notice.NoticeRepository;
 import com.pinkproject.notice.NoticeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor

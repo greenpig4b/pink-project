@@ -1,4 +1,4 @@
-package com.pinkproject.admin.AdminResponse;
+package com.pinkproject.faq.faqResponse;
 
 public record _SaveFaqAdminRespRecord(
         Integer id,
