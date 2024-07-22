@@ -21,7 +21,7 @@ public class User {
     private Integer id; // 유저 번호
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "oauth_provider", nullable = false)
+    @Column(name = "oauth_provider", nullable = true)
     private OauthProvider oauthProvider;  // 오어스프로바이더
 
     @Column(nullable = false, unique = true)
