@@ -47,7 +47,12 @@
             <form action="#" method="#" style="width: 100%;">
               <ul class="search-box">
                 <li class="search-left">
-                    <span>공지사항 <em>{{notices.size}}</em>개</span>
+                    {{#keyword}}
+                        <span>"{{keyword}}"(으)로 검색한 결과 : <em>{{noticeCount}}</em>개</span>
+                    {{/keyword}}
+                    {{^keyword}}
+                        <span>공지사항 <em>{{noticeCount}}</em>개</span>
+                    {{/keyword}}
                 </li>
                 <li class="search-right">
                   <div class="tab-input-wrapper">

@@ -50,7 +50,12 @@
                         <form action="#" method="#" style="width: 100%;">
                             <ul class="search-box">
                                 <li class="search-left">
-                                    <span>FAQ <em>{{faqs.size}}</em>개</span>
+                                    {{#keyword}}
+                                        <span>"{{keyword}}"(으)로 검색한 결과 : <em>{{faqCount}}</em>개</span>
+                                    {{/keyword}}
+                                    {{^keyword}}
+                                        <span>FAQ <em>{{faqCount}}</em>개</span>
+                                    {{/keyword}}
                                 </li>
                                 <li class="search-right">
                                     <div>

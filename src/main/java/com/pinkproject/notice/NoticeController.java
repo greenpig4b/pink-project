@@ -50,6 +50,7 @@ public class NoticeController {
         request.setAttribute("pages", IntStream.range(1, notices.getTotalPages() + 1)
                 .mapToObj(i -> Map.of("number", i, "isCurrent", i == page))
                 .collect(Collectors.toList()));
+        request.setAttribute("noticeCount", notices.getTotalElements());
         request.setAttribute("keyword", keyword);
 
         // 세션에서 admin 객체 가져와서 username 설정

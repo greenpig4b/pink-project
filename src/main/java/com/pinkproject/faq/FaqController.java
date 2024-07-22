@@ -42,6 +42,8 @@ public class FaqController {
                 faqService.searchFaqs(keyword, pageIndex) :
                 faqService.getFaqs(pageIndex);
         model.addAttribute("faqs", faqs.getContent());
+        model.addAttribute("faqCount", faqs.getTotalElements());
+        model.addAttribute("keyword", keyword);
 
         // 페이지네이션 정보 추가
         model.addAttribute("currentPage", page);
