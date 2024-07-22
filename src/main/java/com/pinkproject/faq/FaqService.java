@@ -33,7 +33,7 @@ public class FaqService {
                 faq.getTitle(),
                 faq.getContent(),
                 faq.getAdmin().getUsername(),
-                faq.getClassification(),
+                faq.getClassification().getValue(),
                 faq.getCreatedAt().toLocalDate()
         ));
     }
@@ -47,7 +47,7 @@ public class FaqService {
                         faq.getTitle(),
                         faq.getContent(),
                         faq.getAdmin().getUsername(),
-                        faq.getClassification(), // 추가된 필드
+                        faq.getClassification().getValue(), // 추가된 필드
                         faq.getCreatedAt().toLocalDate()
                 ))
                 .collect(Collectors.toList());
@@ -62,7 +62,7 @@ public class FaqService {
                 faq.getTitle(),
                 faq.getContent(),
                 faq.getAdmin().getUsername(),
-                faq.getClassification(),
+                faq.getClassification().getValue(),
                 faq.getCreatedAt().toLocalDate()
         ));
     }
@@ -78,21 +78,25 @@ public class FaqService {
                 faq.getTitle(),
                 faq.getContent(),
                 faq.getAdmin().getUsername(),
-                faq.getClassification(),
+                faq.getClassification().getValue(),
                 faq.getCreatedAt().toLocalDate()
         );
     }
 
     @Transactional
     public Integer saveFaq(_SaveFaqAdminRecord saveFaqAdminRecord, Admin admin) {
-        Faq faq = Faq.builder()
-                .admin(admin)
-                .title(saveFaqAdminRecord.title())
-                .content(saveFaqAdminRecord.content())
-                .classification(FaqEnum.fromValue(saveFaqAdminRecord.classification()))
-                .build();
-        faq = faqRepository.save(faq);
-        return faq.getId();
+        try {
+            Faq faq = Faq.builder()
+                    .admin(admin)
+                    .title(saveFaqAdminRecord.title())
+                    .content(saveFaqAdminRecord.content())
+                    .classification(FaqEnum.fromValue(saveFaqAdminRecord.classification().toUpperCase())) // 수정된 부분
+                    .build();
+            faq = faqRepository.save(faq);
+            return faq.getId();
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Error saving FAQ: " + e.getMessage(), e);
+        }
     }
 
 
@@ -106,7 +110,7 @@ public class FaqService {
                         faq.getTitle(),
                         faq.getContent(),
                         faq.getAdmin().getUsername(),
-                        faq.getClassification(), // 추가된 필드
+                        faq.getClassification().getValue(), // 추가된 필드
                         faq.getCreatedAt().toLocalDate() // LocalDateTime에서 LocalDate로 변환
                 ))
                 .orElseThrow(() -> new RuntimeException("FAQ not found with id: " + id));

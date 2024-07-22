@@ -32,7 +32,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.WeekFields;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -234,14 +237,16 @@ public class TransactionServiceTest {
 
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
+        LocalDateTime startDate = getStartOfWeek(year, month, week);
+        LocalDateTime endDate = startDate.plusDays(6);
+
         // when
-        _ChartRespRecord response = transactionService.getChartTransaction(user.getId(), year, month, week);
+        _ChartRespRecord response = transactionService.getChartTransaction(user.getId(), year, month, startDate, endDate);
 
         // then
         assertNotNull(response);
         verify(userRepository, times(3)).findById(user.getId());
     }
-
     @Test
     void testGetMonthlyCalendarSummaryAndDailyDetail_test() {
         // given
@@ -269,6 +274,13 @@ public class TransactionServiceTest {
         }
     }
 
+    private LocalDateTime getStartOfWeek(int year, int month, int week) {
+        LocalDate firstDayOfMonth = LocalDate.of(year, month, 1);
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        LocalDate firstDayOfWeek = firstDayOfMonth.with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()));
+
+        return firstDayOfWeek.plusWeeks(week - 1).atStartOfDay();
+    }
     @Configuration
     @Profile("test")
     static class TestConfig {
