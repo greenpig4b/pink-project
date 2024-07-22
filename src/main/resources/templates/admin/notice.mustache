@@ -47,7 +47,12 @@
             <form action="#" method="#" style="width: 100%;">
               <ul class="search-box">
                 <li class="search-left">
-                    <span>공지사항 <em>{{notices.size}}</em>개</span>
+                    {{#keyword}}
+                        <span>"{{keyword}}"(으)로 검색한 결과 : <em>{{noticeCount}}</em>개</span>
+                    {{/keyword}}
+                    {{^keyword}}
+                        <span>공지사항 <em>{{noticeCount}}</em>개</span>
+                    {{/keyword}}
                 </li>
                 <li class="search-right">
                   <div class="tab-input-wrapper">
@@ -85,22 +90,22 @@
             </table>
           </div>
           <div class="button-wrapper">
-              <a class="btn list" href="/admin/notice">목록</a>
               <a class="btn black" href="/admin/notice/save">작성</a>
+              <a class="btn list" href="/admin/notice">목록</a>
           </div>
         </div>
           <div class="pagination">
-          <a href="?page=1{{#keyword}}&keyword={{keyword}}{{/keyword}}">처음으로</a>
+          <a href="?page=1{{#keyword}}&keyword={{keyword}}{{/keyword}}">&laquo;</a>
               {{#hasPrevious}}
-                  <a href="?page={{previousPage}}{{#keyword}}&keyword={{keyword}}{{/keyword}}">◀</a>
+                  <a href="?page={{previousPage}}{{#keyword}}&keyword={{keyword}}{{/keyword}}">&lt;</a>
               {{/hasPrevious}}
               {{#pages}}
                   <a href="?page={{number}}{{#keyword}}&keyword={{keyword}}{{/keyword}}" class="{{#isCurrent}}current{{/isCurrent}}">{{number}}</a>
               {{/pages}}
               {{#hasNext}}
-                  <a href="?page={{nextPage}}{{#keyword}}&keyword={{keyword}}{{/keyword}}">▶</a>
+                  <a href="?page={{nextPage}}{{#keyword}}&keyword={{keyword}}{{/keyword}}">&gt;</a>
               {{/hasNext}}
-              <a href="?page={{lastPage}}{{#keyword}}&keyword={{keyword}}{{/keyword}}">끝으로</a>
+              <a href="?page={{lastPage}}{{#keyword}}&keyword={{keyword}}{{/keyword}}">&raquo;</a>
           </div>
       </div>
     </div>
@@ -111,8 +116,8 @@
     const logoutBtn = document.getElementById('logoutBtn');
 
     logoutBtn.addEventListener('mouseenter', () => {
-      logoutBtn.style.backgroundColor = '#f45858';
-      logoutBtn.style.borderColor = '#f45858';
+        logoutBtn.style.backgroundColor = '#F7B8D2';
+        logoutBtn.style.borderColor = '#F7B8D2';
       logoutBtn.style.color = '#fff';
     });
 

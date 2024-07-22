@@ -50,7 +50,12 @@
                         <form action="#" method="#" style="width: 100%;">
                             <ul class="search-box">
                                 <li class="search-left">
-                                    <span>FAQ <em>{{faqs.size}}</em>개</span>
+                                    {{#keyword}}
+                                        <span>"{{keyword}}"(으)로 검색한 결과 : <em>{{faqCount}}</em>개</span>
+                                    {{/keyword}}
+                                    {{^keyword}}
+                                        <span>FAQ <em>{{faqCount}}</em>개</span>
+                                    {{/keyword}}
                                 </li>
                                 <li class="search-right">
                                     <div>
@@ -66,18 +71,16 @@
                         </form>
                         <table>
                             <colgroup>
-                                <col width="40%">
+                                <col width="35%">
+                                <col width="25%">
+                                <col width="30%">
                                 <col width="10%">
-                                <col width="20%">
-                                <col width="15%">
-                                <col width="15%">
                             </colgroup>
                             <thead>
                             <tr>
                                 <th scope="col">문의제목</th>
                                 <th scope="col">관리자명</th>
                                 <th scope="col">등록일</th>
-                                <th scope="col">분류</th>
                                 <th scope="col">상세보기</th>
                             </tr>
                             </thead>
@@ -87,7 +90,6 @@
                                     <td class="title">{{title}}</td>
                                     <td class="admin">{{username}}</td>
                                     <td><span class="date">{{date}}</span></td>
-                                    <td class="classification">{{classification}}</td>
                                     <td><a class="detail-btn" href="/admin/faq/detail/{{id}}">상세보기</a></td>
                                 </tr>
                             {{/faqs}}
@@ -95,22 +97,22 @@
                         </table>
                     </div>
                     <div class="button-wrapper">
-                        <a class="btn list" href="/admin/faq">목록</a>
                         <a class="btn black" href="/admin/faq/save">작성</a>
+                        <a class="btn list" href="/admin/faq">목록</a>
                     </div>
                 </div>
                 <div class="pagination">
-                <a href="?page=1{{#keyword}}&keyword={{keyword}}{{/keyword}}">처음으로</a>
+                <a href="?page=1{{#keyword}}&keyword={{keyword}}{{/keyword}}">&laquo;</a>
                     {{#hasPrevious}}
-                        <a href="?page={{previousPage}}{{#keyword}}&keyword={{keyword}}{{/keyword}}">◀</a>
+                        <a href="?page={{previousPage}}{{#keyword}}&keyword={{keyword}}{{/keyword}}">&lt;</a>
                     {{/hasPrevious}}
                     {{#pages}}
                         <a href="?page={{number}}{{#keyword}}&keyword={{keyword}}{{/keyword}}" class="{{#isCurrent}}current{{/isCurrent}}">{{number}}</a>
                     {{/pages}}
                     {{#hasNext}}
-                        <a href="?page={{nextPage}}{{#keyword}}&keyword={{keyword}}{{/keyword}}">▶</a>
+                        <a href="?page={{nextPage}}{{#keyword}}&keyword={{keyword}}{{/keyword}}">&gt;</a>
                     {{/hasNext}}
-                    <a href="?page={{lastPage}}{{#keyword}}&keyword={{keyword}}{{/keyword}}">끝으로</a>
+                    <a href="?page={{lastPage}}{{#keyword}}&keyword={{keyword}}{{/keyword}}">&raquo;</a>
                 </div>
             </div>
         </div>

@@ -42,6 +42,8 @@ public class FaqController {
                 faqService.searchFaqs(keyword, pageIndex) :
                 faqService.getFaqs(pageIndex);
         model.addAttribute("faqs", faqs.getContent());
+        model.addAttribute("faqCount", faqs.getTotalElements());
+        model.addAttribute("keyword", keyword);
 
         // 페이지네이션 정보 추가
         model.addAttribute("currentPage", page);
@@ -62,7 +64,8 @@ public class FaqController {
             model.addAttribute("username", sessionAdmin.getUsername());
         } else {
             logger.warn("SessionAdmin not found in session");
-            model.addAttribute("username", "Guest"); // Provide a default value
+            session.invalidate();
+            return "redirect:/admin";
         }
 
         // currentDateTime 설정
@@ -88,11 +91,15 @@ public class FaqController {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String formattedNow = now.format(formatter);
             model.addAttribute("currentDateTime", formattedNow);
+        } else {
+            session.invalidate();
+            return "redirect:/admin";
         }
         model.addAttribute("faq", faqDetail);
         model.addAttribute("title", faqDetail.title());
         model.addAttribute("content", faqDetail.content());
         model.addAttribute("date", faqDetail.date());
+        model.addAttribute("classification", faqDetail.classification());
 
         return "admin/faq-detail";
     }
@@ -117,6 +124,10 @@ public class FaqController {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String formattedNow = now.format(formatter);
             model.addAttribute("currentDateTime", formattedNow);
+        }
+        else {
+            session.invalidate();
+            return "redirect:/admin";
         }
         return "admin/faq-save";
     }

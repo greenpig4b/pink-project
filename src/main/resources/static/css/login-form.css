@@ -29,7 +29,7 @@ body {
 }
 
 .login-container img {
-    width: 150px; /* 이미지 너비 */
+    width: 250px; /* 이미지 너비 */
     margin-bottom: 5px; /* 이미지 아래쪽 마진 줄임 */
 }
 
@@ -82,5 +82,5 @@ p.login-title {
 }
 
 .login-container button:hover {
-    background-color: #ff4c4c;
+    background-color: #F7B8D2;
 }
