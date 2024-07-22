@@ -9,7 +9,7 @@ public record _DetailFaqAdminRecord(
        String title,
        String content,
        String username,
-       FaqEnum classification,
+       String classification,
        LocalDate createdAt
 ) {
     public String date() {

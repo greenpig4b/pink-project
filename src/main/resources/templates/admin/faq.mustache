@@ -66,16 +66,18 @@
                         </form>
                         <table>
                             <colgroup>
-                                <col width="35%">
-                                <col width="25%">
-                                <col width="30%">
+                                <col width="40%">
                                 <col width="10%">
+                                <col width="20%">
+                                <col width="15%">
+                                <col width="15%">
                             </colgroup>
                             <thead>
                             <tr>
                                 <th scope="col">문의제목</th>
                                 <th scope="col">관리자명</th>
                                 <th scope="col">등록일</th>
+                                <th scope="col">분류</th>
                                 <th scope="col">상세보기</th>
                             </tr>
                             </thead>
@@ -85,6 +87,7 @@
                                     <td class="title">{{title}}</td>
                                     <td class="admin">{{username}}</td>
                                     <td><span class="date">{{date}}</span></td>
+                                    <td class="classification">{{classification}}</td>
                                     <td><a class="detail-btn" href="/admin/faq/detail/{{id}}">상세보기</a></td>
                                 </tr>
                             {{/faqs}}

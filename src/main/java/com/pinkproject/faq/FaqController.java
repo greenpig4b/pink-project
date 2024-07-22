@@ -9,10 +9,13 @@ import com.pinkproject.admin.SessionAdmin;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -25,73 +28,71 @@ import java.util.stream.IntStream;
 @Controller
 public class FaqController {
 
+    private final Logger logger = LoggerFactory.getLogger(FaqController.class);
     private final FaqService faqService;
     private final AdminService adminService;
     private final HttpSession session;
 
-
     @GetMapping("/admin/faq")
     public String faq(@RequestParam(value = "keyword", required = false) String keyword,
                       @RequestParam(value = "page", defaultValue = "1") int page,
-                      HttpServletRequest request) {
-        int pageIndex = page - 1; // 페이지 인덱스를 0부터 시작하도록 변환
+                      Model model) {
+        int pageIndex = page - 1;
         Page<_DetailFaqAdminRecord> faqs = keyword != null && !keyword.isEmpty() ?
                 faqService.searchFaqs(keyword, pageIndex) :
                 faqService.getFaqs(pageIndex);
-        request.setAttribute("faqs", faqs.getContent());
+        model.addAttribute("faqs", faqs.getContent());
 
         // 페이지네이션 정보 추가
-        request.setAttribute("currentPage", page);
-        request.setAttribute("totalPages", faqs.getTotalPages());
-        request.setAttribute("hasPrevious", faqs.hasPrevious());
-        request.setAttribute("hasNext", faqs.hasNext());
-        request.setAttribute("previousPage", page > 1 ? page - 1 : 1); // 1 페이지 이하로 내려가지 않도록
-        request.setAttribute("nextPage", page + 1);
-        request.setAttribute("lastPage", faqs.getTotalPages());
-        request.setAttribute("pages", IntStream.range(1, faqs.getTotalPages() + 1) // 1부터 시작하도록 수정
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", faqs.getTotalPages());
+        model.addAttribute("hasPrevious", faqs.hasPrevious());
+        model.addAttribute("hasNext", faqs.hasNext());
+        model.addAttribute("previousPage", page > 1 ? page - 1 : 1);
+        model.addAttribute("nextPage", page + 1);
+        model.addAttribute("lastPage", faqs.getTotalPages());
+        model.addAttribute("pages", IntStream.range(1, faqs.getTotalPages() + 1)
                 .mapToObj(i -> Map.of("number", i, "isCurrent", i == page))
                 .collect(Collectors.toList()));
-        request.setAttribute("keyword", keyword);
+        model.addAttribute("keyword", keyword);
 
-        // 세션에서 admin 객체 가져와서 username 설정
         SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
         if (sessionAdmin != null) {
-            request.setAttribute("username", sessionAdmin.getUsername());
+            logger.info("SessionAdmin found: {}", sessionAdmin.getUsername());
+            model.addAttribute("username", sessionAdmin.getUsername());
         } else {
-            request.setAttribute("username", ""); // 기본값 설정
+            logger.warn("SessionAdmin not found in session");
+            model.addAttribute("username", "Guest"); // Provide a default value
         }
 
         // currentDateTime 설정
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedNow = now.format(formatter);
-        request.setAttribute("currentDateTime", formattedNow);
+        model.addAttribute("currentDateTime", formattedNow);
+
+        // Log all model attributes
+        model.asMap().forEach((key, value) -> logger.info("Model attribute: {} = {}", key, value));
 
         return "admin/faq";
     }
 
 
     @GetMapping("/admin/faq/detail/{id}")
-    public String faqDetail(@PathVariable Integer id, HttpServletRequest request) {
+    public String faqDetail(@PathVariable Integer id, Model model) {
         _DetailFaqAdminRecord faqDetail = faqService.detailFaqAdminRecord(id);
-        HttpSession session = request.getSession();
         SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
         if (sessionAdmin != null) {
-            request.setAttribute("username", sessionAdmin.getUsername());
+            model.addAttribute("username", sessionAdmin.getUsername());
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String formattedNow = now.format(formatter);
-            request.setAttribute("currentDateTime", formattedNow);
+            model.addAttribute("currentDateTime", formattedNow);
         }
-        request.setAttribute("faq", faqDetail);
-        request.setAttribute("title", faqDetail.title());
-        request.setAttribute("content", faqDetail.content());
-        request.setAttribute("date", faqDetail.date());
-
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String formattedNow = now.format(formatter);
-        request.setAttribute("currentDateTime", formattedNow);
+        model.addAttribute("faq", faqDetail);
+        model.addAttribute("title", faqDetail.title());
+        model.addAttribute("content", faqDetail.content());
+        model.addAttribute("date", faqDetail.date());
 
         return "admin/faq-detail";
     }
@@ -108,28 +109,42 @@ public class FaqController {
     }
 
     @GetMapping("/admin/faq/save")
-    public String saveFaqForm(HttpServletRequest request) {
+    public String saveFaqForm(Model model) {
         SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
         if (sessionAdmin != null) {
-            request.setAttribute("username", sessionAdmin.getUsername());
+            model.addAttribute("username", sessionAdmin.getUsername());
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String formattedNow = now.format(formatter);
-            request.setAttribute("currentDateTime", formattedNow);
+            model.addAttribute("currentDateTime", formattedNow);
         }
         return "admin/faq-save";
     }
 
     @PostMapping("/admin/faq/save")
-    public String saveFaq(@ModelAttribute _SaveFaqAdminRecord saveFaqAdminRecord, HttpServletRequest request) {
+    public String saveFaq(@ModelAttribute _SaveFaqAdminRecord saveFaqAdminRecord, Model model) {
         try {
             SessionAdmin sessionAdmin = (SessionAdmin) session.getAttribute("admin");
+            if (sessionAdmin == null) {
+                throw new IllegalArgumentException("No admin session found");
+            }
+
+            logger.info("SessionAdmin: {}", sessionAdmin);
             Admin admin = adminService.findByUsername(sessionAdmin.getUsername());
-            faqService.saveFaq(saveFaqAdminRecord, admin);
+            if (admin == null) {
+                throw new IllegalArgumentException("No admin found with username: " + sessionAdmin.getUsername());
+            }
+
+            logger.info("Admin: {}", admin);
+            Integer faqId = faqService.saveFaq(saveFaqAdminRecord, admin);
+            logger.info("Faq saved with id: {}", faqId);
+
             return "redirect:/admin/faq";
         } catch (Exception e) {
-            request.setAttribute("errorMessage", e.getMessage());
+            logger.error("Error saving FAQ", e);
+            model.addAttribute("errorMessage", e.getMessage());
             return "admin/faq-save";
         }
     }
+
 }
