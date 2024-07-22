@@ -57,7 +57,8 @@ public class NoticeController {
         if (sessionAdmin != null) {
             request.setAttribute("username", sessionAdmin.getUsername());
         } else {
-            request.setAttribute("username", ""); // 기본값 설정
+            session.invalidate();
+            return "redirect:/admin";
         }
 
         // currentDateTime 설정
@@ -80,6 +81,9 @@ public class NoticeController {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String formattedNow = now.format(formatter);
             request.setAttribute("currentDateTime", formattedNow);
+        } else {
+            session.invalidate();
+            return "redirect:/admin";
         }
         request.setAttribute("notice", noticeDetail);
         request.setAttribute("title", noticeDetail.title());

@@ -349,6 +349,11 @@ main {
     cursor: pointer;
 }
 
+.search-box .tab-input-wrapper .submit-btn:hover {
+    background-color: #F7B8D2;
+    color: #fff;
+}
+
 .tab-item table {
     width: 100%;
     border-collapse: collapse;
@@ -425,7 +430,7 @@ main {
 
 .detail-btn {
     display: inline-block; /* 버튼을 인라인 블록 요소로 설정 */
-    padding: 10px 5px; /* 버튼 내부 여백 설정 */
+    padding: 15px 10px; /* 버튼 내부 여백 설정 */
     background-color: #FC7C9A;
     color: #fff;
     text-align: center;
@@ -556,8 +561,14 @@ main {
 
 .button-wrapper {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 10px;
     margin-top: 20px;
+    padding: 0 20px;
+}
+
+.button-wrapper .btn {
+    margin: 0 10px;
 }
 
 .button-wrapper a {
@@ -639,7 +650,6 @@ input[type="checkbox"]:checked + label:after {
     color: #fff;
     font-size: 16px;
 }
-
 .pagination {
     display: flex;
     justify-content: center;
@@ -647,25 +657,34 @@ input[type="checkbox"]:checked + label:after {
     margin: 20px 0;
 }
 
+.pagination a.current {
+    /* background-color: #FC7C9A; */
+    color: #FC7C9A;
+}
+
 .pagination a {
     display: inline-block;
     padding: 10px 20px;
     margin: 0 5px;
     border-radius: 5px;
-    background-color: #FC7C9A;
-    color: #fff;
+    /* background-color: #fff; */
+    color: #333;
     text-decoration: none;
     transition: background-color 0.3s, color 0.3s;
+    /* border: 1px solid #FC7C9A; */
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 1;
 }
 
 .pagination a:hover {
-    background-color: #F7B8D2;
-    color: #fff;
+
+    color: #FC7C9A;
 }
 
 .pagination a.current {
-    background-color: #FC7C9A;
-    color: #fff;
+
+    color: #FC7C9A;
 }
 
 

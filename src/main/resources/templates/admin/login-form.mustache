@@ -23,5 +23,11 @@
         <button type="submit">로그인</button>
     </form>
 </div>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('error') && params.get('error') === 'true') {
+        alert('아이디 혹은 비밀번호가 틀립니다');
+    }
+</script>
 </body>
 </html>

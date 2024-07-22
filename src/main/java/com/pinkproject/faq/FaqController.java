@@ -63,7 +63,7 @@ public class FaqController {
         } else {
             logger.warn("SessionAdmin not found in session");
             session.invalidate();
-            return "redirect:/logout";
+            return "redirect:/admin";
         }
 
         // currentDateTime 설정
@@ -89,6 +89,9 @@ public class FaqController {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String formattedNow = now.format(formatter);
             model.addAttribute("currentDateTime", formattedNow);
+        } else {
+            session.invalidate();
+            return "redirect:/admin";
         }
         model.addAttribute("faq", faqDetail);
         model.addAttribute("title", faqDetail.title());
@@ -119,6 +122,10 @@ public class FaqController {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String formattedNow = now.format(formatter);
             model.addAttribute("currentDateTime", formattedNow);
+        }
+        else {
+            session.invalidate();
+            return "redirect:/admin";
         }
         return "admin/faq-save";
     }
