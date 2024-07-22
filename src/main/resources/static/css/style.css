@@ -163,8 +163,8 @@ main {
 }
 
 .logout-btn:hover {
-    background-color: #FC7C9A;
-    border: 1px solid #FC7C9A;
+    background-color: #F7B8D2;
+    border: 1px solid #F7B8D2;
     color: #fff;
 }
 
@@ -217,8 +217,8 @@ main {
 }
 
 .side-menu ul li a:hover {
-    background-color: #FC7C9A;
-    border-color: #FC7C9A;
+    background-color: #F7B8D2;
+    border-color: #F7B8D2;
     color: #fff;
 }
 
@@ -437,7 +437,7 @@ main {
 }
 
 .detail-btn:hover {
-    background-color: #333;
+    background-color: #F7B8D2;
 }
 
 .tab-item table .detail {
@@ -504,6 +504,16 @@ main {
     margin-bottom: 10px;
 }
 
+.detail-head div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.detail-head div span,
+.detail-head div em {
+    margin: 5px 0;
+}
+
 .review-detail-wrapper {
     width: 80%;
     margin: 0 auto;
@@ -530,7 +540,7 @@ main {
 }
 
 .review-detail-wrapper .back-button-wrapper button {
-    background: #343a40;
+    background: #FC7C9A;
 }
 
 .review-detail-wrapper .report-button-wrapper {
@@ -571,22 +581,22 @@ main {
 }
 
 .btn:hover {
-    background-color: #FC7C9A;
-    border: 1px solid #FC7C9A;
+    background-color: #F7B8D2;
+    border: 1px solid #F7B8D2;
     color: #fff;
 }
 
 
 .list {
-    background-color: #333; /* 목록 버튼 기본 배경색 설정 */
+    background-color: #FC7C9A; /* 목록 버튼 기본 배경색 설정 */
 }
 
 .list:hover {
-    background-color: #FC7C9A; /* 목록 버튼 호버 배경색 설정 */
+    background-color: #F7B8D2; /* 목록 버튼 호버 배경색 설정 */
 }
 
 .black {
-    background-color: #333;
+    background-color: #FC7C9A;
 }
 
 input[type="checkbox"] {
@@ -642,14 +652,14 @@ input[type="checkbox"]:checked + label:after {
     padding: 10px 20px;
     margin: 0 5px;
     border-radius: 5px;
-    background-color: #343a40;
+    background-color: #FC7C9A;
     color: #fff;
     text-decoration: none;
     transition: background-color 0.3s, color 0.3s;
 }
 
 .pagination a:hover {
-    background-color: #FC7C9A;
+    background-color: #F7B8D2;
     color: #fff;
 }
 

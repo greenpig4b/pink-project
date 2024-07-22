@@ -62,7 +62,8 @@ public class FaqController {
             model.addAttribute("username", sessionAdmin.getUsername());
         } else {
             logger.warn("SessionAdmin not found in session");
-            model.addAttribute("username", "Guest"); // Provide a default value
+            session.invalidate();
+            return "redirect:/logout";
         }
 
         // currentDateTime 설정
@@ -93,6 +94,7 @@ public class FaqController {
         model.addAttribute("title", faqDetail.title());
         model.addAttribute("content", faqDetail.content());
         model.addAttribute("date", faqDetail.date());
+        model.addAttribute("classification", faqDetail.classification());
 
         return "admin/faq-detail";
     }
