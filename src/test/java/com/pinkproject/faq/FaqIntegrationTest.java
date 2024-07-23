@@ -65,10 +65,8 @@ public class FaqIntegrationTest {
     void init() {
         objectMapper.getFactory().setCharacterEscapes(new CustomCharacterEscapes());
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        objectMapper.getFactory().setCharacterEscapes(new CustomCharacterEscapes());
         objectMapper.writerWithDefaultPrettyPrinter();
     }
-
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentation) {
@@ -78,7 +76,7 @@ public class FaqIntegrationTest {
         faq = new Faq();
         faq.setTitle("반품 정책은 어떻게 되나요?");
         faq.setContent("반품은 구매일로부터 30일 이내에 가능합니다.");
-        faq.setClassification(FaqEnum.USE); // 적절한 분류 설정
+        faq.setClassification(FaqEnum.USE);
         faqRepository.save(faq);
 
         Admin admin = new Admin();
@@ -104,18 +102,19 @@ public class FaqIntegrationTest {
         );
 
         // 로그인 요청
-        MockHttpServletRequestBuilder loginRequest = MockMvcRequestBuilders.post("/admin/login")
+        MockHttpServletRequestBuilder loginRequest = MockMvcRequestBuilders.post("/api/admin/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\":\"admin\",\"password\":\"password\"}");
 
         ResultActions loginResult = mockMvc.perform(loginRequest)
-                .andExpect(status().is3xxRedirection())
+                .andExpect(status().isOk())
                 .andDo(document("login",
                         requestFields(
                                 fieldWithPath("username").description("관리자 유저네임"),
                                 fieldWithPath("password").description("관리자 비밀번호")
                         )
                 ));
+
         MockHttpSession session = (MockHttpSession) loginResult.andReturn().getRequest().getSession();
         if (session == null) {
             throw new RuntimeException("로그인 후 세션 검색 실패");
@@ -129,7 +128,6 @@ public class FaqIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8.name())
         );
-
 
         // then
         actions.andExpect(status().isCreated())

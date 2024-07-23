@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 public class AdminController {
     private final AdminService adminService;
+    private final NoticeService noticeService;
+    private final FaqService faqService;
     private final HttpSession session;
 
 
@@ -24,10 +26,11 @@ public class AdminController {
     }
 
     @PostMapping("/admin/login")
-    public String login(@RequestBody _LoginAdminRecord loginAdminRecord, HttpSession session) {
+    public String login(@RequestParam String username, @RequestParam String password, HttpSession session) {
+        _LoginAdminRecord loginAdminRecord = new _LoginAdminRecord(username, password);
         boolean isAuthenticated = adminService.authenticate(loginAdminRecord);
         if (isAuthenticated) {
-            Admin admin = adminService.findByUsername(loginAdminRecord.username());
+            Admin admin = adminService.findByUsername(username);
             SessionAdmin sessionAdmin = new SessionAdmin(admin);
             session.setAttribute("admin", sessionAdmin);
             return "redirect:/admin/notice";

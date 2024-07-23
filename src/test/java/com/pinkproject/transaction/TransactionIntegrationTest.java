@@ -1,6 +1,9 @@
 package com.pinkproject.transaction;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pinkproject._core.utils.JwtUtil;
+import com.pinkproject._core.utils.SummaryUtil;
 import com.pinkproject.transaction.TransactionRequest._SaveTransactionRecord;
 import com.pinkproject.transaction.TransactionRequest._UpdateTransactionRecord;
 import com.pinkproject.transaction.TransactionResponse.*;
@@ -9,52 +12,87 @@ import com.pinkproject.transaction.enums.CategoryIn;
 import com.pinkproject.transaction.enums.CategoryOut;
 import com.pinkproject.transaction.enums.TransactionType;
 import com.pinkproject.user.SessionUser;
-import jakarta.servlet.http.HttpSession;
+import com.pinkproject.user.User;
+import com.pinkproject.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
+@AutoConfigureMockMvc
+@ExtendWith(RestDocumentationExtension.class)
 @ActiveProfiles("test")
 public class TransactionIntegrationTest {
 
-    @LocalServerPort
-    private int port;
+    @Autowired
+    private MockMvc mockMvc;
 
     @Autowired
-    private WebApplicationContext context;
+    private UserRepository userRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private HttpSession session;
+    @MockBean
+    private SummaryUtil summaryUtil;
 
-    private WebTestClient webTestClient;
+    private MockHttpSession session;
+
+    private String jwtToken;
 
     @BeforeEach
     public void setup() {
-        this.webTestClient = WebTestClient.bindToApplicationContext(context).build();
-    }
-
-    @Test
-    public void testSaveTransaction() throws Exception {
-        // Given
+        session = new MockHttpSession();
         SessionUser sessionUser = new SessionUser();
         sessionUser.setId(1);
         sessionUser.setEmail("testUser@test.com");
         session.setAttribute("sessionUser", sessionUser);
 
+        // JWT 토큰 생성
+        User user = new User();
+        user.setId(1);
+        user.setEmail("testUser@test.com");
+        user.setPassword("password");
+        userRepository.save(user);
+        jwtToken = JwtUtil.create(user);
+
+        Transaction transaction = Transaction.builder()
+                .user(user)
+                .transactionType(TransactionType.INCOME)
+                .assets(Assets.BANK)
+                .categoryIn(CategoryIn.SALARY)
+                .amount(1000)
+                .description("거래 테스트")
+                .createdAt(LocalDateTime.now())
+                .build();
+        transactionRepository.save(transaction);
+    }
+
+    @Test
+    public void testSaveTransaction() throws Exception {
         _SaveTransactionRecord record = new _SaveTransactionRecord(
                 1,
                 TransactionType.INCOME,
@@ -67,28 +105,34 @@ public class TransactionIntegrationTest {
                 "description"
         );
 
-        // When
-        _SaveTransactionRespRecord response = this.webTestClient.post()
-                .uri("/api/transactions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(record)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(_SaveTransactionRespRecord.class)
-                .returnResult().getResponseBody();
+        MvcResult result = mockMvc.perform(post("/api/transactions")
+                        .session(session)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(record)))
+                .andExpect(status().isOk())
+                .andReturn();
 
-        // Then
+        String responseString = result.getResponse().getContentAsString();
+        System.out.println("Response: " + responseString); // 추가된 디버깅 출력
+
+        JsonNode jsonResponse = objectMapper.readTree(responseString).path("response");
+
+        _SaveTransactionRespRecord response = objectMapper.treeToValue(jsonResponse, _SaveTransactionRespRecord.class);
+
         assertThat(response).isNotNull();
         assertThat(response.userId()).isEqualTo(1);
     }
-
     @Test
     public void testUpdateTransaction() throws Exception {
-        // Given
-        SessionUser sessionUser = new SessionUser();
-        sessionUser.setId(1);
-        sessionUser.setEmail("testUser@test.com");
-        session.setAttribute("sessionUser", sessionUser);
+        User user = userRepository.findById(1).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Mock SummaryUtil
+        SummaryUtil.DailySummary dailySummary = new SummaryUtil.DailySummary(500, 1000, 1500);
+        Map<LocalDate, SummaryUtil.DailySummary> dailySummaries = Map.of(LocalDate.now(), dailySummary);
+        SummaryUtil.Summary summary = new SummaryUtil.Summary(500, 1000, 1500, Map.of(Assets.BANK, 500), Map.of(Assets.BANK, 1000), dailySummaries);
+
+        Mockito.when(summaryUtil.calculateSummary(Mockito.anyList())).thenReturn(summary);
 
         _UpdateTransactionRecord record = new _UpdateTransactionRecord(
                 1,
@@ -103,122 +147,95 @@ public class TransactionIntegrationTest {
                 "updated description"
         );
 
-        // When
-        _UpdateTransactionRespRecord response = this.webTestClient.put()
-                .uri("/api/transactions/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(record)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(_UpdateTransactionRespRecord.class)
-                .returnResult().getResponseBody();
+        MvcResult result = mockMvc.perform(put("/api/transactions/1")
+                        .session(session)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(record)))
+                .andExpect(status().isOk())
+                .andReturn();
 
-        // Then
+        _UpdateTransactionRespRecord response = objectMapper.readValue(result.getResponse().getContentAsString(), _UpdateTransactionRespRecord.class);
+
         assertThat(response).isNotNull();
         assertThat(response.userId()).isEqualTo(1);
     }
 
+
     @Test
     public void testDeleteTransaction() throws Exception {
-        // Given
-        SessionUser sessionUser = new SessionUser();
-        sessionUser.setId(1);
-        sessionUser.setEmail("testUser@test.com");
-        session.setAttribute("sessionUser", sessionUser);
+        MvcResult result = mockMvc.perform(delete("/api/transactions/1")
+                        .session(session)
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk())
+                .andReturn();
 
-        // When
-        _DeleteTransactionRespRecord response = this.webTestClient.delete()
-                .uri("/api/transactions/1")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(_DeleteTransactionRespRecord.class)
-                .returnResult().getResponseBody();
+        _DeleteTransactionRespRecord response = objectMapper.readValue(result.getResponse().getContentAsString(), _DeleteTransactionRespRecord.class);
 
-        // Then
         assertThat(response).isNotNull();
         assertThat(response.userId()).isEqualTo(1);
     }
 
     @Test
     public void testGetMonthlyTransactions() throws Exception {
-        // Given
-        SessionUser sessionUser = new SessionUser();
-        sessionUser.setId(1);
-        sessionUser.setEmail("testUser@test.com");
-        session.setAttribute("sessionUser", sessionUser);
+        MvcResult result = mockMvc.perform(get("/api/transactions/monthly")
+                        .session(session)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .param("year", "2023")
+                        .param("month", "7"))
+                .andExpect(status().isOk())
+                .andReturn();
 
-        // When
-        _MonthlyTransactionMainRecord response = this.webTestClient.get()
-                .uri("/api/transactions/monthly?year=2023&month=7")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(_MonthlyTransactionMainRecord.class)
-                .returnResult().getResponseBody();
+        _MonthlyTransactionMainRecord response = objectMapper.readValue(result.getResponse().getContentAsString(), _MonthlyTransactionMainRecord.class);
 
-        // Then
         assertThat(response).isNotNull();
         assertThat(response.userId()).isEqualTo(1);
     }
 
     @Test
     public void testGetMonthlyFinancialReportMain() throws Exception {
-        // Given
-        SessionUser sessionUser = new SessionUser();
-        sessionUser.setId(1);
-        sessionUser.setEmail("testUser@test.com");
-        session.setAttribute("sessionUser", sessionUser);
+        MvcResult result = mockMvc.perform(get("/api/financial-report")
+                        .session(session)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .param("year", "2023")
+                        .param("month", "7"))
+                .andExpect(status().isOk())
+                .andReturn();
 
-        // When
-        _MonthlyFinancialReport response = this.webTestClient.get()
-                .uri("/api/financial-report?year=2023&month=7")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(_MonthlyFinancialReport.class)
-                .returnResult().getResponseBody();
+        _MonthlyFinancialReport response = objectMapper.readValue(result.getResponse().getContentAsString(), _MonthlyFinancialReport.class);
 
-        // Then
         assertThat(response).isNotNull();
         assertThat(response.userId()).isEqualTo(1);
     }
 
     @Test
     public void testGetCalendar() throws Exception {
-        // Given
-        SessionUser sessionUser = new SessionUser();
-        sessionUser.setId(1);
-        sessionUser.setEmail("testUser@test.com");
-        session.setAttribute("sessionUser", sessionUser);
+        MvcResult result = mockMvc.perform(get("/api/calendar")
+                        .session(session)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .param("year", "2023")
+                        .param("month", "7"))
+                .andExpect(status().isOk())
+                .andReturn();
 
-        // When
-        _MonthlyCalendar response = this.webTestClient.get()
-                .uri("/api/calendar?year=2023&month=7")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(_MonthlyCalendar.class)
-                .returnResult().getResponseBody();
+        _MonthlyCalendar response = objectMapper.readValue(result.getResponse().getContentAsString(), _MonthlyCalendar.class);
 
-        // Then
         assertThat(response).isNotNull();
         assertThat(response.userId()).isEqualTo(1);
     }
 
     @Test
     public void testGetChart() throws Exception {
-        // Given
-        SessionUser sessionUser = new SessionUser();
-        sessionUser.setId(1);
-        sessionUser.setEmail("testUser@test.com");
-        session.setAttribute("sessionUser", sessionUser);
+        MvcResult result = mockMvc.perform(get("/api/chart/monthly")
+                        .session(session)
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .param("year", "2023")
+                        .param("month", "7"))
+                .andExpect(status().isOk())
+                .andReturn();
 
-        // When
-        _ChartRespRecord response = this.webTestClient.get()
-                .uri("/api/chart?year=2023&month=7&week=2")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(_ChartRespRecord.class)
-                .returnResult().getResponseBody();
+        _ChartRespRecord response = objectMapper.readValue(result.getResponse().getContentAsString(), _ChartRespRecord.class);
 
-        // Then
         assertThat(response).isNotNull();
         assertThat(response.monthCount()).isEqualTo(7);
     }
