@@ -9,12 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -38,11 +42,22 @@ public class AdminIntegrationTest {
     private Admin admin;
 
     @BeforeEach
-    void setUp() {
+    void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(documentationConfiguration(restDocumentation))
+                .build();
+
+        adminRepository.deleteAll();
+
         admin = new Admin();
         admin.setUsername("admin");
         admin.setPassword("password");
-        adminRepository.save(admin);
+        try {
+            adminRepository.save(admin);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @Test
@@ -52,25 +67,30 @@ public class AdminIntegrationTest {
 
         // when
         ResultActions actions = mockMvc.perform(
-                post("/admin/authenticate")
+                post("/api/admin/login")
                         .content(objectMapper.writeValueAsString(loginAdminRecord))
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
+        System.out.println("응답: " + actions.andReturn().getResponse().getContentAsString());
+
         // then
         actions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("admin"))
+                .andExpect(jsonPath("$.response.message").value("로그인 성공"))
                 .andDo(document("admin-authenticate",
                         requestFields(
-                                fieldWithPath("username").description("The admin's username"),
-                                fieldWithPath("password").description("The admin's password")
+                                fieldWithPath("username").description("관리자의 사용자 이름"),
+                                fieldWithPath("password").description("관리자의 비밀번호")
                         ),
                         responseFields(
-                                fieldWithPath("username").description("The admin's username"),
-                                fieldWithPath("token").description("The authentication token")
+                                fieldWithPath("status").description("응답 상태 코드"),
+                                fieldWithPath("success").description("성공 여부"),
+                                fieldWithPath("response.message").description("응답 메시지"),
+                                fieldWithPath("errorMessage").description("오류 메시지").optional()
                         )
                 ));
     }
+
 
     @Test
     void testAuthenticateSuccess() throws Exception {
@@ -79,25 +99,30 @@ public class AdminIntegrationTest {
 
         // when
         ResultActions actions = mockMvc.perform(
-                post("/admin/authenticate")
+                post("/api/admin/login")
                         .content(objectMapper.writeValueAsString(loginAdminRecord))
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
+        System.out.println("응답: " + actions.andReturn().getResponse().getContentAsString());
+
         // then
         actions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("admin"))
+                .andExpect(jsonPath("$.response.message").value("로그인 성공"))
                 .andDo(document("admin-authenticate-success",
                         requestFields(
-                                fieldWithPath("username").description("The admin's username"),
-                                fieldWithPath("password").description("The admin's password")
+                                fieldWithPath("username").description("관리자의 사용자 이름"),
+                                fieldWithPath("password").description("관리자의 비밀번호")
                         ),
                         responseFields(
-                                fieldWithPath("username").description("The admin's username"),
-                                fieldWithPath("token").description("The authentication token")
+                                fieldWithPath("status").description("응답 상태 코드"),
+                                fieldWithPath("success").description("성공 여부"),
+                                fieldWithPath("response.message").description("응답 메시지"),
+                                fieldWithPath("errorMessage").description("오류 메시지").optional()
                         )
                 ));
     }
+
 
     @Test
     void testAuthenticateFailure() throws Exception {
@@ -106,21 +131,25 @@ public class AdminIntegrationTest {
 
         // when
         ResultActions actions = mockMvc.perform(
-                post("/admin/authenticate")
+                post("/api/admin/login")
                         .content(objectMapper.writeValueAsString(loginAdminRecord))
                         .contentType(MediaType.APPLICATION_JSON)
         );
+
+        System.out.println("응답: " + actions.andReturn().getResponse().getContentAsString());
 
         // then
         actions.andExpect(status().isUnauthorized())
                 .andDo(document("admin-authenticate-failure",
                         requestFields(
-                                fieldWithPath("username").description("The admin's username"),
-                                fieldWithPath("password").description("The admin's password")
+                                fieldWithPath("username").description("관리자의 사용자 이름"),
+                                fieldWithPath("password").description("관리자의 비밀번호")
                         ),
                         responseFields(
-                                fieldWithPath("status").description("The response status"),
-                                fieldWithPath("error").description("The error message")
+                                fieldWithPath("status").description("응답 상태 코드"),
+                                fieldWithPath("success").description("성공 여부"),
+                                fieldWithPath("response").description("응답 데이터").optional(),
+                                fieldWithPath("errorMessage").description("오류 메시지")
                         )
                 ));
     }
