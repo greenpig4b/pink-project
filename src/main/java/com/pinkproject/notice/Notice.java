@@ -18,7 +18,7 @@ public class Notice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id; // 공지사항 번호
 
-    @JoinColumn(name = "admin_id")
+    @JoinColumn(name = "admin_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Admin admin; // 관리자
 
