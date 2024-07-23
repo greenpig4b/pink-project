@@ -114,7 +114,6 @@ public class MemoService {
             throw new IllegalArgumentException("사용자 권한이 없습니다.");
         }
 
-        memo.setId(reqRecord.id());
         memo.setUser(user);
         memo.setTitle(reqRecord.title());
         memo.setContent(reqRecord.content());
