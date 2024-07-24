@@ -226,11 +226,17 @@ public class TransactionIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        _MonthlyTransactionMainRecord response = objectMapper.readValue(result.getResponse().getContentAsString(), _MonthlyTransactionMainRecord.class);
+        String responseString = result.getResponse().getContentAsString();
+        System.out.println("Response: " + responseString);
+
+        JsonNode jsonResponse = objectMapper.readTree(responseString).path("response");
+
+        _MonthlyTransactionMainRecord response = objectMapper.treeToValue(jsonResponse, _MonthlyTransactionMainRecord.class);
 
         assertThat(response).isNotNull();
         assertThat(response.userId()).isEqualTo(1);
     }
+
 
     @Test
     public void testGetMonthlyFinancialReportMain() throws Exception {
@@ -242,11 +248,17 @@ public class TransactionIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        _MonthlyFinancialReport response = objectMapper.readValue(result.getResponse().getContentAsString(), _MonthlyFinancialReport.class);
+        String responseString = result.getResponse().getContentAsString();
+        System.out.println("Response: " + responseString);
+
+        JsonNode jsonResponse = objectMapper.readTree(responseString).path("response");
+
+        _MonthlyFinancialReport response = objectMapper.treeToValue(jsonResponse, _MonthlyFinancialReport.class);
 
         assertThat(response).isNotNull();
         assertThat(response.userId()).isEqualTo(1);
     }
+
 
     @Test
     public void testGetCalendar() throws Exception {
