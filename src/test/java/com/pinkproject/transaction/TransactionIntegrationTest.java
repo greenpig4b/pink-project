@@ -204,11 +204,17 @@ public class TransactionIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        _DeleteTransactionRespRecord response = objectMapper.readValue(result.getResponse().getContentAsString(), _DeleteTransactionRespRecord.class);
+        String responseString = result.getResponse().getContentAsString();
+        System.out.println("Response: " + responseString);
+
+        JsonNode jsonResponse = objectMapper.readTree(responseString).path("response");
+
+        _DeleteTransactionRespRecord response = objectMapper.treeToValue(jsonResponse, _DeleteTransactionRespRecord.class);
 
         assertThat(response).isNotNull();
         assertThat(response.userId()).isEqualTo(1);
     }
+
 
     @Test
     public void testGetMonthlyTransactions() throws Exception {
