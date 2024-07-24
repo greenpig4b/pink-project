@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -70,14 +73,21 @@ public class TransactionController {
     // 결산 메인 페이지
     @GetMapping("/api/financial-report")
     public ResponseEntity<?> getMonthlyFinancialReportMain(@RequestParam Integer year, @RequestParam Integer month){
-         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
-         if (sessionUser == null) {
-             return ResponseEntity.status(401).build();
-         }
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
+        if (sessionUser == null) {
+            return ResponseEntity.status(401).build();
+        }
         _MonthlyFinancialReport respRecord = transactionService.getMonthlyFinancialReportMain(sessionUser.getId(), year, month);
 
-        return ResponseEntity.ok(new ApiUtil<>(respRecord));
+        String aiResponse = transactionService.processSettle(sessionUser.getId(), year, month);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("financialReport", respRecord);
+        response.put("aiAnalysis", aiResponse);
+
+        return ResponseEntity.ok(new ApiUtil<>(response));
     }
+
 
     // 달력 페이지
     @GetMapping("/api/calendar")
@@ -91,6 +101,8 @@ public class TransactionController {
 
         return ResponseEntity.ok(new ApiUtil<>(respRecord));
     }
+
+
     @GetMapping("/api/chart/monthly")
     public ResponseEntity<?> getMonthlyChart(
             @RequestParam Integer year,
@@ -120,4 +132,7 @@ public class TransactionController {
 
         return ResponseEntity.ok(new ApiUtil<>(respRecord));
     }
+
+
+
 }
