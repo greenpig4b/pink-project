@@ -17,15 +17,19 @@ import com.pinkproject.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -35,14 +39,16 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mockStatic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ExtendWith(RestDocumentationExtension.class)
+@ExtendWith({RestDocumentationExtension.class, MockitoExtension.class, SpringExtension.class})
 @ActiveProfiles("test")
 public class TransactionIntegrationTest {
+
 
     @Autowired
     private MockMvc mockMvc;
@@ -56,15 +62,14 @@ public class TransactionIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
-    private SummaryUtil summaryUtil;
-
+    @Mock
     private MockHttpSession session;
 
     private String jwtToken;
 
     @BeforeEach
     public void setup() {
+        MockitoAnnotations.openMocks(this);
         session = new MockHttpSession();
         SessionUser sessionUser = new SessionUser();
         sessionUser.setId(1);
@@ -123,42 +128,71 @@ public class TransactionIntegrationTest {
         assertThat(response).isNotNull();
         assertThat(response.userId()).isEqualTo(1);
     }
+
     @Test
     public void testUpdateTransaction() throws Exception {
         User user = userRepository.findById(1).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        // Mock SummaryUtil
         SummaryUtil.DailySummary dailySummary = new SummaryUtil.DailySummary(500, 1000, 1500);
-        Map<LocalDate, SummaryUtil.DailySummary> dailySummaries = Map.of(LocalDate.now(), dailySummary);
-        SummaryUtil.Summary summary = new SummaryUtil.Summary(500, 1000, 1500, Map.of(Assets.BANK, 500), Map.of(Assets.BANK, 1000), dailySummaries);
-
-        Mockito.when(summaryUtil.calculateSummary(Mockito.anyList())).thenReturn(summary);
-
-        _UpdateTransactionRecord record = new _UpdateTransactionRecord(
-                1,
-                1,
-                TransactionType.EXPENSE,
-                "2023-07-01",
-                "12:00:00",
-                500,
-                CategoryIn.SALARY,
-                CategoryOut.FOOD,
-                Assets.BANK,
-                "updated description"
+        Map<LocalDate, SummaryUtil.DailySummary> dailySummaries = Map.of(LocalDate.of(2023, 7, 1), dailySummary);
+        SummaryUtil.Summary summary = new SummaryUtil.Summary(
+                500, // monthlyIncome
+                1000,
+                1500,
+                Map.of(Assets.BANK, 500),
+                Map.of(Assets.BANK, 1000),
+                dailySummaries // dailySummaries
         );
 
-        MvcResult result = mockMvc.perform(put("/api/transactions/1")
-                        .session(session)
-                        .header("Authorization", "Bearer " + jwtToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(record)))
-                .andExpect(status().isOk())
-                .andReturn();
+        try (MockedStatic<SummaryUtil> utilities = mockStatic(SummaryUtil.class)) {
+            utilities.when(() -> SummaryUtil.calculateSummary(Mockito.anyList())).thenReturn(summary);
 
-        _UpdateTransactionRespRecord response = objectMapper.readValue(result.getResponse().getContentAsString(), _UpdateTransactionRespRecord.class);
+            _UpdateTransactionRecord record = new _UpdateTransactionRecord(
+                    1,
+                    1,
+                    TransactionType.EXPENSE,
+                    "2023-07-01",
+                    "12:00:00",
+                    500,
+                    CategoryIn.SALARY,
+                    CategoryOut.FOOD,
+                    Assets.BANK,
+                    "updated description"
+            );
 
-        assertThat(response).isNotNull();
-        assertThat(response.userId()).isEqualTo(1);
+            System.out.println("기록요청 전달 " + objectMapper.writeValueAsString(record));
+
+            Transaction transaction = Transaction.builder()
+                    .user(user)
+                    .transactionType(TransactionType.EXPENSE)
+                    .assets(Assets.BANK)
+                    .categoryIn(CategoryIn.SALARY)
+                    .categoryOut(CategoryOut.FOOD)
+                    .amount(500)
+                    .description("updated description")
+                    .createdAt(LocalDateTime.of(2023, 7, 1, 12, 0))
+                    .build();
+            transactionRepository.save(transaction);
+
+            MvcResult result = mockMvc.perform(put("/api/transactions/1")
+                            .session(session)
+                            .header("Authorization", "Bearer " + jwtToken)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(record)))
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            String contentAsString = result.getResponse().getContentAsString();
+            System.out.println("Response: " + contentAsString);  // 추가된 디버깅 출력
+
+            JsonNode jsonResponse = objectMapper.readTree(contentAsString).path("response");
+            System.out.println("JSON 응답: " + jsonResponse.toPrettyString());
+
+            _UpdateTransactionRespRecord response = objectMapper.treeToValue(jsonResponse, _UpdateTransactionRespRecord.class);
+
+            assertThat(response).isNotNull();
+            assertThat(response.userId()).isEqualTo(1);
+        }
     }
 
 
