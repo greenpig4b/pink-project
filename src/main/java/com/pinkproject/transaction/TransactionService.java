@@ -6,6 +6,8 @@ import com.pinkproject._core.utils.Formatter;
 import com.pinkproject._core.utils.SummaryUtil;
 import com.pinkproject.memo.Memo;
 import com.pinkproject.memo.MemoRepository;
+import com.pinkproject.openAi.OpenAIService;
+import com.pinkproject.transaction.TransactionRequest.AiResponse;
 import com.pinkproject.transaction.TransactionRequest._SaveTransactionRecord;
 import com.pinkproject.transaction.TransactionRequest._UpdateTransactionRecord;
 import com.pinkproject.transaction.TransactionResponse.*;
@@ -22,10 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
-import java.time.temporal.WeekFields;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -35,6 +35,7 @@ public class TransactionService {
     private final UserRepository userRepository;
     private final TransactionRepository transactionRepository;
     private final MemoRepository memoRepository;
+    private final OpenAIService openAIService;
 
     // 월간 주간 다합친 DTO
     public _ChartRespRecord getChartTransaction(Integer sessionUserId, Integer year, Integer month,LocalDateTime startDate, LocalDateTime endDate ) {
@@ -308,6 +309,29 @@ public class TransactionService {
 
         return new _MonthlyCalendar(sessionUserId, Formatter.formatYearWithSuffix(startDate), Formatter.formatMonthWithSuffix(startDate), Formatter.number(summary.getMonthlyIncome()), Formatter.number(summary.getMonthlyExpense()), Formatter.number(summary.getMonthlyTotalAmount()), dailySummaries);
     }
+
+
+    // 결산 전월 대비 ai 통계 내기
+    public String processSettle(Integer sessionUserId, int year, int month) {
+        List<Transaction> transactions = transactionRepository.findAllByYearAndMonth(sessionUserId, year, month);
+
+        List<AiResponse.AiDTO> transactionInfo = transactions.stream()
+                .map(transaction -> new AiResponse.AiDTO(transaction))
+                .collect(Collectors.toList());
+
+        // 트랜잭션 정보를 문자열로 변환
+        String transactionInfoString = transactionInfo.stream()
+                .map(AiResponse.AiDTO::toString)
+                .collect(Collectors.joining("; "));
+
+        String context = "당신은 금융 거래 데이터를 분석하는 어시스턴트입니다.";
+        String prompt = "다음은 분석할 거래 내역입니다: " + transactionInfoString + ". 지출 패턴을 분석하고, 주목할 만한 경향이나 이상 패턴에 대한 통찰을 제공해 주세요.";
+
+        String aiResponse = openAIService.askOpenAI(prompt, context);
+
+        return aiResponse;
+    }
+
 
 
 }

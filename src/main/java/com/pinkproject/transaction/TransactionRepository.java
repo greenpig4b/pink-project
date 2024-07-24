@@ -26,4 +26,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
                                     @Param("startDate") LocalDateTime startDate,
                                     @Param("endDate") LocalDateTime endDate,
                                     @Param("userId") int userId);
+
 }
