@@ -64,14 +64,11 @@
 
 ### front-End
 
-|                                                   류재성                                                   |                                                   최윤정                                                    |
-|:-------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------:| 
-| <img src="https://avatars.githubusercontent.com/u/153602328?v=4" alt="profile" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/129649095?v=4" alt="profile" width="100" height="100"> | 
-|                          [@coderyu5523](https://github.com/coderyu5523)                                   |                               [@yunchocopie](https://github.com/yunchocopie)                               |
-|                                                       이서현                                                        |
-|:------------------------------------------------------------------------------------------------------------------------:|
-| <img src="https://avatars.githubusercontent.com/u/153695703?v=4" alt="profile" width="100" height="100"> | 
-|                                    [@lhyeonnit](https://github.com/lhyeonnit)                                     |
+|                                                   류재성                                                   |                                                   최윤정                                                    |                                     이서현                                         |
+|:-------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------:| |:--------------------------------------------------------------------------------------------:|
+| <img src="https://avatars.githubusercontent.com/u/153602328?v=4" alt="profile" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/129649095?v=4" alt="profile" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/153695703?v=4" alt="profile" width="100" height="100"> |
+|                          [@coderyu5523](https://github.com/coderyu5523)                                  |                               [@yunchocopie](https://github.com/yunchocopie)                             |                    [@lhyeonnit](https://github.com/lhyeonnit)                              |
+
 
 
 <br>
