@@ -93,7 +93,7 @@ public class FaqIntegrationTest {
     }
 
     @Test
-    void testCreateFaq() throws Exception {
+    void createFaq_test() throws Exception {
         // given
         _SaveFaqAdminRecord createFaqRequest = new _SaveFaqAdminRecord(
                 "주문을 추적하는 방법은?",

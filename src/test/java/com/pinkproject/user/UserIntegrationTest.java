@@ -89,7 +89,7 @@ public class UserIntegrationTest {
         kakaoAccessToken = "testAccessToken";
     }
     @Test
-    void testCreateUser() throws Exception {
+    void createUser_test() throws Exception {
         _JoinRecord joinRecord = new _JoinRecord("testuser@kakao.com", "password"); // 테스트 데이터 수정
         _JoinRespRecord joinRespRecord = new _JoinRespRecord(user.getEmail(), user.getPassword());
 
@@ -118,7 +118,7 @@ public class UserIntegrationTest {
                 ));
     }
     @Test
-    void testLoginUser() throws Exception {
+    void loginUser_test() throws Exception {
         _LoginRecord loginRecord = new _LoginRecord("testuser@kakao.com", "password");
         _LoginRespRecord.UserRecord userRecord = _LoginRespRecord.fromUser(user);
         _LoginRespRecord loginRespRecord = new _LoginRespRecord(userRecord, null);
@@ -155,7 +155,7 @@ public class UserIntegrationTest {
 
 
     @Test
-    void testUpdateUser() throws Exception {
+    void updateUser_test() throws Exception {
         _UserUpdateRecord updateRecord = new _UserUpdateRecord("newpassword");
         _UserUpdateRespRecord updateRespRecord = new _UserUpdateRespRecord(user.getId(), user.getEmail(), updateRecord.password());
 
@@ -206,7 +206,7 @@ public class UserIntegrationTest {
     }
 
     @Test
-    void testGetUser() throws Exception {
+    void getUser_test() throws Exception {
         _UserRespRecord userRespRecord = new _UserRespRecord(user.getId(), user.getEmail(), user.getPassword());
 
         when(userService.getUserInfo(anyInt())).thenReturn(userRespRecord);
@@ -248,7 +248,7 @@ public class UserIntegrationTest {
     }
 
     @Test
-    void testCheckEmail() throws Exception {
+    void checkEmail_test() throws Exception {
         doThrow(new Exception400("중복된 이메일입니다."))
                 .when(userService)
                 .validateAndCheckEmailDuplicate(anyString());
@@ -271,7 +271,7 @@ public class UserIntegrationTest {
     }
 
     @Test
-    public void testKakaoLogin() throws Exception {
+    public void kakaoLogin_test() throws Exception {
         when(userRepository.findByEmail(anyString()))
                 .thenReturn(Optional.of(user));
         when(restTemplate.exchange(anyString(),
