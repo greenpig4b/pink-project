@@ -35,7 +35,7 @@
 
 # 📚 발표자료
 
-[3조_ppt.pdf 다운로드](https://docs.google.com/uc?export=download&id=16RE98iUz3uRQAoLWqzRkbm7IN8sFVH0y)
+[3조_ppt.pdf](https://docs.google.com/uc?export=download&id=16RE98iUz3uRQAoLWqzRkbm7IN8sFVH0y)
 
 <br>
 
