@@ -127,30 +127,30 @@
   <td align="center">관리자 - 자주 찾는 질문</td>
 </tr>
 <tr>
-  <td><img src="https://github.com/dongkipark1/pink-project/blob/dev/src/main/resources/static/images/scenario/admin-notice.gif?raw=true"  width="256" height="455"/></td>
-  <td><img src="https://github.com/dongkipark1/pink-project/blob/dev/src/main/resources/static/images/scenario/admin-faq.gif?raw=true"  width="256" height="455"/></td>
+  <td><img src="https://raw.github.com/dongkipark1/pink-project/blob/dev/src/main/resources/static/images/scenario/admin-notice.gif"  width="256" height="455"/></td>
+  <td><img src="https://raw.github.com/dongkipark1/pink-project/blob/dev/src/main/resources/static/images/scenario/admin-faq.gif"  width="256" height="455"/></td>
 </tr>
 <tr>
   <td align="center">로그인 - OAuth</td>
   <td align="center">사용자 - 메모 저장 및 확인</td>
 </tr>
 <tr>
-  <td><img src="https://github.com/dongkipark1/pink-project/blob/dev/src/main/resources/static/images/scenario/user-oauth.gif?raw=true"  width="256" height="455"/></td>
-  <td><img src="https://github.com/dongkipark1/pink-project/blob/dev/src/main/resources/static/images/scenario/user-memoSave.gif?raw=true"  width="256" height="455"/></td>
+  <td><img src="https://raw.github.com/dongkipark1/pink-project/blob/dev/src/main/resources/static/images/scenario/user-oauth.gif"  width="256" height="455"/></td>
+  <td><img src="https://raw.github.com/dongkipark1/pink-project/blob/dev/src/main/resources/static/images/scenario/user-memoSave.gif"  width="256" height="455"/></td>
 </tr>
 <tr>
   <td align="center">사용자 - 수입 지출 저장 및 확인</td>
   <td align="center">사용자 - 수입 지출 달력으로 확인</td>
 </tr>
 <tr>
-  <td><img src="https://github.com/dongkipark1/pink-project/blob/dev/src/main/resources/static/images/scenario/user-transactionSave.gif?raw=true"  width="256" height="455"/></td>
-  <td><img src="https://github.com/dongkipark1/pink-project/blob/dev/src/main/resources/static/images/scenario/user-calendar.gif?raw=true"  width="256" height="455"/></td>
+  <td><img src="https://raw.github.com/dongkipark1/pink-project/blob/dev/src/main/resources/static/images/scenario/user-transactionSave.gif"  width="256" height="455"/></td>
+  <td><img src="https://raw.github.com/dongkipark1/pink-project/blob/dev/src/main/resources/static/images/scenario/user-calendar.gif"  width="256" height="455"/></td>
 </tr>
 <tr>
   <td align="center">사용자 - 수입 지출 그래프 </td>
 </tr>
 <tr>
-  <td><img src="https://github.com/dongkipark1/pink-project/blob/dev/src/main/resources/static/images/scenario/user-transactionGraph.gif?raw=true"  width="256" height="455"/></td>
+  <td><img src="https://raw.github.com/dongkipark1/pink-project/blob/dev/src/main/resources/static/images/scenario/user-transactionGraph.gif"  width="256" height="455"/></td>
 </tr>
 </table>
 
