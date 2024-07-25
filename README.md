@@ -24,6 +24,8 @@
 - `MVC 패턴을 사용한 SSR 구현`
 - `MVVM 패턴을 이용한 Flutter 서버 통신`
 - `통합 테스트 (API 문서 (RestDoc))`
+- `OAuth를 사용한 KAKAO 로그인`
+- `OPEN AI를 활용한 분석 시스템`
 
 <br>
 
@@ -52,12 +54,12 @@
 | <img src="https://avatars.githubusercontent.com/u/78337301?v=4" alt="profile" width="100" height="100">| 
 |                                    [@greenpig4b](https://github.com/greenpig4b)                                     |
 
-### Front-End
+### Back-End
 
-|                                                   송민경                                                    |                                                   박동기                                                    |
+|                                                   장현정                                                    |                                                   박동기                                                    |
 |:--------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------:| 
-| <img src="https://avatars.githubusercontent.com/u/153582401?v=4" alt="profile" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/153582240?v=4" alt="profile" width="100" height="100"> | 
-|                                    [@vosw1](https://github.com/vosw1)                                    |                              [@dongkipark1](https://github.com/dongkipark1)                              |
+| <img src="https://avatars.githubusercontent.com/u/139729358?v=4" alt="profile" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/153582240?v=4" alt="profile" width="100" height="100"> | 
+|                                    [@Hyeonjeong-JANG](https://github.com/Hyeonjeong-JANG)                                    |                              [@dongkipark1](https://github.com/dongkipark1)                              |
 
 ### Back-End
 
