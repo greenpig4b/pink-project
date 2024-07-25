@@ -49,7 +49,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 public class TransactionIntegrationTest {
 
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -66,25 +65,36 @@ public class TransactionIntegrationTest {
     private MockHttpSession session;
 
     private String jwtToken;
+    private User user;
+    private Transaction transaction;
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        session = new MockHttpSession();
-        SessionUser sessionUser = new SessionUser();
-        sessionUser.setId(1);
-        sessionUser.setEmail("testUser@test.com");
-        session.setAttribute("sessionUser", sessionUser);
 
-        // JWT 토큰 생성
-        User user = new User();
-        user.setId(1);
+        // 기존 데이터 삭제
+        transactionRepository.deleteAll();
+        userRepository.deleteAll();
+
+        // 사용자 데이터 생성 및 저장
+        user = new User();
         user.setEmail("testUser@test.com");
         user.setPassword("password");
         userRepository.save(user);
-        jwtToken = JwtUtil.create(user);
 
-        Transaction transaction = Transaction.builder()
+        // 세션 설정
+        session = new MockHttpSession();
+        SessionUser sessionUser = new SessionUser();
+        sessionUser.setId(user.getId());
+        sessionUser.setEmail(user.getEmail());
+        session.setAttribute("sessionUser", sessionUser);
+
+        // JWT 토큰 생성
+        jwtToken = JwtUtil.create(user);
+        System.out.println("JWT token: " + jwtToken);
+
+        // 거래 데이터 생성 및 저장
+        transaction = Transaction.builder()
                 .user(user)
                 .transactionType(TransactionType.INCOME)
                 .assets(Assets.BANK)
@@ -97,9 +107,9 @@ public class TransactionIntegrationTest {
     }
 
     @Test
-    public void testSaveTransaction() throws Exception {
+    public void saveTransaction_test() throws Exception {
         _SaveTransactionRecord record = new _SaveTransactionRecord(
-                1,
+                user.getId(),  // 사용자 ID
                 TransactionType.INCOME,
                 "2023-07-01",
                 "10:00:00",
@@ -119,20 +129,16 @@ public class TransactionIntegrationTest {
                 .andReturn();
 
         String responseString = result.getResponse().getContentAsString();
-        System.out.println("Response: " + responseString); // 추가된 디버깅 출력
-
         JsonNode jsonResponse = objectMapper.readTree(responseString).path("response");
 
         _SaveTransactionRespRecord response = objectMapper.treeToValue(jsonResponse, _SaveTransactionRespRecord.class);
 
         assertThat(response).isNotNull();
-        assertThat(response.userId()).isEqualTo(1);
+        assertThat(response.userId()).isEqualTo(user.getId());
     }
 
     @Test
-    public void testUpdateTransaction() throws Exception {
-        User user = userRepository.findById(1).orElseThrow(() -> new IllegalArgumentException("User not found"));
-
+    public void updateTransaction_test() throws Exception {
         SummaryUtil.DailySummary dailySummary = new SummaryUtil.DailySummary(500, 1000, 1500);
         Map<LocalDate, SummaryUtil.DailySummary> dailySummaries = Map.of(LocalDate.of(2023, 7, 1), dailySummary);
         SummaryUtil.Summary summary = new SummaryUtil.Summary(
@@ -148,8 +154,8 @@ public class TransactionIntegrationTest {
             utilities.when(() -> SummaryUtil.calculateSummary(Mockito.anyList())).thenReturn(summary);
 
             _UpdateTransactionRecord record = new _UpdateTransactionRecord(
-                    1,
-                    1,
+                    user.getId(),  // 사용자 ID
+                    transaction.getId(),  // 트랜잭션 ID
                     TransactionType.EXPENSE,
                     "2023-07-01",
                     "12:00:00",
@@ -160,21 +166,7 @@ public class TransactionIntegrationTest {
                     "updated description"
             );
 
-            System.out.println("기록요청 전달 " + objectMapper.writeValueAsString(record));
-
-            Transaction transaction = Transaction.builder()
-                    .user(user)
-                    .transactionType(TransactionType.EXPENSE)
-                    .assets(Assets.BANK)
-                    .categoryIn(CategoryIn.SALARY)
-                    .categoryOut(CategoryOut.FOOD)
-                    .amount(500)
-                    .description("updated description")
-                    .createdAt(LocalDateTime.of(2023, 7, 1, 12, 0))
-                    .build();
-            transactionRepository.save(transaction);
-
-            MvcResult result = mockMvc.perform(put("/api/transactions/1")
+            MvcResult result = mockMvc.perform(put("/api/transactions/" + transaction.getId())
                             .session(session)
                             .header("Authorization", "Bearer " + jwtToken)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -183,41 +175,34 @@ public class TransactionIntegrationTest {
                     .andReturn();
 
             String contentAsString = result.getResponse().getContentAsString();
-            System.out.println("Response: " + contentAsString);  // 추가된 디버깅 출력
-
             JsonNode jsonResponse = objectMapper.readTree(contentAsString).path("response");
-            System.out.println("JSON 응답: " + jsonResponse.toPrettyString());
 
             _UpdateTransactionRespRecord response = objectMapper.treeToValue(jsonResponse, _UpdateTransactionRespRecord.class);
 
             assertThat(response).isNotNull();
-            assertThat(response.userId()).isEqualTo(1);
+            assertThat(response.userId()).isEqualTo(user.getId());
         }
     }
 
-
     @Test
-    public void testDeleteTransaction() throws Exception {
-        MvcResult result = mockMvc.perform(delete("/api/transactions/1")
+    public void deleteTransaction_test() throws Exception {
+        MvcResult result = mockMvc.perform(delete("/api/transactions/" + transaction.getId())
                         .session(session)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk())
                 .andReturn();
 
         String responseString = result.getResponse().getContentAsString();
-        System.out.println("Response: " + responseString);
-
         JsonNode jsonResponse = objectMapper.readTree(responseString).path("response");
 
         _DeleteTransactionRespRecord response = objectMapper.treeToValue(jsonResponse, _DeleteTransactionRespRecord.class);
 
         assertThat(response).isNotNull();
-        assertThat(response.userId()).isEqualTo(1);
+        assertThat(response.userId()).isEqualTo(user.getId());
     }
 
-
     @Test
-    public void testGetMonthlyTransactions() throws Exception {
+    public void getMonthlyTransactions_test() throws Exception {
         MvcResult result = mockMvc.perform(get("/api/transactions/monthly")
                         .session(session)
                         .header("Authorization", "Bearer " + jwtToken)
@@ -227,19 +212,19 @@ public class TransactionIntegrationTest {
                 .andReturn();
 
         String responseString = result.getResponse().getContentAsString();
-        System.out.println("Response: " + responseString);
-
         JsonNode jsonResponse = objectMapper.readTree(responseString).path("response");
 
         _MonthlyTransactionMainRecord response = objectMapper.treeToValue(jsonResponse, _MonthlyTransactionMainRecord.class);
 
         assertThat(response).isNotNull();
-        assertThat(response.userId()).isEqualTo(1);
+        assertThat(response.userId()).isEqualTo(user.getId());
     }
 
-
     @Test
-    public void testGetMonthlyFinancialReportMain() throws Exception {
+    public void getMonthlyFinancialReportMain_test() throws Exception {
+        System.out.println("JWT token: " + jwtToken);
+        System.out.println("Session User: " + session.getAttribute("sessionUser"));
+
         MvcResult result = mockMvc.perform(get("/api/financial-report")
                         .session(session)
                         .header("Authorization", "Bearer " + jwtToken)
@@ -249,19 +234,20 @@ public class TransactionIntegrationTest {
                 .andReturn();
 
         String responseString = result.getResponse().getContentAsString();
-        System.out.println("Response: " + responseString);
+        System.out.println("Response String: " + responseString);
 
         JsonNode jsonResponse = objectMapper.readTree(responseString).path("response");
+        System.out.println("JSON Response: " + jsonResponse);
 
         _MonthlyFinancialReport response = objectMapper.treeToValue(jsonResponse, _MonthlyFinancialReport.class);
+        System.out.println("Monthly Financial Report: " + response);
 
         assertThat(response).isNotNull();
-        assertThat(response.userId()).isEqualTo(1);
+        assertThat(response.userId()).isEqualTo(user.getId());
     }
 
-
     @Test
-    public void testGetCalendar() throws Exception {
+    public void getCalendar_test() throws Exception {
         MvcResult result = mockMvc.perform(get("/api/calendar")
                         .session(session)
                         .header("Authorization", "Bearer " + jwtToken)
@@ -270,14 +256,17 @@ public class TransactionIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        _MonthlyCalendar response = objectMapper.readValue(result.getResponse().getContentAsString(), _MonthlyCalendar.class);
+        String responseString = result.getResponse().getContentAsString();
+        JsonNode jsonResponse = objectMapper.readTree(responseString).path("response");
+
+        _MonthlyCalendar response = objectMapper.treeToValue(jsonResponse, _MonthlyCalendar.class);
 
         assertThat(response).isNotNull();
-        assertThat(response.userId()).isEqualTo(1);
+        assertThat(response.userId()).isEqualTo(user.getId());
     }
 
     @Test
-    public void testGetChart() throws Exception {
+    public void getChart_test() throws Exception {
         MvcResult result = mockMvc.perform(get("/api/chart/monthly")
                         .session(session)
                         .header("Authorization", "Bearer " + jwtToken)
@@ -286,7 +275,10 @@ public class TransactionIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        _ChartRespRecord response = objectMapper.readValue(result.getResponse().getContentAsString(), _ChartRespRecord.class);
+        String responseString = result.getResponse().getContentAsString();
+        JsonNode jsonResponse = objectMapper.readTree(responseString).path("response");
+
+        _ChartRespRecord response = objectMapper.treeToValue(jsonResponse, _ChartRespRecord.class);
 
         assertThat(response).isNotNull();
         assertThat(response.monthCount()).isEqualTo(7);

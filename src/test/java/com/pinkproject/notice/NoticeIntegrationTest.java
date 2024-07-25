@@ -84,7 +84,7 @@ public class NoticeIntegrationTest {
     }
 
     @Test
-    void testCreateNotice() throws Exception {
+    void createNotice_test() throws Exception {
         MockHttpServletRequestBuilder loginRequest = MockMvcRequestBuilders.post("/api/admin/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\":\"" + admin.getUsername() + "\",\"password\":\"password\"}");
@@ -144,7 +144,7 @@ public class NoticeIntegrationTest {
     }
 
     @Test
-    void testGetNotices() throws Exception {
+    void getNotices_test() throws Exception {
         MockHttpServletRequestBuilder loginRequest = MockMvcRequestBuilders.post("/api/admin/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\":\"" + admin.getUsername() + "\",\"password\":\"password\"}");
@@ -193,7 +193,7 @@ public class NoticeIntegrationTest {
     }
 
     @Test
-    void testGetNoticeById() throws Exception {
+    void getNoticeById_test() throws Exception {
         MockHttpServletRequestBuilder loginRequest = MockMvcRequestBuilders.post("/api/admin/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\":\"" + admin.getUsername() + "\",\"password\":\"password\"}");
