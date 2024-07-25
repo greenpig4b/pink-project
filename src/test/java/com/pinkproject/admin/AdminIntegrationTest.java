@@ -61,7 +61,7 @@ public class AdminIntegrationTest {
     }
 
     @Test
-    void testFindByUsername() throws Exception {
+    void findByUsername_test() throws Exception {
         // given
         _LoginAdminRecord loginAdminRecord = new _LoginAdminRecord("admin", "password");
 
@@ -93,7 +93,7 @@ public class AdminIntegrationTest {
 
 
     @Test
-    void testAuthenticateSuccess() throws Exception {
+    void authenticateSuccess_test() throws Exception {
         // given
         _LoginAdminRecord loginAdminRecord = new _LoginAdminRecord("admin", "password");
 
@@ -125,7 +125,7 @@ public class AdminIntegrationTest {
 
 
     @Test
-    void testAuthenticateFailure() throws Exception {
+    void authenticateFailure_test() throws Exception {
         // given
         _LoginAdminRecord loginAdminRecord = new _LoginAdminRecord("admin", "wrongpassword");
 

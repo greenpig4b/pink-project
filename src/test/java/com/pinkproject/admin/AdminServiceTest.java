@@ -45,7 +45,7 @@ public class AdminServiceTest {
     }
 
     @Test
-    void testAuthenticateUserNotFound_test() {
+    void authenticateUserNotFound_test() {
         // given
         _LoginAdminRecord loginAdminRecord = new _LoginAdminRecord("unknown", "password");
         when(adminRepository.findByUsername("unknown")).thenReturn(null);
@@ -59,7 +59,7 @@ public class AdminServiceTest {
     }
 
     @Test
-    void testAuthenticateSuccess_test() {
+    void authenticateSuccess_test() {
         // given
         _LoginAdminRecord loginAdminRecord = new _LoginAdminRecord("admin", "password");
         when(adminRepository.findByUsername("admin")).thenReturn(admin);
@@ -73,7 +73,7 @@ public class AdminServiceTest {
     }
 
     @Test
-    void testAuthenticateFailure_test() {
+    void authenticateFailure_test() {
         // given
         _LoginAdminRecord loginAdminRecord = new _LoginAdminRecord("admin", "wrongpassword");
         when(adminRepository.findByUsername("admin")).thenReturn(admin);

@@ -2,6 +2,7 @@ package com.pinkproject.transaction;
 
 import com.pinkproject._core.utils.SummaryUtil;
 import com.pinkproject.memo.MemoRepository;
+import com.pinkproject.openAi.OpenAIService;
 import com.pinkproject.transaction.TransactionRequest._SaveTransactionRecord;
 import com.pinkproject.transaction.TransactionRequest._UpdateTransactionRecord;
 import com.pinkproject.transaction.TransactionResponse.*;
@@ -302,8 +303,13 @@ public class TransactionServiceTest {
         }
 
         @Bean
-        public TransactionService transactionService(UserRepository userRepository, TransactionRepository transactionRepository, MemoRepository memoRepository) {
-            return new TransactionService(userRepository, transactionRepository, memoRepository);
+        public OpenAIService openAIService() {
+            return mock(OpenAIService.class);
+        }
+
+        @Bean
+        public TransactionService transactionService(UserRepository userRepository, TransactionRepository transactionRepository, MemoRepository memoRepository,OpenAIService openAIService) {
+            return new TransactionService(userRepository, transactionRepository, memoRepository,openAIService);
         }
     }
 }

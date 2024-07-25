@@ -96,7 +96,7 @@ public class MemoIntegrationTest {
     }
 
     @Test
-    void testCreateMemo() throws Exception {
+    void createMemo_test() throws Exception {
         // given
         _SaveMemoRecord createMemoRequest = new _SaveMemoRecord(
                 user.getId(),
@@ -138,7 +138,7 @@ public class MemoIntegrationTest {
     }
 
     @Test
-    void testGetMonthlyMemos() throws Exception {
+    void getMonthlyMemos_test() throws Exception {
         // when
         ResultActions actions = mockMvc.perform(
                 get("/api/memos/monthly")
@@ -169,7 +169,7 @@ public class MemoIntegrationTest {
     }
 
     @Test
-    void testUpdateMemo() throws Exception {
+    void updateMemo_test() throws Exception {
         // given
         _UpdateMemoRecord updateMemoRequest = new _UpdateMemoRecord(
                 memo.getId(),  // 메모 ID 추가
@@ -210,7 +210,7 @@ public class MemoIntegrationTest {
     }
 
     @Test
-    void testDeleteMemo() throws Exception {
+    void deleteMemo_test() throws Exception {
         // when
         ResultActions actions = mockMvc.perform(
                 delete("/api/memos/" + memo.getId())
