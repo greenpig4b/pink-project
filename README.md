@@ -62,12 +62,12 @@
 |  [@Hyeonjeong-JANG](https://github.com/Hyeonjeong-JANG)  |    [@dongkipark1](https://github.com/dongkipark1)   |
 
 
-### Back-End
+### front-End
 
 |                                                   류재성                                                   |                                                   최윤정                                                    |
 |:-------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------:| 
-|  | <img src="https://avatars.githubusercontent.com/u/118310514?v=4" alt="profile" width="100" height="100"> | 
-|                                                             |                               [@minmeanmin](https://github.com/minmeanmin)                               |
+| <img src="https://avatars.githubusercontent.com/u/153602328?v=4" alt="profile" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/129649095?v=4" alt="profile" width="100" height="100"> | 
+|                          [@coderyu5523](https://github.com/coderyu5523)                                   |                               [@yunchocopie](https://github.com/yunchocopie)                               |
 
 <br>
 
