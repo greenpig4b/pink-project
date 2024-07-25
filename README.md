@@ -1,4 +1,4 @@
-# 🐖 [가계부 어플] PinkPig.
+# 🐖 [가계부 어플] PINKPIG.
 
 ![PINKPIG logo](https://github.com/dongkipark1/pink-project/blob/dev/src/main/resources/static/images/logo.png?raw=true)
 
