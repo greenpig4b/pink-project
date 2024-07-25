@@ -1,6 +1,6 @@
 # 🏨 [가계부 어플] PinkPig.
 
-![PINKPIG_logo](![Pink Pig](https://github.com/dongkipark1/pink-project/blob/main/resources/static/images/logo.png)
+![PINKPIG_logo](https://github.com/dongkipark1/pink-project/blob/main/resources/static/images/logo.png)
 )
 
 <br>
