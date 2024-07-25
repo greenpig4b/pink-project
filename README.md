@@ -123,51 +123,35 @@
 
 <table style="border: 2px;">
 <tr>
-  <td align=center>스플래시 화면</td>
-  <td align=center>회원가입</td>
+  <td align="center">관리자 - 공지사항</td>
+  <td align="center">관리자 - 자주 찾는 질문</td>
 </tr>
 <tr>
-  <td><img src="https://github.com/donghunseol/yeogi_copy/assets/153582315/ba794e96-2750-47aa-8e56-588fafe07e1d"  width="256" height="455"/></td>
-  <td><img src="https://github.com/donghunseol/yeogi_copy/assets/153582315/223892f7-2ae2-4083-958a-f39b585e0e0a"  width="256" height="455"/></td>
+  <td><img src="https://raw.githubusercontent.com/dongkipark1/pink-project/dev/src/main/resources/static/images/scenario/admin-notice.gif"  width="400" height="455"/></td>
+  <td><img src="https://raw.githubusercontent.com/dongkipark1/pink-project/dev/src/main/resources/static/images/scenario/admin-faq.gif"  width="400" height="455"/></td>
 </tr>
 <tr>
-  <td align=center>로그인</td>
-  <td align=center>로그아웃</td>
+  <td align="center">로그인 - OAuth</td>
+  <td align="center">사용자 - 메모 저장 및 확인</td>
 </tr>
 <tr>
-  <td><img src="https://github.com/donghunseol/yeogi_copy/assets/153582315/baf287d6-59f9-437e-be45-d51fd2e0c1c2"  width="256" height="455"/></td>
-  <td><img src="https://github.com/donghunseol/yeogi_copy/assets/153582315/e51caa27-5f99-4811-bd60-a091b59e89f0"  width="256" height="455"/></td>
+  <td><img src="https://raw.githubusercontent.com/dongkipark1/pink-project/dev/src/main/resources/static/images/scenario/user-oauth.gif"  width="400" height="455"/></td>
+  <td><img src="https://raw.githubusercontent.com/dongkipark1/pink-project/dev/src/main/resources/static/images/scenario/user-memoSave.gif"  width="400" height="455"/></td>
 </tr>
 <tr>
-  <td align=center>숙소 선택하기</td>
-  <td align=center>룸 선택하기</td>
+  <td align="center">사용자 - 수입 지출 저장 및 확인</td>
+  <td align="center">사용자 - 수입 지출 달력으로 확인</td>
 </tr>
 <tr>
-  <td><img src="https://github.com/donghunseol/yeogi_copy/assets/153582315/929550b6-2a5a-45f1-b535-c24cea2f1e75"  width="256" height="455"/></td>
-  <td><img src="https://github.com/donghunseol/yeogi_copy/assets/153582315/34328614-db6a-4cf9-853a-5429f1742b55"  width="256" height="455"/></td>
+  <td><img src="https://raw.githubusercontent.com/dongkipark1/pink-project/dev/src/main/resources/static/images/scenario/user-transactionSave.gif"  width="400" height="455"/></td>
+  <td><img src="https://raw.githubusercontent.com/dongkipark1/pink-project/dev/src/main/resources/static/images/scenario/user-calendar.gif"  width="400" height="455"/></td>
 </tr>
 <tr>
-  <td align=center>예약하기</td>
-  <td align=center>결제하기</td>
+  <td align="center">사용자 - 수입 지출 그래프 </td>
 </tr>
 <tr>
-  <td><img src="https://github.com/donghunseol/yeogi_copy/assets/153582315/f66821a5-d7c9-41e6-9c9d-25530c90c7fb"  width="256" height="455"/></td>
-  <td><img src="https://github.com/donghunseol/yeogi_copy/assets/153582315/f3e957cd-4189-4bb7-937b-702099e82e58"  width="256" height="455"/></td>
-</tr>
-<tr>
-  <td align=center>검색하기</td>
-  <td align=center>부가기능</td>
-</tr>
-<tr>
-  <td><img src="https://github.com/donghunseol/yeogi_copy/assets/153582315/410a4740-dc9a-4368-88da-c70ee6764c31"  width="256" height="455"/></td>
-  <td><img src="https://github.com/donghunseol/yeogi_copy/assets/153582315/8f096a70-d6d9-4f02-ba2e-b26e8761093e"  width="256" height="455"/></td>
-</tr>
-<tr>
-  <td align=center>스크랩</td>
-  <td align=center>주변 검색하기</td>
-</tr>
-<tr>
-  <td><img src="https://github.com/donghunseol/yeogi_copy/assets/153582315/03d45f69-8b3a-4fc7-a298-05f23fa68cf4"  width="256" height="455"/></td>
-  <td><img src="https://github.com/donghunseol/yeogi_copy/assets/153582315/e30e586c-b80c-4765-8e39-9c46647a8d68"  width="256" height="455"/></td>
+  <td><img src="https://raw.githubusercontent.com/dongkipark1/pink-project/dev/src/main/resources/static/images/scenario/user-transactionGraph.gif"  width="400" height="455"/></td>
 </tr>
 </table>
+
+
