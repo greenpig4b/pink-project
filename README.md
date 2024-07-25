@@ -47,27 +47,27 @@
 
 # 👨‍👩‍👧‍👧 팀원 소개
 
-### Team-Leader
+### **Team-Leader**
 
-|                                                       김지훈(팀장)                                                        |
-|:------------------------------------------------------------------------------------------------------------------------:|
+|                      김지훈(팀장)                      |
+|:----------------------------------------------------:|
 | <img src="https://avatars.githubusercontent.com/u/78337301?v=4" alt="profile" width="100" height="100"> | 
-|                                    [@greenpig4b](https://github.com/greenpig4b)                                     |
+| [@greenpig4b](https://github.com/greenpig4b) |
 
-### Back-End
+### **Back-End**
 
 |                    장현정                     |                    박동기                     |
 |:---------------------------------------------:|:---------------------------------------------:| 
 | <img src="https://avatars.githubusercontent.com/u/139729358?v=4" alt="profile" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/153582240?v=4" alt="profile" width="100" height="100"> | 
-|  [@Hyeonjeong-JANG](https://github.com/Hyeonjeong-JANG)  |    [@dongkipark1](https://github.com/dongkipark1)   |
+| [@Hyeonjeong-JANG](https://github.com/Hyeonjeong-JANG)  | [@dongkipark1](https://github.com/dongkipark1)   |
 
+### **Front-End**
 
-### front-End
-
-|                                                   류재성                                                   |                                                   최윤정                                                    |                                     이서현                                         |
-|:-------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------:| |:--------------------------------------------------------------------------------------------:|
+|                    류재성                     |                    최윤정                     |                    이서현                     |
+|:---------------------------------------------:|:---------------------------------------------:|:---------------------------------------------:|
 | <img src="https://avatars.githubusercontent.com/u/153602328?v=4" alt="profile" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/129649095?v=4" alt="profile" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/153695703?v=4" alt="profile" width="100" height="100"> |
-|                          [@coderyu5523](https://github.com/coderyu5523)                                  |                               [@yunchocopie](https://github.com/yunchocopie)                             |                    [@lhyeonnit](https://github.com/lhyeonnit)                              |
+| [@coderyu5523](https://github.com/coderyu5523) | [@yunchocopie](https://github.com/yunchocopie) | [@lhyeonnit](https://github.com/lhyeonnit) |
+
 
 
 
