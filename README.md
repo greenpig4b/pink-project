@@ -59,7 +59,7 @@
 |                                                   장현정                                                    |                                                   박동기                                                    |
 |:--------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------:| 
 | <img src="https://avatars.githubusercontent.com/u/139729358?v=4" alt="profile" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/153582240?v=4" alt="profile" width="100" height="100"> | 
-|                                    [@Hyeonjeong-JANG](https://github.com/Hyeonjeong-JANG)                                    |                              [@dongkipark1](https://github.com/dongkipark1)                              |
+|                  [@Hyeonjeong-JANG](https://github.com/Hyeonjeong-JANG)                                    |                              [@dongkipark1](https://github.com/dongkipark1)                              |
 
 ### Back-End
 
