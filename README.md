@@ -35,7 +35,8 @@
 
 # 📚 발표자료
 
-[3조_ppt.pdf](https://github.com/dongkipark1/pink-project/blob/main/3조_ppt.pdf)
+[3조_ppt.pdf 다운로드](https://docs.google.com/uc?export=download&id=16RE98iUz3uRQAoLWqzRkbm7IN8sFVH0y)
+
 <br>
 
 # ⏰ 프로젝트 기간
