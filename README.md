@@ -31,7 +31,7 @@
 
 # 📽️ 시연영상
 
-[3조 시연 영상](https://youtu.be/iYL5NhQxDjg?si=1U2-tsvSTIc7Yysz](https://www.youtube.com/watch?v=FbJ2KY67rQA)
+[3조 시연 영상](https://www.youtube.com/watch?v=FbJ2KY67rQA)
 
 # 📚 발표자료
 
